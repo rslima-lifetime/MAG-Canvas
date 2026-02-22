@@ -165,7 +165,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             {activeTab === 'NEW' && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">1. Nome do Report</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">1. Nome do Projeto</label>
                   <input 
                     type="text" 
                     value={title}
@@ -251,7 +251,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                     onClick={handleStart}
                     className="w-full py-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg bg-[#0079C2] text-white hover:bg-[#006098] hover:shadow-xl transform hover:-translate-y-0.5 active:scale-95"
                   >
-                    <span>Criar Report</span>
+                    <span>Iniciar Projeto</span>
                     <ArrowRight size={18} />
                   </button>
                 </div>
