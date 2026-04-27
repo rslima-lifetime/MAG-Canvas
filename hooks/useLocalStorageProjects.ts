@@ -7,6 +7,7 @@ export interface SavedProjectMeta {
   title: string;
   updatedAt: string;
   pageCount: number;
+  format: 'REPORT' | 'PRESENTATION';
 }
 
 const INDEX_KEY = 'mag_canvas_projects_index';
@@ -43,7 +44,8 @@ export const useLocalStorageProjects = () => {
         id: projectId,
         title: data.title,
         updatedAt: now,
-        pageCount: data.pages.length + (data.cover?.enabled ? 1 : 0)
+        pageCount: data.pages.length + (data.cover?.enabled ? 1 : 0),
+        format: data.layoutFormat
       };
 
       const existingIdx = currentIndex.findIndex(p => p.id === projectId);

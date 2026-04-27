@@ -491,14 +491,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                           <div>
                             <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight group-hover:text-[#0079C2]">{proj.title}</h4>
                             <div className="flex items-center gap-3 mt-1">
-                              <span>{proj.format === 'REPORT' ? 'A4 Vertical' : 'Slide 16:9'}</span>
+                              <span>{(proj as any).format === 'REPORT' ? 'A4 Vertical' : 'Slide 16:9'}</span>
                               <span className="w-1 h-1 rounded-full bg-slate-200" />
                               <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
                                 <Clock size={10} /> 
-                                {proj.updatedAt?.seconds 
-                                  ? new Date(proj.updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
-                                  : proj.updatedAt 
-                                    ? new Date(proj.updatedAt).toLocaleDateString('pt-BR')
+                                {(proj as any).updatedAt?.seconds 
+                                  ? new Date((proj as any).updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
+                                  : (proj as any).updatedAt 
+                                    ? new Date((proj as any).updatedAt).toLocaleDateString('pt-BR')
                                     : 'Recente'
                                 }
                               </span>

@@ -185,12 +185,15 @@ export interface CoverPage {
 }
 
 export interface ReportData {
+  id: string;
   title: string;
-  subtitle: string;
+  layoutFormat: 'REPORT' | 'PRESENTATION';
+  designSystem: DesignSystem;
+  cover: CoverPage;
   pages: Page[];
-  cover?: CoverPage;
-  layoutFormat?: DocumentFormat;
-  designSystem?: DesignSystem;
+  isShared?: boolean;
+  _firestoreId?: string;
+  _localId?: string;
 }
 
 export interface Block {
@@ -224,8 +227,8 @@ export interface Page {
 }
 
 export const DEFAULT_REPORT_DATA: ReportData = {
+  id: "new-report",
   title: "Report Estratégico de People Analytics",
-  subtitle: "Consolidado de KPIs e Insights de Capital Humano",
   layoutFormat: 'REPORT',
   designSystem: 'STANDARD',
   pages: [],
