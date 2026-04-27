@@ -185,7 +185,7 @@ export interface CoverPage {
 }
 
 export interface ReportData {
-  id: string;
+  id?: string;
   title: string;
   subtitle: string;
   layoutFormat: 'REPORT' | 'PRESENTATION';
