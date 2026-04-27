@@ -2,11 +2,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   FileText, Presentation, LayoutPanelTop, Sparkles, 
-  ArrowRight, Upload, Clock, HardDrive, Trash2, AlertCircle, FileJson, Save, LayoutTemplate, CheckCircle2
+  ArrowRight, Upload, Clock, HardDrive, Trash2, AlertCircle, FileJson, Save, LayoutTemplate, CheckCircle2,
+  LogIn, Cloud, Users, Share2, Shield, ShieldCheck, LogOut
 } from 'lucide-react';
 import { DocumentFormat, DesignSystem, ReportData, DEFAULT_REPORT_DATA } from '../types';
 import { useLocalStorageProjects, SavedProjectMeta } from '../hooks/useLocalStorageProjects';
+import { useFirestoreProjects } from '../hooks/useFirestoreProjects';
+import { useAuth } from '../context/AuthContext';
+import { LoginModal } from './auth/LoginModal';
+import { auth } from '../lib/firebase';
 import { TEMPLATES, TemplateMeta } from '../data/templates';
+import { GestaoAcessos } from './admin/GestaoAcessos';
 
 interface WelcomeScreenProps {
   onStart: (data: Partial<ReportData>) => void;
@@ -14,20 +20,39 @@ interface WelcomeScreenProps {
 }
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport }) => {
-  const [activeTab, setActiveTab] = useState<'NEW' | 'TEMPLATES' | 'SAVED'>('NEW');
+  const [activeTab, setActiveTab] = useState<'NEW' | 'TEMPLATES' | 'SAVED' | 'ADMIN'>('NEW');
   const [title, setTitle] = useState('');
   const [format, setFormat] = useState<DocumentFormat>('REPORT');
   const [design, setDesign] = useState<DesignSystem>('STANDARD');
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { listProjects, loadLocalProject, deleteLocalProject } = useLocalStorageProjects();
+  const { listUserProjects, listSharedProjects, deleteProject } = useFirestoreProjects();
+  const { user } = useAuth();
+  
   const [savedProjects, setSavedProjects] = useState<SavedProjectMeta[]>([]);
+  const [cloudProjects, setCloudProjects] = useState<any[]>([]);
+  const [sharedProjects, setSharedProjects] = useState<any[]>([]);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isCloudLoading, setIsCloudLoading] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'SAVED') {
       setSavedProjects(listProjects());
+      
+      if (user) {
+        setIsCloudLoading(true);
+        Promise.all([
+          listUserProjects(user.uid),
+          listSharedProjects()
+        ]).then(([userProjs, sharedProjs]) => {
+          setCloudProjects(userProjs);
+          setSharedProjects(sharedProjs);
+          setIsCloudLoading(false);
+        });
+      }
     }
-  }, [activeTab, listProjects]);
+  }, [activeTab, listProjects, user, listUserProjects, listSharedProjects]);
 
   const handleStart = () => {
     // Define um título padrão se o usuário não digitou nada
@@ -63,11 +88,19 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     }
   };
 
-  const handleDeleteProject = (e: React.MouseEvent, id: string) => {
+  const handleDeleteProject = async (e: React.MouseEvent, id: string, type: 'LOCAL' | 'CLOUD') => {
     e.stopPropagation();
-    if (window.confirm("Tem certeza? Esta ação não pode ser desfeita se você não tiver um backup exportado.")) {
-      deleteLocalProject(id);
-      setSavedProjects(listProjects());
+    if (window.confirm("Tem certeza? Esta ação não pode ser desfeita.")) {
+      if (type === 'LOCAL') {
+        deleteLocalProject(id);
+        setSavedProjects(listProjects());
+      } else {
+        await deleteProject(id);
+        if (user) {
+          const projs = await listUserProjects(user.uid);
+          setCloudProjects(projs);
+        }
+      }
     }
   };
 
@@ -85,10 +118,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#00A7E7]/10 blur-3xl" />
       </div>
 
-      <div className="bg-white max-w-5xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row relative z-10 animate-in fade-in zoom-in-95 duration-500 h-[650px]">
+      <div className="bg-white max-w-7xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row relative z-10 animate-in fade-in zoom-in-95 duration-500 h-[650px]">
         
         {/* Lado Esquerdo: Branding */}
-        <div className="w-full md:w-4/12 bg-gradient-to-br from-[#006098] to-[#004a76] p-10 flex flex-col justify-between text-white relative overflow-hidden">
+        <div className="w-full md:w-[320px] shrink-0 bg-gradient-to-br from-[#006098] to-[#004a76] p-8 flex flex-col justify-between text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 70% 30%, white 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
           
           <div className="z-10">
@@ -136,8 +169,8 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
         {/* Lado Direito: Área de Trabalho */}
         <div className="flex-1 flex flex-col bg-white">
           {/* Header com Abas */}
-          <div className="px-10 pt-8 pb-0 flex items-end border-b border-slate-100 gap-6">
-            <div className="flex gap-8 overflow-x-auto no-scrollbar pb-0.5 w-full">
+          <div className="px-8 pt-8 pb-0 flex items-end border-b border-slate-100 gap-4">
+            <div className="flex gap-5 overflow-x-auto no-scrollbar pb-0.5 w-full">
               <button 
                 onClick={() => setActiveTab('NEW')}
                 className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all whitespace-nowrap ${activeTab === 'NEW' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
@@ -156,12 +189,48 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                 className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'SAVED' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
               >
                 Projetos Salvos 
-                <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-full">{listProjects().length}</span>
+                <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-full ml-1">
+                  {listProjects().length + (user ? cloudProjects.length + sharedProjects.length : 0)}
+                </span>
               </button>
+              {user && (
+                <button 
+                  onClick={() => setActiveTab('ADMIN')}
+                  className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'ADMIN' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
+                >
+                  <ShieldCheck size={14} /> Administração
+                </button>
+              )}
+            </div>
+            
+            <div className="pb-4">
+              {user ? (
+                <div className="flex items-center gap-3 pl-4 border-l border-slate-100">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#006098] to-[#00A7E7] flex items-center justify-center text-white text-[11px] font-black border-2 border-white shadow-sm shrink-0">
+                    {(user.displayName || user.email || '?')[0].toUpperCase()}
+                  </div>
+                  <div className="flex flex-col min-w-[80px]">
+                    <span className="text-[10px] font-black text-[#006098] uppercase leading-tight truncate max-w-[120px]">{user.displayName || 'Usuário'}</span>
+                    <button 
+                      onClick={() => auth.signOut()} 
+                      className="flex items-center gap-1 text-[8px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-600 transition-colors mt-0.5 group"
+                    >
+                      <LogOut size={10} className="group-hover:-translate-x-0.5 transition-transform" /> Sair
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-[9px] font-black uppercase tracking-widest text-[#006098] hover:bg-[#0079C2] hover:text-white hover:border-[#0079C2] transition-all group"
+                >
+                  <LogIn size={12} className="group-hover:scale-110 transition-transform" /> Acessar Conta
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="flex-1 p-10 overflow-y-auto">
+          <div className="flex-1 p-8 overflow-y-auto">
             {activeTab === 'NEW' && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="space-y-2">
@@ -302,22 +371,110 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
 
             {activeTab === 'SAVED' && (
               <div className="flex flex-col h-full animate-in fade-in slide-in-from-left-4 duration-300">
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex gap-3">
-                  <AlertCircle size={20} className="text-amber-500 shrink-0" />
-                  <div className="flex flex-col gap-1">
-                    <h4 className="text-[11px] font-black uppercase text-amber-700">Armazenamento Local do Navegador</h4>
-                    <p className="text-[10px] text-amber-800/80 leading-relaxed">
-                      Estes projetos estão salvos apenas no cache deste navegador. <br/>
-                      <span className="font-bold">Segurança:</span> Eles não são acessíveis por outras pessoas. <br/>
-                      <span className="font-bold">Compartilhamento:</span> Para enviar a alguém, você deve abrir o projeto e clicar em "Salvar Backup" para gerar o arquivo JSON.
-                    </p>
+                {!user && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex gap-3">
+                    <AlertCircle size={20} className="text-amber-500 shrink-0" />
+                    <div className="flex flex-col gap-1">
+                      <h4 className="text-[11px] font-black uppercase text-amber-700">Modo Offline (Browser)</h4>
+                      <p className="text-[10px] text-amber-800/80 leading-relaxed">
+                        Você não está logado. Os projetos abaixo estão salvos apenas neste computador. <br/>
+                        <button onClick={() => setIsLoginModalOpen(true)} className="font-bold underline">Entre com sua conta</button> para salvar na nuvem e compartilhar com a equipe.
+                      </p>
+                    </div>
                   </div>
+                )}
+
+                {/* Seção Nuvem - Meus Projetos */}
+                {user && (
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Sparkles size={16} className="text-[#00A7E7]" />
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#006098]">Meus Projetos na Nuvem</h4>
+                    </div>
+                    {isCloudLoading ? (
+                      <div className="py-8 flex justify-center"><div className="w-6 h-6 border-2 border-[#0079C2] border-t-transparent rounded-full animate-spin"></div></div>
+                    ) : cloudProjects.length === 0 ? (
+                      <p className="text-[10px] text-slate-400 font-medium italic ml-6">Nenhum projeto salvo na nuvem ainda.</p>
+                    ) : (
+                      <div className="grid grid-cols-1 gap-3">
+                        {cloudProjects.map((proj) => (
+                          <div 
+                            key={proj.id}
+                            onClick={() => onStart({ ...proj, _firestoreId: proj.id })}
+                            className="group flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl hover:border-[#0079C2] hover:shadow-md cursor-pointer transition-all"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#0079C2]">
+                                <Cloud size={20} />
+                              </div>
+                              <div>
+                                <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{proj.title}</h4>
+                                <div className="flex items-center gap-3 mt-1">
+                                  <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
+                                    <Clock size={10} /> {proj.updatedAt?.toDate().toLocaleDateString('pt-BR')}
+                                  </span>
+                                  {proj.isShared && (
+                                    <span className="text-[8px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded uppercase">Compartilhado</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <button 
+                              onClick={(e) => handleDeleteProject(e, proj.id, 'CLOUD')}
+                              className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Seção Nuvem - Compartilhados com a Equipe */}
+                {user && sharedProjects.length > 0 && (
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Users size={16} className="text-emerald-500" />
+                      <Users size={16} className="text-[#0079C2]" />
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#006098]">Projetos da Equipe (Modo Colaborativo)</h4>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                      {sharedProjects.map((proj) => (
+                        <div 
+                          key={proj.id}
+                          onClick={() => onStart({ ...proj, _firestoreId: proj.id })}
+                          className="group flex items-center justify-between p-4 bg-emerald-50/30 border border-emerald-100 rounded-xl hover:border-emerald-500 hover:shadow-md cursor-pointer transition-all"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100 group-hover:scale-110 transition-transform">
+                              <Users size={18} />
+                            </div>
+                            <div>
+                              <h4 className="text-[12px] font-black text-slate-700 uppercase leading-tight">{proj.title || 'Sem Título'}</h4>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-[8px] font-black uppercase text-emerald-600 bg-emerald-100/50 px-2 py-0.5 rounded-md">Área Coletiva</span>
+                                <p className="text-[9px] font-bold text-slate-400">Dono: {proj.ownerId === user.uid ? 'Você' : (proj.ownerName || 'Equipe')}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-[8px] font-black text-emerald-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Abrir para Editar →</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 mb-4 mt-4">
+                  <HardDrive size={16} className="text-slate-400" />
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Cache Local (Neste Navegador)</h4>
                 </div>
 
                 {savedProjects.length === 0 ? (
-                  <div className="flex-1 flex flex-col items-center justify-center opacity-40">
-                    <HardDrive size={48} className="text-slate-300 mb-4" />
-                    <p className="text-sm font-bold text-slate-400">Nenhum projeto salvo localmente.</p>
+                  <div className="flex flex-col items-center justify-center opacity-40 py-8">
+                    <HardDrive size={32} className="text-slate-300 mb-2" />
+                    <p className="text-[10px] font-bold text-slate-400">Nenhum projeto no cache local.</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 gap-3">
@@ -334,24 +491,25 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                           <div>
                             <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight group-hover:text-[#0079C2]">{proj.title}</h4>
                             <div className="flex items-center gap-3 mt-1">
+                              <span>{proj.format === 'REPORT' ? 'A4 Vertical' : 'Slide 16:9'}</span>
+                              <span className="w-1 h-1 rounded-full bg-slate-200" />
                               <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
-                                <Clock size={10} /> {new Date(proj.updatedAt).toLocaleDateString('pt-BR')} às {new Date(proj.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                              <span className="text-[9px] font-bold text-slate-400 border-l border-slate-300 pl-3">
-                                {proj.pageCount} Páginas
+                                <Clock size={10} /> 
+                                {proj.updatedAt?.seconds 
+                                  ? new Date(proj.updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
+                                  : proj.updatedAt 
+                                    ? new Date(proj.updatedAt).toLocaleDateString('pt-BR')
+                                    : 'Recente'
+                                }
                               </span>
                             </div>
                           </div>
                         </div>
                         
                         <div className="flex items-center gap-2">
-                          <div className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[8px] font-black uppercase tracking-widest border border-emerald-200">
-                            Salvo no Browser
-                          </div>
                           <button 
-                            onClick={(e) => handleDeleteProject(e, proj.id)}
+                            onClick={(e) => handleDeleteProject(e, proj.id, 'LOCAL')}
                             className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
-                            title="Excluir do navegador"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -362,6 +520,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                 )}
               </div>
             )}
+
+            {activeTab === 'ADMIN' && (
+              <GestaoAcessos />
+            )}
           </div>
         </div>
       </div>
@@ -369,6 +531,8 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
       <div className="absolute bottom-6 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
         MAG Seguros • Núcleo People Analytics © {new Date().getFullYear()}
       </div>
+
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
 };

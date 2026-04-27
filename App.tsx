@@ -11,7 +11,11 @@ import { AppHeader } from './components/layout/AppHeader';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { useLocalStorageProjects } from './hooks/useLocalStorageProjects';
 import { parseShareUrl, clearShareUrl } from './utils/share';
-import { Plus, AlertTriangle, Save, Trash2, X } from 'lucide-react';
+import { Plus, AlertTriangle, Save, Trash2, X, LogIn, Users, User, Share2 } from 'lucide-react';
+import { useAuth } from './context/AuthContext';
+import { useFirestoreProjects } from './hooks/useFirestoreProjects';
+import { LoginModal } from './components/auth/LoginModal';
+import { auth } from './lib/firebase';
 
 const App: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -48,6 +52,11 @@ const App: React.FC = () => {
   const [clipboardBlocks, setClipboardBlocks] = useState<Block[]>([]);
   const [showSafeMargins, setShowSafeMargins] = useState(false);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  const { user } = useAuth();
+  const { saveProject, getProject } = useFirestoreProjects();
   
   const pageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const mainContainerRef = useRef<HTMLDivElement>(null);
@@ -106,7 +115,8 @@ const App: React.FC = () => {
     setReportData(prev => ({ ...prev, cover: { ...prev.cover!, ...updates } }));
   }, [setReportData, isReadOnly]);
 
-  const handleSaveLocal = useCallback(() => {
+  const handleSaveLocal = useCallback(async () => {
+    // Salvamento Local (Cache)
     const newId = saveLocalProject(reportData);
     if (newId && reportData !== undefined) {
       if (!(reportData as any)._localId) {
@@ -114,7 +124,46 @@ const App: React.FC = () => {
       }
       lastSavedDataJson.current = JSON.stringify({ ...reportData, _localId: newId });
     }
-  }, [reportData, saveLocalProject, setReportData]);
+
+    // Salvamento na Nuvem (Firebase) se estiver logado
+    if (user) {
+      setIsSaving(true);
+      const isShared = !!(reportData as any).isShared;
+      const firestoreId = await saveProject(reportData, user.uid, isShared);
+      if (firestoreId) {
+        setReportData(prev => ({ ...prev, _firestoreId: firestoreId }));
+      }
+      setIsSaving(false);
+    }
+  }, [reportData, saveLocalProject, setReportData, user, saveProject]);
+
+  const handleToggleWorkspace = useCallback(async () => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+
+    const nextShared = !(reportData as any).isShared;
+    setIsSaving(true);
+    
+    // Atualiza estado local imediatamente para feedback visual
+    setReportData(prev => ({ ...prev, isShared: nextShared }));
+    
+    // Salva no Firebase com a nova flag
+    const firestoreId = await saveProject({ ...reportData, isShared: nextShared }, user.uid, nextShared);
+    
+    if (firestoreId) {
+      setReportData(prev => ({ ...prev, _firestoreId: firestoreId, isShared: nextShared }));
+      
+      // Se acabou de tornar público, podemos também copiar o link (opcional, mas útil)
+      if (nextShared) {
+        const shareUrl = `${window.location.origin}${window.location.pathname}?p=${firestoreId}`;
+        await navigator.clipboard.writeText(shareUrl);
+        // Feedback sutil seria bom aqui, mas vamos manter o foco na persistência
+      }
+    }
+    setIsSaving(false);
+  }, [user, reportData, saveProject, setReportData]);
 
   const updatePresentationZoom = useCallback(() => {
     if (!isPresentationMode) return;
@@ -191,21 +240,42 @@ const App: React.FC = () => {
   // --- Effects ---
 
   useEffect(() => {
-    const { data: sharedData, isReadOnly: readOnlyMode } = parseShareUrl();
-    if (sharedData) {
-      setReportData(sharedData);
-      delete (sharedData as any)._localId;
-      lastSavedDataJson.current = JSON.stringify(sharedData);
-      setShowWelcome(false);
+    const loadFromUrl = async () => {
+      // 1. Verificar se existe ID de projeto no Firestore (?p=ID)
+      const params = new URLSearchParams(window.location.search);
+      const projectId = params.get('p');
       
-      if (readOnlyMode) {
-        setIsReadOnly(true);
-        setIsSidebarOpen(true);
-      } else {
-        setIsSidebarOpen(false); 
+      if (projectId) {
+        const cloudData = await getProject(projectId);
+        if (cloudData) {
+          setReportData(cloudData);
+          lastSavedDataJson.current = JSON.stringify(cloudData);
+          setShowWelcome(false);
+          setIsReadOnly(true); // Geralmente links compartilhados são somente leitura inicialmente
+          setIsSidebarOpen(true);
+          return;
+        }
       }
-    }
-  }, [setReportData]);
+
+      // 2. Fallback para o modo antigo de JSON na URL
+      const { data: sharedData, isReadOnly: readOnlyMode } = parseShareUrl();
+      if (sharedData) {
+        setReportData(sharedData);
+        delete (sharedData as any)._localId;
+        lastSavedDataJson.current = JSON.stringify(sharedData);
+        setShowWelcome(false);
+        
+        if (readOnlyMode) {
+          setIsReadOnly(true);
+          setIsSidebarOpen(true);
+        } else {
+          setIsSidebarOpen(false); 
+        }
+      }
+    };
+
+    loadFromUrl();
+  }, [setReportData, getProject]);
 
   useEffect(() => {
     const container = mainContainerRef.current;
@@ -578,6 +648,10 @@ const App: React.FC = () => {
             showSafeMargins={showSafeMargins}
             onToggleSafeMargins={() => setShowSafeMargins(!showSafeMargins)}
             isReadOnly={isReadOnly}
+            onShare={handleToggleWorkspace}
+            isShared={!!(reportData as any).isShared}
+            user={user}
+            onLogout={() => auth.signOut()}
           />
         )}
 
@@ -722,6 +796,15 @@ const App: React.FC = () => {
           />
         )}
       </main>
+
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      
+      {isSaving && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#006098] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in slide-in-from-bottom-4 z-[300]">
+          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <span className="text-[10px] font-black uppercase tracking-widest">Salvando na Nuvem...</span>
+        </div>
+      )}
     </div>
   );
 };
