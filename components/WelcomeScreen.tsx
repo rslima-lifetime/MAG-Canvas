@@ -95,10 +95,16 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
         deleteLocalProject(id);
         setSavedProjects(listProjects());
       } else {
-        await deleteProject(id);
-        if (user) {
-          const projs = await listUserProjects(user.uid);
-          setCloudProjects(projs);
+        const success = await deleteProject(id);
+        if (success) {
+          if (user) {
+            const projs = await listUserProjects(user.uid);
+            setCloudProjects(projs);
+            const sharedProjs = await listSharedProjects();
+            setSharedProjects(sharedProjs);
+          }
+        } else {
+          alert("Não foi possível excluir o projeto da nuvem. Verifique sua conexão ou se você tem permissão.");
         }
       }
     }
