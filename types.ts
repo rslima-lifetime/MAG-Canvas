@@ -190,7 +190,7 @@ export interface ReportData {
   subtitle: string;
   layoutFormat: 'REPORT' | 'PRESENTATION';
   designSystem: DesignSystem;
-  cover: CoverPage;
+  cover?: CoverPage;
   pages: Page[];
   isShared?: boolean;
   _firestoreId?: string;
