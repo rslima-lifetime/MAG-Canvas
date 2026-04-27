@@ -95,16 +95,25 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
         deleteLocalProject(id);
         setSavedProjects(listProjects());
       } else {
+        // Optimistic UI: Remove da tela imediatamente
+        setCloudProjects(prev => prev.filter(p => p.id !== id));
+        setSharedProjects(prev => prev.filter(p => p.id !== id));
+        
         const success = await deleteProject(id);
+        
         if (success) {
+          // Atualiza do banco de dados para garantir consistência em background
           if (user) {
-            const projs = await listUserProjects(user.uid);
-            setCloudProjects(projs);
-            const sharedProjs = await listSharedProjects();
-            setSharedProjects(sharedProjs);
+            listUserProjects(user.uid).then(setCloudProjects);
+            listSharedProjects().then(setSharedProjects);
           }
         } else {
+          // Se falhou, avisa e recarrega os projetos reais
           alert("Não foi possível excluir o projeto da nuvem. Verifique sua conexão ou se você tem permissão.");
+          if (user) {
+            listUserProjects(user.uid).then(setCloudProjects);
+            listSharedProjects().then(setSharedProjects);
+          }
         }
       }
     }
