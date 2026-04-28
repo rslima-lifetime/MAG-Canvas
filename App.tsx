@@ -579,23 +579,21 @@ const App: React.FC = () => {
     link.click();
   }, [reportData]);
 
-  const importBackup = useCallback((file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const importedData = JSON.parse(e.target?.result as string);
-        if (importedData.pages) {
-          setReportData(importedData);
-          lastSavedDataJson.current = JSON.stringify(importedData);
-          setShowWelcome(false); 
-          setIsReadOnly(false);
-          clearShareUrl();
-        }
-      } catch (e) {
-        alert("Erro ao importar arquivo.");
+  const importBackup = useCallback((jsonStr: string) => {
+    try {
+      const importedData = JSON.parse(jsonStr);
+      if (importedData.pages) {
+        setReportData(importedData);
+        lastSavedDataJson.current = JSON.stringify(importedData);
+        setShowWelcome(false); 
+        setIsReadOnly(false);
+        clearShareUrl();
+      } else {
+        alert("Estrutura de JSON inválida. O campo 'pages' é obrigatório.");
       }
-    };
-    reader.readAsText(file);
+    } catch (e) {
+      alert("Erro ao processar o JSON. Verifique se o código está correto.");
+    }
   }, [setReportData]);
 
   const handleAddBlockFromSidebar = (pageIdx: number, type: BlockType, withPlaceholders: boolean = true) => {

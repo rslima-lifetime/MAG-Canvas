@@ -1,6 +1,7 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { PageJsonEditorModal } from './PageJsonEditorModal';
+import { ImportJsonModal } from './ImportJsonModal';
 import { 
   ChevronDown, ChevronRight, FileText, Plus, Layers, 
   Eye, LayoutPanelTop, Trash2, AlertTriangle,
@@ -33,7 +34,7 @@ interface SidebarFormProps {
   canRedo: boolean;
   onTogglePreview: () => void;
   onExportBackup: () => void;
-  onImportBackup: (file: File) => void;
+  onImportBackup: (jsonStr: string) => void;
   onSaveLocal: () => void;
   onHome: () => void;
   overflowingPages?: number[];
@@ -56,6 +57,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
   const [viewLinkStatus, setViewLinkStatus] = useState<'IDLE' | 'COPIED'>('IDLE');
   const [linkSize, setLinkSize] = useState(0);
   const [pageJsonModal, setPageJsonModal] = useState<{ open: boolean; draft: string; error: string | null }>({ open: false, draft: '', error: null });
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   
   const [lastSaveTime, setLastSaveTime] = useState<Date | null>(null);
   const [timeDisplay, setTimeDisplay] = useState<string>('');
@@ -422,7 +424,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
           </summary>
           <div className="pt-3 flex gap-2">
             <button 
-              onClick={() => fileInputRef.current?.click()} 
+              onClick={() => setIsImportModalOpen(true)} 
               className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-lg flex items-center justify-center border border-slate-200 transition-all text-[9px] font-bold uppercase gap-1" 
               title="Restaurar Backup (JSON)"
             >
@@ -435,9 +437,14 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
             >
               <Send size={12} /> Exportar JSON
             </button>
-            <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={(e) => { const file = e.target.files?.[0]; if (file) onImportBackup(file); e.target.value = ''; }} />
           </div>
         </details>
+
+        <ImportJsonModal 
+          open={isImportModalOpen} 
+          onClose={() => setIsImportModalOpen(false)} 
+          onImport={onImportBackup} 
+        />
       </div>
     </div>
   );

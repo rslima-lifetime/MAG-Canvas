@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   FileText, Presentation, LayoutPanelTop, Sparkles, 
@@ -16,7 +15,7 @@ import { GestaoAcessos } from './admin/GestaoAcessos';
 
 interface WelcomeScreenProps {
   onStart: (data: Partial<ReportData>) => void;
-  onImport: (file: File) => void;
+  onImport: (jsonStr: string) => void;
 }
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport }) => {
@@ -25,11 +24,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   const [format, setFormat] = useState<DocumentFormat>('REPORT');
   const [design, setDesign] = useState<DesignSystem>('STANDARD');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [pastedJson, setPastedJson] = useState('');
+  const [importError, setImportError] = useState<string | null>(null);
   
   const { listProjects, loadLocalProject, deleteLocalProject } = useLocalStorageProjects();
   const { listUserProjects, listSharedProjects, deleteProject, toggleShareProject, saveProject } = useFirestoreProjects();
   const { user } = useAuth();
-  
+
   const [savedProjects, setSavedProjects] = useState<SavedProjectMeta[]>([]);
   const [cloudProjects, setCloudProjects] = useState<any[]>([]);
   const [sharedProjects, setSharedProjects] = useState<any[]>([]);
@@ -249,20 +251,19 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             
             <div className="pt-6 border-t border-white/10">
               <button 
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => { setIsImportModalOpen(true); setImportError(null); setPastedJson(''); }}
                   className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-[#00A7E7] hover:border-[#00A7E7] hover:shadow-lg transition-all group text-left"
               >
                   <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-[#00A7E7] transition-colors text-white">
-                      <Upload size={16} />
+                      <FileJson size={16} />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-black uppercase tracking-wider text-white group-hover:text-white transition-colors">
                         Restaurar Backup
                     </span>
-                    <span className="text-[9px] text-blue-200/60 group-hover:text-white/80 transition-colors">Importar arquivo .json</span>
+                    <span className="text-[9px] text-blue-200/60 group-hover:text-white/80 transition-colors">Colar código JSON</span>
                   </div>
               </button>
-              <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleFileChange} />
             </div>
           </div>
         </div>
@@ -711,6 +712,74 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
 
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
       
+      {isImportModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full h-[70vh] p-8 shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200">
+            <div className="flex items-center justify-between mb-4 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#0079C2] text-white flex items-center justify-center">
+                  <FileJson size={20} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-[#006098] uppercase tracking-tight">Restaurar Projeto (JSON)</h3>
+                  <p className="text-xs text-slate-400 font-medium uppercase tracking-widest">Cole o código completo do seu projeto</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsImportModalOpen(false)} 
+                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 min-h-0 relative mb-4">
+              <textarea
+                value={pastedJson}
+                onChange={(e) => { setPastedJson(e.target.value); setImportError(null); }}
+                placeholder='{"title": "Novo Projeto", "pages": [...] }'
+                spellCheck={false}
+                className="w-full h-full p-4 font-mono text-xs leading-relaxed text-slate-700 bg-slate-50 rounded-2xl resize-none outline-none border border-slate-200 focus:border-[#0079C2] focus:ring-2 focus:ring-[#0079C2]/10 transition-all"
+              />
+              {importError && (
+                <div className="absolute bottom-0 left-0 right-0 px-4 py-2.5 bg-rose-50 border-t border-rose-200 text-xs font-bold text-rose-600 flex items-center gap-2 rounded-b-2xl">
+                  <AlertCircle size={14} />
+                  {importError}
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-3 shrink-0 justify-end">
+              <button 
+                onClick={() => setIsImportModalOpen(false)}
+                className="py-3 px-6 rounded-xl text-xs font-black text-slate-500 bg-slate-100 hover:bg-slate-200 uppercase tracking-widest transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => {
+                  try {
+                    const parsed = JSON.parse(pastedJson);
+                    if (!parsed.pages) {
+                      setImportError("O JSON precisa conter a propriedade 'pages'.");
+                      return;
+                    }
+                    onImport(pastedJson);
+                    setIsImportModalOpen(false);
+                  } catch (err: any) {
+                    setImportError(err.message || "JSON inválido. Verifique a sintaxe.");
+                  }
+                }}
+                disabled={!pastedJson.trim()}
+                className={`py-3 px-8 rounded-xl text-xs font-black text-white uppercase tracking-widest shadow-lg transition-all ${pastedJson.trim() ? 'bg-[#0079C2] hover:bg-[#006098] hover:shadow-xl active:scale-95 cursor-pointer' : 'bg-slate-300 cursor-not-allowed'}`}
+              >
+                Importar Projeto
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {projectToDelete && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl animate-in zoom-in-95 duration-200">
