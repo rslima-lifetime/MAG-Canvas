@@ -69,7 +69,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   }, [listProjects, user, listUserProjects, listSharedProjects]);
 
   const handleStart = () => {
-    // Define um tÃ­tulo padrÃ£o se o usuÃ¡rio nÃ£o digitou nada
+    // Define um título padrão se o usuário não digitou nada
     const projectTitle = title.trim() || 'Novo Projeto de People Analytics';
 
     onStart({
@@ -88,7 +88,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   };
 
   const handleUseTemplate = (template: TemplateMeta) => {
-    // Clona o objeto para evitar referÃªncia direta
+    // Clona o objeto para evitar referência direta
     const templateData = JSON.parse(JSON.stringify(template.data));
     onStart(templateData);
   };
@@ -125,14 +125,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
       const success = await deleteProject(id);
       
       if (success) {
-        // Atualiza do banco de dados para garantir consistÃªncia em background
+        // Atualiza do banco de dados para garantir consistência em background
         if (user) {
           listUserProjects(user.uid).then(setCloudProjects);
           listSharedProjects().then(setSharedProjects);
         }
       } else {
         // Se falhou, avisa e recarrega os projetos reais
-        alert("NÃ£o foi possÃ­vel excluir o projeto da nuvem. Verifique sua conexÃ£o ou se vocÃª tem permissÃ£o.");
+        alert("Não foi possível excluir o projeto da nuvem. Verifique sua conexão ou se você tem permissão.");
         if (user) {
           listUserProjects(user.uid).then(setCloudProjects);
           listSharedProjects().then(setSharedProjects);
@@ -149,14 +149,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     setCloudProjects(prev => prev.map(p => p.id === id ? { ...p, isShared: newStatus } : p));
     
     if (!newStatus) {
-      // Se parou de compartilhar, removemos da lista de compartilhados caso estivesse lÃ¡ tambÃ©m
+      // Se parou de compartilhar, removemos da lista de compartilhados caso estivesse lá também
       setSharedProjects(prev => prev.filter(p => p.id !== id));
     }
 
     const success = await toggleShareProject(id, newStatus);
     
     if (!success) {
-      alert("NÃ£o foi possÃ­vel alterar o compartilhamento na nuvem. Verifique sua conexÃ£o.");
+      alert("Não foi possível alterar o compartilhamento na nuvem. Verifique sua conexão.");
       // Rollback se falhar
       if (user) {
         listUserProjects(user.uid).then(setCloudProjects);
@@ -191,7 +191,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             </div>
             <h1 className="text-3xl font-black uppercase tracking-tight leading-none mb-4">MAG<br/><span className="text-[#00A7E7]">Canvas</span></h1>
             <p className="text-sm font-medium text-blue-100/80 leading-relaxed">
-              Crie relatÃ³rios estratÃ©gicos e apresentaÃ§Ãµes de alto impacto seguindo a identidade visual da MAG Seguros.
+              Crie relatórios estratégicos e apresentações de alto impacto seguindo a identidade visual da MAG Seguros.
             </p>
           </div>
 
@@ -199,11 +199,11 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             <div className="space-y-4">
               <div className="flex items-center gap-3 opacity-60 select-none">
                 <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center"><LayoutPanelTop size={14} /></div>
-                <span className="text-xs font-bold uppercase tracking-wider">PadronizaÃ§Ã£o Visual</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Padronização Visual</span>
               </div>
               <div className="flex items-center gap-3 opacity-60 select-none">
                 <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center"><FileText size={14} /></div>
-                <span className="text-xs font-bold uppercase tracking-wider">ExportaÃ§Ã£o PDF/A4</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Exportação PDF/A4</span>
               </div>
             </div>
             
@@ -227,7 +227,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
           </div>
         </div>
 
-        {/* Lado Direito: Ãrea de Trabalho */}
+        {/* Lado Direito: Área de Trabalho */}
         <div className="flex-1 flex flex-col bg-white">
           {/* Header com Abas */}
           <div className="px-8 pt-8 pb-0 flex items-end border-b border-slate-100 gap-4">
@@ -239,13 +239,6 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                 <PlusCircle size={14} /> Novo em Branco
               </button>
               <button 
-                onClick={() => setActiveTab('TEMPLATES')}
-                className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'TEMPLATES' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
-              >
-                <LayoutTemplate size={14} /> Modelos Prontos
-
-              </button>
-              <button 
                 onClick={() => setActiveTab('SAVED')}
                 className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'SAVED' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
               >
@@ -254,12 +247,18 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                   {user ? uniqueCloudProjects.length : savedProjects.length}
                 </span>
               </button>
+              <button 
+                onClick={() => setActiveTab('TEMPLATES')}
+                className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'TEMPLATES' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
+              >
+                <LayoutTemplate size={14} /> Modelos Prontos
+              </button>
               {user && (
                 <button 
                   onClick={() => setActiveTab('ADMIN')}
                   className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'ADMIN' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
                 >
-                  <ShieldCheck size={14} /> AdministraÃ§Ã£o
+                  <ShieldCheck size={14} /> Administração
                 </button>
               )}
             </div>
@@ -271,7 +270,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                     {(user.displayName || user.email || '?')[0].toUpperCase()}
                   </div>
                   <div className="flex flex-col min-w-[80px]">
-                    <span className="text-[10px] font-black text-[#006098] uppercase leading-tight truncate max-w-[120px]">{user.displayName || 'UsuÃ¡rio'}</span>
+                    <span className="text-[10px] font-black text-[#006098] uppercase leading-tight truncate max-w-[120px]">{user.displayName || 'Usuário'}</span>
                     <button 
                       onClick={() => auth.signOut()} 
                       className="flex items-center gap-1 text-[8px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-600 transition-colors mt-0.5 group"
@@ -300,7 +299,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                   </div>
                   <h2 className="text-xl font-black text-[#006098] uppercase tracking-tight mb-2">Acesso Restrito</h2>
                   <p className="text-sm text-slate-500 mb-8 max-w-sm leading-relaxed">
-                    VocÃª precisa estar conectado Ã  sua conta corporativa para criar e salvar novos projetos com seguranÃ§a na nuvem.
+                    Você precisa estar conectado à sua conta corporativa para criar e salvar novos projetos com segurança na nuvem.
                   </p>
                   <button 
                     onClick={() => setIsLoginModalOpen(true)} 
@@ -317,7 +316,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                       type="text" 
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Ex: Report Mensal (Deixe vazio para automÃ¡tico)"
+                      placeholder="Ex: Report Mensal (Deixe vazio para automático)"
                       className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-[#006098] outline-none focus:ring-2 focus:ring-[#0079C2]/20 focus:border-[#0079C2] transition-all placeholder:text-slate-300 placeholder:font-normal"
                       autoFocus
                     />
@@ -338,7 +337,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                           <FileText size={18} />
                           <div className="flex flex-col items-start">
                             <span className="text-[10px] font-black uppercase">A4 Vertical</span>
-                            <span className="text-[8px] font-medium opacity-60">Para impressÃ£o/leitura</span>
+                            <span className="text-[8px] font-medium opacity-60">Para impressão/leitura</span>
                           </div>
                         </button>
                         <button 
@@ -352,7 +351,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                           <Presentation size={18} />
                           <div className="flex flex-col items-start">
                             <span className="text-[10px] font-black uppercase">Slide 16:9</span>
-                            <span className="text-[8px] font-medium opacity-60">Para apresentaÃ§Ãµes</span>
+                            <span className="text-[8px] font-medium opacity-60">Para apresentações</span>
                           </div>
                         </button>
                       </div>
@@ -371,7 +370,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                         >
                           <LayoutPanelTop size={18} />
                           <div className="flex flex-col items-start">
-                            <span className="text-[10px] font-black uppercase">PadrÃ£o</span>
+                            <span className="text-[10px] font-black uppercase">Padrão</span>
                             <span className="text-[8px] font-medium opacity-60">Clean e Corporativo</span>
                           </div>
                         </button>
@@ -414,7 +413,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                   </div>
                   <h2 className="text-xl font-black text-[#006098] uppercase tracking-tight mb-2">Acesso Restrito</h2>
                   <p className="text-sm text-slate-500 mb-8 max-w-sm leading-relaxed">
-                    VocÃª precisa estar conectado Ã  sua conta corporativa para utilizar os modelos prontos da equipe.
+                    Você precisa estar conectado à sua conta corporativa para utilizar os modelos prontos da equipe.
                   </p>
                   <button 
                     onClick={() => setIsLoginModalOpen(true)} 
@@ -430,7 +429,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                     <div>
                       <h4 className="text-[11px] font-black uppercase text-[#006098] mb-1">Aceleradores de Produtividade</h4>
                       <p className="text-[10px] text-blue-800/70 leading-relaxed">
-                        Escolha um modelo prÃ©-configurado para iniciar seu projeto com estrutura profissional. Todos os campos sÃ£o editÃ¡veis apÃ³s a criaÃ§Ã£o.
+                        Escolha um modelo pré-configurado para iniciar seu projeto com estrutura profissional. Todos os campos são editáveis após a criação.
                       </p>
                     </div>
                   </div>
@@ -474,14 +473,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                     <div className="flex flex-col gap-1">
                       <h4 className="text-[11px] font-black uppercase text-amber-700">Modo Offline (Browser)</h4>
                       <p className="text-[10px] text-amber-800/80 leading-relaxed">
-                        VocÃª nÃ£o estÃ¡ logado. Os projetos abaixo estÃ£o salvos apenas neste computador. <br/>
+                        Você não está logado. Os projetos abaixo estão salvos apenas neste computador. <br/>
                         <button onClick={() => setIsLoginModalOpen(true)} className="font-bold underline">Entre com sua conta</button> para salvar na nuvem e compartilhar com a equipe.
                       </p>
                     </div>
                   </div>
                 )}
 
-                {/* SeÃ§Ã£o Nuvem - Projetos Unificados */}
+                {/* Seção Nuvem - Projetos Unificados */}
                 {user && (
                   <div className="mb-8">
                     <div className="flex items-center gap-2 mb-4">
@@ -510,7 +509,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                 badgeText = "SEU PROJETO";
                               } else if (isOwner && isShared) {
                                 badgeColor = "bg-blue-50 text-[#0079C2] border-blue-200";
-                                badgeText = "COMPARTILHADO (POR VOCÃŠ)";
+                                badgeText = "COMPARTILHADO (POR VOCÊ)";
                               } else if (!isOwner && isShared) {
                                 badgeColor = "bg-emerald-50 text-emerald-600 border-emerald-200";
                                 badgeText = `DA EQUIPE (Dono: ${proj.ownerName || 'Outro'})`;
@@ -527,7 +526,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                       {isOwner ? <Cloud size={20} /> : <Users size={20} />}
                                     </div>
                                     <div>
-                                      <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{proj.title || 'Sem TÃ­tulo'}</h4>
+                                      <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{proj.title || 'Sem Título'}</h4>
                                       <div className="flex items-center gap-3 mt-1">
                                         <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded border ${badgeColor}`}>
                                           {badgeText}
@@ -565,7 +564,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                       </button>
                                     </div>
                                   ) : (
-                                    <div className="text-[8px] font-black text-[#0079C2] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="text-[8px] font-black text-[#006098] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                                       Abrir para Editar →
                                     </div>
                                   )}
@@ -579,7 +578,6 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                   </div>
                 )}
 
-                {/* Apenas exibe o cache local se NÃƒO estiver logado, como fallback */}
                 {!user && (
                   <>
                     <div className="flex items-center gap-2 mb-4 mt-4">
@@ -647,12 +645,11 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
       </div>
       
       <div className="absolute bottom-6 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-        MAG Seguros â€¢ NÃºcleo People Analytics Â© {new Date().getFullYear()}
+        MAG Seguros • Núcleo People Analytics © {new Date().getFullYear()}
       </div>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
       
-      {/* Modal Customizado de ConfirmaÃ§Ã£o de ExclusÃ£o */}
       {projectToDelete && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl animate-in zoom-in-95 duration-200">
@@ -660,7 +657,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
               <AlertCircle size={32} />
             </div>
             <h3 className="text-xl font-black text-[#006098] text-center uppercase tracking-tight mb-3">Excluir Projeto?</h3>
-            <p className="text-sm text-slate-500 text-center mb-8">Esta aÃ§Ã£o Ã© irreversÃ­vel e o arquivo serÃ¡ apagado permanentemente.</p>
+            <p className="text-sm text-slate-500 text-center mb-8">Esta ação é irreversível e o arquivo será apagado permanentemente.</p>
             <div className="flex gap-3">
               <button 
                 onClick={() => setProjectToDelete(null)}
@@ -681,4 +678,3 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     </div>
   );
 };
-

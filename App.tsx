@@ -244,6 +244,7 @@ const App: React.FC = () => {
       // 1. Verificar se existe ID de projeto no Firestore (?p=ID)
       const params = new URLSearchParams(window.location.search);
       const projectId = params.get('p');
+      const viewMode = params.get('view');
       
       if (projectId) {
         const cloudData = await getProject(projectId);
@@ -252,7 +253,14 @@ const App: React.FC = () => {
           lastSavedDataJson.current = JSON.stringify(cloudData);
           setShowWelcome(false);
           setIsReadOnly(true); // Geralmente links compartilhados são somente leitura inicialmente
-          setIsSidebarOpen(true);
+          
+          if (viewMode === 'presentation') {
+            setIsPresentationMode(true);
+            setIsSidebarOpen(false);
+            setActivePageIndex('cover');
+          } else {
+            setIsSidebarOpen(true);
+          }
           return;
         }
       }
@@ -685,13 +693,18 @@ const App: React.FC = () => {
                 onActiveBlockChange={(id) => handleBlockSelection(id, false, false, typeof activePageIndex === 'number' ? activePageIndex : 0)}
                 activePageIndex={activePageIndex} onActivePageChange={setActivePageIndex}
                 undo={undo} redo={redo} canUndo={canUndo} canRedo={canRedo}
-                onTogglePreview={() => setIsSidebarOpen(false)} 
+                onTogglePreview={() => setShowSafeMargins(!showSafeMargins)} 
                 onExportBackup={exportBackup} onImportBackup={importBackup} onSaveLocal={handleSaveLocal} onHome={handleGoHome}
                 overflowingPages={overflowingPages}
                 onAddPage={handleAddPage}
                 onDuplicatePage={handleDuplicatePage}
                 onMovePage={movePage}
                 onAddBlock={handleAddBlockFromSidebar}
+                onEnterPresentation={() => {
+                  setIsPresentationMode(true);
+                  setIsSidebarOpen(false);
+                  setActivePageIndex('cover');
+                }}
               />
             )}
           </div>
