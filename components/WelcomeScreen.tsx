@@ -207,12 +207,6 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onImport(file);
-    }
-  };
 
   return (
     <div className="fixed inset-0 bg-[#f1f5f9] flex items-center justify-center z-[100] p-6 font-sans">
