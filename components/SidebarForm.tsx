@@ -1,5 +1,6 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { PageJsonEditorModal } from './PageJsonEditorModal';
 import { 
   ChevronDown, ChevronRight, FileText, Plus, Layers, 
   Eye, LayoutPanelTop, Trash2, AlertTriangle,
@@ -8,6 +9,7 @@ import {
   MessageSquare, FileJson, Send
 } from 'lucide-react';
 import { ReportData, BlockType, BlockWidth, Page, CoverPage, DEFAULT_REPORT_DATA, Block, NarrativeBadge, DocumentFormat, DesignSystem } from '../types';
+
 import { SidebarHeader } from './sidebar/SidebarHeader';
 import { SidebarPageSettings } from './sidebar/SidebarPageSettings';
 import { SidebarToolbox } from './sidebar/SidebarToolbox';
@@ -341,88 +343,33 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
         </div>
       </div>
 
-      {/* MODAL: EDITOR JSON DE PÁGINA */}
-      {pageJsonModal.open && (
-        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-200 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl h-[85vh] flex flex-col border border-slate-200 animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#0079C2] text-white flex items-center justify-center">
-                  <FileJson size={16} />
-                </div>
-                <div>
-                  <h3 className="text-[13px] font-black text-[#006098] uppercase tracking-tight">Editor JSON da Página</h3>
-                  <p className="text-[9px] text-slate-400 font-medium uppercase tracking-widest">
-                    {typeof activePageIndex === 'number' ? `Página ${activePageIndex + 1}: ${data.pages[activePageIndex]?.title || 'Sem título'}` : ''}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setPageJsonModal({ open: false, draft: '', error: null })}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="flex-1 relative overflow-hidden">
-              <textarea
-                value={pageJsonModal.draft}
-                onChange={(e) => setPageJsonModal(prev => ({ ...prev, draft: e.target.value, error: null }))}
-                spellCheck={false}
-                className="w-full h-full p-6 font-mono text-[12px] leading-relaxed text-slate-700 bg-slate-50 resize-none outline-none border-0"
-                placeholder='{"id": "page-1", "title": "...", "blocks": [...]}'
-              />
-              {pageJsonModal.error && (
-                <div className="absolute bottom-0 left-0 right-0 px-6 py-3 bg-rose-50 border-t border-rose-200 text-[10px] font-bold text-rose-600 flex items-center gap-2">
-                  <AlertTriangle size={12} />
-                  {pageJsonModal.error}
-                </div>
-              )}
-            </div>
-
-            <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between shrink-0 gap-3">
-              <button
-                onClick={() => {
-                  if (typeof activePageIndex === 'number') {
-                    const page = data.pages[activePageIndex];
-                    setPageJsonModal(prev => ({ ...prev, draft: JSON.stringify(page, null, 2), error: null }));
-                  }
-                }}
-                className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all"
-              >
-                Resetar
-              </button>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setPageJsonModal({ open: false, draft: '', error: null })}
-                  className="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-500 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={() => {
-                    try {
-                      const parsed = JSON.parse(pageJsonModal.draft);
-                      if (!Array.isArray(parsed.blocks)) throw new Error('O campo "blocks" é obrigatório e deve ser um array.');
-                      if (typeof activePageIndex !== 'number') return;
-                      const newPages = [...data.pages];
-                      newPages[activePageIndex] = { ...newPages[activePageIndex], ...parsed };
-                      onChange({ ...data, pages: newPages });
-                      setPageJsonModal({ open: false, draft: '', error: null });
-                    } catch (err: any) {
-                      setPageJsonModal(prev => ({ ...prev, error: err.message || 'JSON inválido. Verifique a sintaxe.' }));
-                    }
-                  }}
-                  className="px-6 py-2.5 text-[10px] font-black uppercase tracking-widest bg-[#0079C2] text-white rounded-xl hover:bg-[#006098] transition-all shadow-md"
-                >
-                  Aplicar à Página
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <PageJsonEditorModal
+        open={pageJsonModal.open}
+        draft={pageJsonModal.draft}
+        error={pageJsonModal.error}
+        pageLabel={typeof activePageIndex === 'number' ? `Página ${activePageIndex + 1}: ${data.pages[activePageIndex]?.title || 'Sem título'}` : ''}
+        onDraftChange={(v) => setPageJsonModal(prev => ({ ...prev, draft: v, error: null }))}
+        onReset={() => {
+          if (typeof activePageIndex === 'number') {
+            const page = data.pages[activePageIndex];
+            setPageJsonModal(prev => ({ ...prev, draft: JSON.stringify(page, null, 2), error: null }));
+          }
+        }}
+        onClose={() => setPageJsonModal({ open: false, draft: '', error: null })}
+        onApply={() => {
+          try {
+            const parsed = JSON.parse(pageJsonModal.draft);
+            if (!Array.isArray(parsed.blocks)) throw new Error('O campo "blocks" é obrigatório e deve ser um array.');
+            if (typeof activePageIndex !== 'number') return;
+            const newPages = [...data.pages];
+            newPages[activePageIndex] = { ...newPages[activePageIndex], ...parsed };
+            onChange({ ...data, pages: newPages });
+            setPageJsonModal({ open: false, draft: '', error: null });
+          } catch (err: any) {
+            setPageJsonModal(prev => ({ ...prev, error: err.message || 'JSON inválido. Verifique a sintaxe.' }));
+          }
+        }}
+      />
 
       {/* RODAPÉ UTILITÁRIO */}
       <div className="p-4 border-t bg-white shrink-0 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.05)] z-20">
