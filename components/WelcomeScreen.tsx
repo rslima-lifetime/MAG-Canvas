@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   FileText, Presentation, LayoutPanelTop, Sparkles, 
   ArrowRight, Upload, Clock, HardDrive, Trash2, AlertCircle, FileJson, Save, LayoutTemplate, CheckCircle2,
-  LogIn, Cloud, Users, Share2, Shield, ShieldCheck, LogOut, Lock, PlusCircle
+  LogIn, Cloud, Users, Share2, Shield, ShieldCheck, LogOut, Lock, PlusCircle, X
 } from 'lucide-react';
 import { DocumentFormat, DesignSystem, ReportData, DEFAULT_REPORT_DATA } from '../types';
 import { useLocalStorageProjects, SavedProjectMeta } from '../hooks/useLocalStorageProjects';
@@ -707,7 +707,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
       </div>
       
       <div className="absolute bottom-6 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-        MAG Seguros • Núcleo People Analytics © {new Date().getFullYear()}
+        MAG Seguros | Núcleo People Analytics (c) {new Date().getFullYear()}
       </div>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
@@ -729,7 +729,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                 onClick={() => setIsImportModalOpen(false)} 
                 className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all"
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
 
