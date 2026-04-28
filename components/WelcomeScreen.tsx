@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   FileText, Presentation, LayoutPanelTop, Sparkles, 
   ArrowRight, Upload, Clock, HardDrive, Trash2, AlertCircle, FileJson, Save, LayoutTemplate, CheckCircle2,
-  LogIn, Cloud, Users, Share2, Shield, ShieldCheck, LogOut
+  LogIn, Cloud, Users, Share2, Shield, ShieldCheck, LogOut, Lock, PlusCircle
 } from 'lucide-react';
 import { DocumentFormat, DesignSystem, ReportData, DEFAULT_REPORT_DATA } from '../types';
 import { useLocalStorageProjects, SavedProjectMeta } from '../hooks/useLocalStorageProjects';
@@ -27,7 +27,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { listProjects, loadLocalProject, deleteLocalProject } = useLocalStorageProjects();
-  const { listUserProjects, listSharedProjects, deleteProject } = useFirestoreProjects();
+  const { listUserProjects, listSharedProjects, deleteProject, toggleShareProject } = useFirestoreProjects();
   const { user } = useAuth();
   
   const [savedProjects, setSavedProjects] = useState<SavedProjectMeta[]>([]);
@@ -35,27 +35,41 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   const [sharedProjects, setSharedProjects] = useState<any[]>([]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCloudLoading, setIsCloudLoading] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<{ id: string, type: 'LOCAL' | 'CLOUD' } | null>(null);
+
+  const uniqueCloudProjects = React.useMemo(() => {
+    const allProjects = [...cloudProjects, ...sharedProjects];
+    const uniqueProjects = Array.from(new Map(allProjects.map(p => [p.id, p])).values());
+    uniqueProjects.sort((a, b) => {
+      const timeA = a.updatedAt?.seconds || 0;
+      const timeB = b.updatedAt?.seconds || 0;
+      return timeB - timeA;
+    });
+    return uniqueProjects;
+  }, [cloudProjects, sharedProjects]);
 
   useEffect(() => {
-    if (activeTab === 'SAVED') {
-      setSavedProjects(listProjects());
-      
-      if (user) {
-        setIsCloudLoading(true);
-        Promise.all([
-          listUserProjects(user.uid),
-          listSharedProjects()
-        ]).then(([userProjs, sharedProjs]) => {
-          setCloudProjects(userProjs);
-          setSharedProjects(sharedProjs);
-          setIsCloudLoading(false);
-        });
-      }
+    // Carrega sempre para a contagem da badge
+    setSavedProjects(listProjects());
+    
+    if (user) {
+      setIsCloudLoading(true);
+      Promise.all([
+        listUserProjects(user.uid),
+        listSharedProjects()
+      ]).then(([userProjs, sharedProjs]) => {
+        setCloudProjects(userProjs);
+        setSharedProjects(sharedProjs);
+        setIsCloudLoading(false);
+      });
+    } else {
+      setCloudProjects([]);
+      setSharedProjects([]);
     }
-  }, [activeTab, listProjects, user, listUserProjects, listSharedProjects]);
+  }, [listProjects, user, listUserProjects, listSharedProjects]);
 
   const handleStart = () => {
-    // Define um título padrão se o usuário não digitou nada
+    // Define um tÃ­tulo padrÃ£o se o usuÃ¡rio nÃ£o digitou nada
     const projectTitle = title.trim() || 'Novo Projeto de People Analytics';
 
     onStart({
@@ -74,7 +88,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   };
 
   const handleUseTemplate = (template: TemplateMeta) => {
-    // Clona o objeto para evitar referência direta
+    // Clona o objeto para evitar referÃªncia direta
     const templateData = JSON.parse(JSON.stringify(template.data));
     onStart(templateData);
   };
@@ -88,33 +102,65 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     }
   };
 
-  const handleDeleteProject = async (e: React.MouseEvent, id: string, type: 'LOCAL' | 'CLOUD') => {
+  const handleDeleteProject = (e: React.MouseEvent, id: string, type: 'LOCAL' | 'CLOUD') => {
     e.stopPropagation();
-    if (window.confirm("Tem certeza? Esta ação não pode ser desfeita.")) {
-      if (type === 'LOCAL') {
-        deleteLocalProject(id);
-        setSavedProjects(listProjects());
-      } else {
-        // Optimistic UI: Remove da tela imediatamente
-        setCloudProjects(prev => prev.filter(p => p.id !== id));
-        setSharedProjects(prev => prev.filter(p => p.id !== id));
-        
-        const success = await deleteProject(id);
-        
-        if (success) {
-          // Atualiza do banco de dados para garantir consistência em background
-          if (user) {
-            listUserProjects(user.uid).then(setCloudProjects);
-            listSharedProjects().then(setSharedProjects);
-          }
-        } else {
-          // Se falhou, avisa e recarrega os projetos reais
-          alert("Não foi possível excluir o projeto da nuvem. Verifique sua conexão ou se você tem permissão.");
-          if (user) {
-            listUserProjects(user.uid).then(setCloudProjects);
-            listSharedProjects().then(setSharedProjects);
-          }
+    setProjectToDelete({ id, type });
+  };
+
+  const confirmDeleteProject = async () => {
+    if (!projectToDelete) return;
+    const { id, type } = projectToDelete;
+    
+    // Optimistic UI imediato
+    setProjectToDelete(null);
+
+    if (type === 'LOCAL') {
+      deleteLocalProject(id);
+      setSavedProjects(listProjects());
+    } else {
+      // Optimistic UI: Remove da tela imediatamente
+      setCloudProjects(prev => prev.filter(p => p.id !== id));
+      setSharedProjects(prev => prev.filter(p => p.id !== id));
+      
+      const success = await deleteProject(id);
+      
+      if (success) {
+        // Atualiza do banco de dados para garantir consistÃªncia em background
+        if (user) {
+          listUserProjects(user.uid).then(setCloudProjects);
+          listSharedProjects().then(setSharedProjects);
         }
+      } else {
+        // Se falhou, avisa e recarrega os projetos reais
+        alert("NÃ£o foi possÃ­vel excluir o projeto da nuvem. Verifique sua conexÃ£o ou se vocÃª tem permissÃ£o.");
+        if (user) {
+          listUserProjects(user.uid).then(setCloudProjects);
+          listSharedProjects().then(setSharedProjects);
+        }
+      }
+    }
+  };
+
+  const handleToggleShare = async (e: React.MouseEvent, id: string, currentStatus: boolean) => {
+    e.stopPropagation();
+    const newStatus = !currentStatus;
+    
+    // Optimistic UI imediato
+    setCloudProjects(prev => prev.map(p => p.id === id ? { ...p, isShared: newStatus } : p));
+    
+    if (!newStatus) {
+      // Se parou de compartilhar, removemos da lista de compartilhados caso estivesse lÃ¡ tambÃ©m
+      setSharedProjects(prev => prev.filter(p => p.id !== id));
+    }
+
+    const success = await toggleShareProject(id, newStatus);
+    
+    if (!success) {
+      alert("NÃ£o foi possÃ­vel alterar o compartilhamento na nuvem. Verifique sua conexÃ£o.");
+      // Rollback se falhar
+      if (user) {
+        listUserProjects(user.uid).then(setCloudProjects);
+        listSharedProjects().then(setSharedProjects);
       }
     }
   };
@@ -145,7 +191,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             </div>
             <h1 className="text-3xl font-black uppercase tracking-tight leading-none mb-4">MAG<br/><span className="text-[#00A7E7]">Canvas</span></h1>
             <p className="text-sm font-medium text-blue-100/80 leading-relaxed">
-              Crie relatórios estratégicos e apresentações de alto impacto seguindo a identidade visual da MAG Seguros.
+              Crie relatÃ³rios estratÃ©gicos e apresentaÃ§Ãµes de alto impacto seguindo a identidade visual da MAG Seguros.
             </p>
           </div>
 
@@ -153,11 +199,11 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             <div className="space-y-4">
               <div className="flex items-center gap-3 opacity-60 select-none">
                 <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center"><LayoutPanelTop size={14} /></div>
-                <span className="text-xs font-bold uppercase tracking-wider">Padronização Visual</span>
+                <span className="text-xs font-bold uppercase tracking-wider">PadronizaÃ§Ã£o Visual</span>
               </div>
               <div className="flex items-center gap-3 opacity-60 select-none">
                 <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center"><FileText size={14} /></div>
-                <span className="text-xs font-bold uppercase tracking-wider">Exportação PDF/A4</span>
+                <span className="text-xs font-bold uppercase tracking-wider">ExportaÃ§Ã£o PDF/A4</span>
               </div>
             </div>
             
@@ -181,31 +227,31 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
           </div>
         </div>
 
-        {/* Lado Direito: Área de Trabalho */}
+        {/* Lado Direito: Ãrea de Trabalho */}
         <div className="flex-1 flex flex-col bg-white">
           {/* Header com Abas */}
           <div className="px-8 pt-8 pb-0 flex items-end border-b border-slate-100 gap-4">
             <div className="flex gap-5 overflow-x-auto no-scrollbar pb-0.5 w-full">
               <button 
                 onClick={() => setActiveTab('NEW')}
-                className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all whitespace-nowrap ${activeTab === 'NEW' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
+                className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'NEW' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
               >
-                Novo em Branco
+                <PlusCircle size={14} /> Novo em Branco
               </button>
               <button 
                 onClick={() => setActiveTab('TEMPLATES')}
                 className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'TEMPLATES' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
               >
                 <LayoutTemplate size={14} /> Modelos Prontos
-                <span className="bg-emerald-100 text-emerald-600 border border-emerald-200 text-[8px] px-1.5 py-0.5 rounded-full ml-1">Novo</span>
+
               </button>
               <button 
                 onClick={() => setActiveTab('SAVED')}
                 className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'SAVED' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
               >
-                Projetos Salvos 
+                <HardDrive size={14} /> Projetos Salvos 
                 <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-full ml-1">
-                  {listProjects().length + (user ? cloudProjects.length + sharedProjects.length : 0)}
+                  {user ? uniqueCloudProjects.length : savedProjects.length}
                 </span>
               </button>
               {user && (
@@ -213,7 +259,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                   onClick={() => setActiveTab('ADMIN')}
                   className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'ADMIN' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
                 >
-                  <ShieldCheck size={14} /> Administração
+                  <ShieldCheck size={14} /> AdministraÃ§Ã£o
                 </button>
               )}
             </div>
@@ -225,7 +271,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                     {(user.displayName || user.email || '?')[0].toUpperCase()}
                   </div>
                   <div className="flex flex-col min-w-[80px]">
-                    <span className="text-[10px] font-black text-[#006098] uppercase leading-tight truncate max-w-[120px]">{user.displayName || 'Usuário'}</span>
+                    <span className="text-[10px] font-black text-[#006098] uppercase leading-tight truncate max-w-[120px]">{user.displayName || 'UsuÃ¡rio'}</span>
                     <button 
                       onClick={() => auth.signOut()} 
                       className="flex items-center gap-1 text-[8px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-600 transition-colors mt-0.5 group"
@@ -247,141 +293,177 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
 
           <div className="flex-1 p-8 overflow-y-auto">
             {activeTab === 'NEW' && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">1. Nome do Projeto</label>
-                  <input 
-                    type="text" 
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Ex: Report Mensal (Deixe vazio para automático)"
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-[#006098] outline-none focus:ring-2 focus:ring-[#0079C2]/20 focus:border-[#0079C2] transition-all placeholder:text-slate-300 placeholder:font-normal"
-                    autoFocus
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">2. Formato</label>
-                    <div className="grid grid-cols-1 gap-2">
-                      <button 
-                        onClick={() => setFormat('REPORT')}
-                        className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
-                          format === 'REPORT' 
-                          ? 'border-[#0079C2] bg-blue-50 text-[#006098]' 
-                          : 'border-slate-100 hover:border-slate-200 text-slate-400'
-                        }`}
-                      >
-                        <FileText size={18} />
-                        <div className="flex flex-col items-start">
-                          <span className="text-[10px] font-black uppercase">A4 Vertical</span>
-                          <span className="text-[8px] font-medium opacity-60">Para impressão/leitura</span>
-                        </div>
-                      </button>
-                      <button 
-                        onClick={() => setFormat('PRESENTATION')}
-                        className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
-                          format === 'PRESENTATION' 
-                          ? 'border-[#0079C2] bg-blue-50 text-[#006098]' 
-                          : 'border-slate-100 hover:border-slate-200 text-slate-400'
-                        }`}
-                      >
-                        <Presentation size={18} />
-                        <div className="flex flex-col items-start">
-                          <span className="text-[10px] font-black uppercase">Slide 16:9</span>
-                          <span className="text-[8px] font-medium opacity-60">Para apresentações</span>
-                        </div>
-                      </button>
-                    </div>
+              !user ? (
+                <div className="flex flex-col items-center justify-center h-full text-center p-12 animate-in fade-in zoom-in-95">
+                  <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                    <Lock size={32} className="text-slate-400" />
                   </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">3. Estilo Visual</label>
-                    <div className="grid grid-cols-1 gap-2">
-                      <button 
-                        onClick={() => setDesign('STANDARD')}
-                        className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
-                          design === 'STANDARD' 
-                          ? 'border-[#0079C2] bg-blue-50 text-[#006098]' 
-                          : 'border-slate-100 hover:border-slate-200 text-slate-400'
-                        }`}
-                      >
-                        <LayoutPanelTop size={18} />
-                        <div className="flex flex-col items-start">
-                          <span className="text-[10px] font-black uppercase">Padrão</span>
-                          <span className="text-[8px] font-medium opacity-60">Clean e Corporativo</span>
-                        </div>
-                      </button>
-                      <button 
-                        onClick={() => setDesign('FUTURE')}
-                        className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
-                          design === 'FUTURE' 
-                          ? 'border-[#006098] bg-[#006098] text-white shadow-md' 
-                          : 'border-slate-100 hover:border-slate-200 text-slate-400'
-                        }`}
-                      >
-                        <Sparkles size={18} />
-                        <div className="flex flex-col items-start">
-                          <span className="text-[10px] font-black uppercase">Futuro MAG</span>
-                          <span className="text-[8px] font-medium opacity-80">Conceitual e Dark</span>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-100">
+                  <h2 className="text-xl font-black text-[#006098] uppercase tracking-tight mb-2">Acesso Restrito</h2>
+                  <p className="text-sm text-slate-500 mb-8 max-w-sm leading-relaxed">
+                    VocÃª precisa estar conectado Ã  sua conta corporativa para criar e salvar novos projetos com seguranÃ§a na nuvem.
+                  </p>
                   <button 
-                    onClick={handleStart}
-                    className="w-full py-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg bg-[#0079C2] text-white hover:bg-[#006098] hover:shadow-xl transform hover:-translate-y-0.5 active:scale-95"
+                    onClick={() => setIsLoginModalOpen(true)} 
+                    className="px-8 py-3 bg-[#0079C2] text-white rounded-full text-xs font-black uppercase tracking-widest shadow-lg hover:bg-[#006098] hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
                   >
-                    <span>Iniciar Projeto</span>
-                    <ArrowRight size={18} />
+                    <LogIn size={16} /> Fazer Login
                   </button>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">1. Nome do Projeto</label>
+                    <input 
+                      type="text" 
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="Ex: Report Mensal (Deixe vazio para automÃ¡tico)"
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-[#006098] outline-none focus:ring-2 focus:ring-[#0079C2]/20 focus:border-[#0079C2] transition-all placeholder:text-slate-300 placeholder:font-normal"
+                      autoFocus
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">2. Formato</label>
+                      <div className="grid grid-cols-1 gap-2">
+                        <button 
+                          onClick={() => setFormat('REPORT')}
+                          className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                            format === 'REPORT' 
+                            ? 'border-[#0079C2] bg-blue-50 text-[#006098]' 
+                            : 'border-slate-100 hover:border-slate-200 text-slate-400'
+                          }`}
+                        >
+                          <FileText size={18} />
+                          <div className="flex flex-col items-start">
+                            <span className="text-[10px] font-black uppercase">A4 Vertical</span>
+                            <span className="text-[8px] font-medium opacity-60">Para impressÃ£o/leitura</span>
+                          </div>
+                        </button>
+                        <button 
+                          onClick={() => setFormat('PRESENTATION')}
+                          className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                            format === 'PRESENTATION' 
+                            ? 'border-[#0079C2] bg-blue-50 text-[#006098]' 
+                            : 'border-slate-100 hover:border-slate-200 text-slate-400'
+                          }`}
+                        >
+                          <Presentation size={18} />
+                          <div className="flex flex-col items-start">
+                            <span className="text-[10px] font-black uppercase">Slide 16:9</span>
+                            <span className="text-[8px] font-medium opacity-60">Para apresentaÃ§Ãµes</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">3. Estilo Visual</label>
+                      <div className="grid grid-cols-1 gap-2">
+                        <button 
+                          onClick={() => setDesign('STANDARD')}
+                          className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                            design === 'STANDARD' 
+                            ? 'border-[#0079C2] bg-blue-50 text-[#006098]' 
+                            : 'border-slate-100 hover:border-slate-200 text-slate-400'
+                          }`}
+                        >
+                          <LayoutPanelTop size={18} />
+                          <div className="flex flex-col items-start">
+                            <span className="text-[10px] font-black uppercase">PadrÃ£o</span>
+                            <span className="text-[8px] font-medium opacity-60">Clean e Corporativo</span>
+                          </div>
+                        </button>
+                        <button 
+                          onClick={() => setDesign('FUTURE')}
+                          className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                            design === 'FUTURE' 
+                            ? 'border-[#006098] bg-[#006098] text-white shadow-md' 
+                            : 'border-slate-100 hover:border-slate-200 text-slate-400'
+                          }`}
+                        >
+                          <Sparkles size={18} />
+                          <div className="flex flex-col items-start">
+                            <span className="text-[10px] font-black uppercase">Futuro MAG</span>
+                            <span className="text-[8px] font-medium opacity-80">Conceitual e Dark</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100">
+                    <button 
+                      onClick={handleStart}
+                      className="w-full py-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg bg-[#0079C2] text-white hover:bg-[#006098] hover:shadow-xl transform hover:-translate-y-0.5 active:scale-95"
+                    >
+                      <span>Iniciar Projeto</span>
+                      <ArrowRight size={18} />
+                    </button>
+                  </div>
+                </div>
+              )
             )}
 
             {activeTab === 'TEMPLATES' && (
-              <div className="grid grid-cols-1 gap-4 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl mb-2 flex gap-3">
-                  <LayoutTemplate size={24} className="text-[#0079C2] shrink-0" />
-                  <div>
-                    <h4 className="text-[11px] font-black uppercase text-[#006098] mb-1">Aceleradores de Produtividade</h4>
-                    <p className="text-[10px] text-blue-800/70 leading-relaxed">
-                      Escolha um modelo pré-configurado para iniciar seu projeto com estrutura profissional. Todos os campos são editáveis após a criação.
-                    </p>
+              !user ? (
+                <div className="flex flex-col items-center justify-center h-full text-center p-12 animate-in fade-in zoom-in-95">
+                  <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                    <Lock size={32} className="text-slate-400" />
                   </div>
+                  <h2 className="text-xl font-black text-[#006098] uppercase tracking-tight mb-2">Acesso Restrito</h2>
+                  <p className="text-sm text-slate-500 mb-8 max-w-sm leading-relaxed">
+                    VocÃª precisa estar conectado Ã  sua conta corporativa para utilizar os modelos prontos da equipe.
+                  </p>
+                  <button 
+                    onClick={() => setIsLoginModalOpen(true)} 
+                    className="px-8 py-3 bg-[#0079C2] text-white rounded-full text-xs font-black uppercase tracking-widest shadow-lg hover:bg-[#006098] hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  >
+                    <LogIn size={16} /> Fazer Login
+                  </button>
                 </div>
-
-                {TEMPLATES.map((tpl) => (
-                  <div key={tpl.id} className="group border rounded-2xl p-5 hover:border-[#0079C2] hover:shadow-md transition-all bg-white flex flex-col gap-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-sm font-black text-[#006098] uppercase tracking-tight">{tpl.title}</h3>
-                          <span className="text-[9px] px-2 py-0.5 bg-blue-100 text-[#006098] rounded-full font-bold uppercase">{tpl.data.layoutFormat === 'REPORT' ? 'A4' : 'Slide'}</span>
-                        </div>
-                        <p className="text-[11px] text-slate-500 leading-relaxed max-w-md">{tpl.description}</p>
-                      </div>
-                      <div className="flex gap-1">
-                        {tpl.tags.map(tag => (
-                          <span key={tag} className="text-[8px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded uppercase tracking-wider">{tag}</span>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="pt-4 border-t border-slate-100 flex justify-end">
-                      <button 
-                        onClick={() => handleUseTemplate(tpl)}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-[#0079C2] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#006098] transition-all shadow-sm group-hover:shadow-lg"
-                      >
-                        <CheckCircle2 size={14} /> Usar este Modelo
-                      </button>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl mb-2 flex gap-3">
+                    <LayoutTemplate size={24} className="text-[#0079C2] shrink-0" />
+                    <div>
+                      <h4 className="text-[11px] font-black uppercase text-[#006098] mb-1">Aceleradores de Produtividade</h4>
+                      <p className="text-[10px] text-blue-800/70 leading-relaxed">
+                        Escolha um modelo prÃ©-configurado para iniciar seu projeto com estrutura profissional. Todos os campos sÃ£o editÃ¡veis apÃ³s a criaÃ§Ã£o.
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
+
+                  {TEMPLATES.map((tpl) => (
+                    <div key={tpl.id} className="group border rounded-2xl p-5 hover:border-[#0079C2] hover:shadow-md transition-all bg-white flex flex-col gap-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-sm font-black text-[#006098] uppercase tracking-tight">{tpl.title}</h3>
+                            <span className="text-[9px] px-2 py-0.5 bg-blue-100 text-[#006098] rounded-full font-bold uppercase">{tpl.data.layoutFormat === 'REPORT' ? 'A4' : 'Slide'}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 leading-relaxed max-w-md">{tpl.description}</p>
+                        </div>
+                        <div className="flex gap-1">
+                          {tpl.tags.map(tag => (
+                            <span key={tag} className="text-[8px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded uppercase tracking-wider">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="pt-4 border-t border-slate-100 flex justify-end">
+                        <button 
+                          onClick={() => handleUseTemplate(tpl)}
+                          className="flex items-center gap-2 px-5 py-2.5 bg-[#0079C2] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#006098] transition-all shadow-sm group-hover:shadow-lg"
+                        >
+                          <CheckCircle2 size={14} /> Usar este Modelo
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
 
             {activeTab === 'SAVED' && (
@@ -392,146 +474,167 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                     <div className="flex flex-col gap-1">
                       <h4 className="text-[11px] font-black uppercase text-amber-700">Modo Offline (Browser)</h4>
                       <p className="text-[10px] text-amber-800/80 leading-relaxed">
-                        Você não está logado. Os projetos abaixo estão salvos apenas neste computador. <br/>
+                        VocÃª nÃ£o estÃ¡ logado. Os projetos abaixo estÃ£o salvos apenas neste computador. <br/>
                         <button onClick={() => setIsLoginModalOpen(true)} className="font-bold underline">Entre com sua conta</button> para salvar na nuvem e compartilhar com a equipe.
                       </p>
                     </div>
                   </div>
                 )}
 
-                {/* Seção Nuvem - Meus Projetos */}
+                {/* SeÃ§Ã£o Nuvem - Projetos Unificados */}
                 {user && (
                   <div className="mb-8">
                     <div className="flex items-center gap-2 mb-4">
                       <Sparkles size={16} className="text-[#00A7E7]" />
-                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#006098]">Meus Projetos na Nuvem</h4>
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#006098]">Projetos em Nuvem</h4>
                     </div>
                     {isCloudLoading ? (
                       <div className="py-8 flex justify-center"><div className="w-6 h-6 border-2 border-[#0079C2] border-t-transparent rounded-full animate-spin"></div></div>
-                    ) : cloudProjects.length === 0 ? (
-                      <p className="text-[10px] text-slate-400 font-medium italic ml-6">Nenhum projeto salvo na nuvem ainda.</p>
                     ) : (
-                      <div className="grid grid-cols-1 gap-3">
-                        {cloudProjects.map((proj) => (
-                          <div 
-                            key={proj.id}
-                            onClick={() => onStart({ ...proj, _firestoreId: proj.id })}
-                            className="group flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl hover:border-[#0079C2] hover:shadow-md cursor-pointer transition-all"
-                          >
-                            <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#0079C2]">
-                                <Cloud size={20} />
-                              </div>
-                              <div>
-                                <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{proj.title}</h4>
-                                <div className="flex items-center gap-3 mt-1">
-                                  <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
-                                    <Clock size={10} /> {proj.updatedAt?.toDate().toLocaleDateString('pt-BR')}
-                                  </span>
-                                  {proj.isShared && (
-                                    <span className="text-[8px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded uppercase">Compartilhado</span>
+                      (() => {
+                        if (uniqueCloudProjects.length === 0) {
+                          return <p className="text-[10px] text-slate-400 font-medium italic ml-6">Nenhum projeto salvo na nuvem ainda.</p>;
+                        }
+
+                        return (
+                          <div className="grid grid-cols-1 gap-3">
+                            {uniqueCloudProjects.map((proj) => {
+                              const isOwner = proj.ownerId === user.uid;
+                              const isShared = proj.isShared;
+                              
+                              let badgeColor = "bg-slate-100 text-slate-500 border-slate-200";
+                              let badgeText = "PRIVADO";
+                              
+                              if (isOwner && !isShared) {
+                                badgeColor = "bg-slate-100 text-slate-600 border-slate-200";
+                                badgeText = "SEU PROJETO";
+                              } else if (isOwner && isShared) {
+                                badgeColor = "bg-blue-50 text-[#0079C2] border-blue-200";
+                                badgeText = "COMPARTILHADO (POR VOCÃŠ)";
+                              } else if (!isOwner && isShared) {
+                                badgeColor = "bg-emerald-50 text-emerald-600 border-emerald-200";
+                                badgeText = `DA EQUIPE (Dono: ${proj.ownerName || 'Outro'})`;
+                              }
+
+                              return (
+                                <div 
+                                  key={proj.id}
+                                  onClick={() => onStart({ ...proj, _firestoreId: proj.id, ownerId: proj.ownerId })}
+                                  className="group flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-[#0079C2] hover:shadow-md cursor-pointer transition-all"
+                                >
+                                  <div className="flex items-center gap-4">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${isOwner ? 'bg-blue-50 text-[#0079C2] border-blue-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                                      {isOwner ? <Cloud size={20} /> : <Users size={20} />}
+                                    </div>
+                                    <div>
+                                      <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{proj.title || 'Sem TÃ­tulo'}</h4>
+                                      <div className="flex items-center gap-3 mt-1">
+                                        <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded border ${badgeColor}`}>
+                                          {badgeText}
+                                        </span>
+                                        <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
+                                          <Clock size={10} /> 
+                                          {proj.updatedAt?.seconds 
+                                            ? new Date(proj.updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
+                                            : 'Recente'
+                                          }
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {isOwner ? (
+                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <button 
+                                        onClick={(e) => handleToggleShare(e, proj.id, isShared)}
+                                        className={`p-2 rounded-lg transition-colors border ${
+                                          isShared 
+                                            ? 'text-[#0079C2] bg-blue-50 border-blue-100 hover:bg-blue-100' 
+                                            : 'text-slate-300 hover:text-[#0079C2] hover:bg-slate-50 border-transparent'
+                                        }`}
+                                        title={isShared ? "Desfazer Compartilhamento" : "Compartilhar com a Equipe"}
+                                      >
+                                        <Share2 size={16} />
+                                      </button>
+                                      <div className="w-px h-6 bg-slate-100 mx-1"></div>
+                                      <button 
+                                        onClick={(e) => handleDeleteProject(e, proj.id, 'CLOUD')}
+                                        className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                                        title="Excluir Projeto"
+                                      >
+                                        <Trash2 size={16} />
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <div className="text-[8px] font-black text-[#0079C2] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                      Abrir para Editar →
+                                    </div>
                                   )}
                                 </div>
-                              </div>
-                            </div>
-                            <button 
-                              onClick={(e) => handleDeleteProject(e, proj.id, 'CLOUD')}
-                              className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
-                            >
-                              <Trash2 size={16} />
-                            </button>
+                              );
+                            })}
                           </div>
-                        ))}
-                      </div>
+                        );
+                      })()
                     )}
                   </div>
                 )}
 
-                {/* Seção Nuvem - Compartilhados com a Equipe */}
-                {user && sharedProjects.length > 0 && (
-                  <div className="mb-8">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Users size={16} className="text-emerald-500" />
-                      <Users size={16} className="text-[#0079C2]" />
-                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#006098]">Projetos da Equipe (Modo Colaborativo)</h4>
+                {/* Apenas exibe o cache local se NÃƒO estiver logado, como fallback */}
+                {!user && (
+                  <>
+                    <div className="flex items-center gap-2 mb-4 mt-4">
+                      <HardDrive size={16} className="text-slate-400" />
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Cache Local (Neste Navegador)</h4>
                     </div>
-                    <div className="grid grid-cols-1 gap-3">
-                      {sharedProjects.map((proj) => (
-                        <div 
-                          key={proj.id}
-                          onClick={() => onStart({ ...proj, _firestoreId: proj.id })}
-                          className="group flex items-center justify-between p-4 bg-emerald-50/30 border border-emerald-100 rounded-xl hover:border-emerald-500 hover:shadow-md cursor-pointer transition-all"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100 group-hover:scale-110 transition-transform">
-                              <Users size={18} />
-                            </div>
-                            <div>
-                              <h4 className="text-[12px] font-black text-slate-700 uppercase leading-tight">{proj.title || 'Sem Título'}</h4>
-                              <div className="flex items-center gap-2 mt-1">
-                                <span className="text-[8px] font-black uppercase text-emerald-600 bg-emerald-100/50 px-2 py-0.5 rounded-md">Área Coletiva</span>
-                                <p className="text-[9px] font-bold text-slate-400">Dono: {proj.ownerId === user.uid ? 'Você' : (proj.ownerName || 'Equipe')}</p>
+
+                    {savedProjects.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center opacity-40 py-8">
+                        <HardDrive size={32} className="text-slate-300 mb-2" />
+                        <p className="text-[10px] font-bold text-slate-400">Nenhum projeto no cache local.</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 gap-3">
+                        {savedProjects.map((proj) => (
+                          <div 
+                            key={proj.id}
+                            onClick={() => handleLoadProject(proj.id)}
+                            className="group flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl hover:border-[#0079C2] hover:shadow-md cursor-pointer transition-all"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#0079C2]">
+                                <FileJson size={20} />
+                              </div>
+                              <div>
+                                <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight group-hover:text-[#0079C2]">{proj.title}</h4>
+                                <div className="flex items-center gap-3 mt-1">
+                                  <span>{(proj as any).format === 'REPORT' ? 'A4 Vertical' : 'Slide 16:9'}</span>
+                                  <span className="w-1 h-1 rounded-full bg-slate-200" />
+                                  <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
+                                    <Clock size={10} /> 
+                                    {(proj as any).updatedAt?.seconds 
+                                      ? new Date((proj as any).updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
+                                      : (proj as any).updatedAt 
+                                        ? new Date((proj as any).updatedAt).toLocaleDateString('pt-BR')
+                                        : 'Recente'
+                                    }
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="text-[8px] font-black text-emerald-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Abrir para Editar →</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2 mb-4 mt-4">
-                  <HardDrive size={16} className="text-slate-400" />
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Cache Local (Neste Navegador)</h4>
-                </div>
-
-                {savedProjects.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center opacity-40 py-8">
-                    <HardDrive size={32} className="text-slate-300 mb-2" />
-                    <p className="text-[10px] font-bold text-slate-400">Nenhum projeto no cache local.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 gap-3">
-                    {savedProjects.map((proj) => (
-                      <div 
-                        key={proj.id}
-                        onClick={() => handleLoadProject(proj.id)}
-                        className="group flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl hover:border-[#0079C2] hover:shadow-md cursor-pointer transition-all"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#0079C2]">
-                            <FileJson size={20} />
-                          </div>
-                          <div>
-                            <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight group-hover:text-[#0079C2]">{proj.title}</h4>
-                            <div className="flex items-center gap-3 mt-1">
-                              <span>{(proj as any).format === 'REPORT' ? 'A4 Vertical' : 'Slide 16:9'}</span>
-                              <span className="w-1 h-1 rounded-full bg-slate-200" />
-                              <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
-                                <Clock size={10} /> 
-                                {(proj as any).updatedAt?.seconds 
-                                  ? new Date((proj as any).updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
-                                  : (proj as any).updatedAt 
-                                    ? new Date((proj as any).updatedAt).toLocaleDateString('pt-BR')
-                                    : 'Recente'
-                                }
-                              </span>
+                            
+                            <div className="flex items-center gap-2">
+                              <button 
+                                onClick={(e) => handleDeleteProject(e, proj.id, 'LOCAL')}
+                                className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                              >
+                                <Trash2 size={16} />
+                              </button>
                             </div>
                           </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-2">
-                          <button 
-                            onClick={(e) => handleDeleteProject(e, proj.id, 'LOCAL')}
-                            className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -544,10 +647,38 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
       </div>
       
       <div className="absolute bottom-6 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-        MAG Seguros • Núcleo People Analytics © {new Date().getFullYear()}
+        MAG Seguros â€¢ NÃºcleo People Analytics Â© {new Date().getFullYear()}
       </div>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      
+      {/* Modal Customizado de ConfirmaÃ§Ã£o de ExclusÃ£o */}
+      {projectToDelete && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-rose-100 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <AlertCircle size={32} />
+            </div>
+            <h3 className="text-xl font-black text-[#006098] text-center uppercase tracking-tight mb-3">Excluir Projeto?</h3>
+            <p className="text-sm text-slate-500 text-center mb-8">Esta aÃ§Ã£o Ã© irreversÃ­vel e o arquivo serÃ¡ apagado permanentemente.</p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setProjectToDelete(null)}
+                className="flex-1 py-3 px-4 rounded-xl text-xs font-black text-slate-500 bg-slate-100 hover:bg-slate-200 uppercase tracking-widest transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={confirmDeleteProject}
+                className="flex-1 py-3 px-4 rounded-xl text-xs font-black text-white bg-rose-500 hover:bg-rose-600 uppercase tracking-widest shadow-lg hover:shadow-xl transition-all"
+              >
+                Sim, Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+

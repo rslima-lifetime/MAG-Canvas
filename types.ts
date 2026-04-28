@@ -193,6 +193,10 @@ export interface ReportData {
   cover?: CoverPage;
   pages: Page[];
   isShared?: boolean;
+  ownerId?: string;
+  lockedBy?: string;
+  lockedByName?: string;
+  lockedAt?: number;
   _firestoreId?: string;
   _localId?: string;
 }

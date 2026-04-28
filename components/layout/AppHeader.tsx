@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   PanelLeftClose, PanelLeftOpen, ZoomOut, ZoomIn, 
-  Printer, Eye, Lock, List, Share2, Check, LogOut, Users
+  Printer, Eye, Lock, List, Share2, Check, LogOut, Users, Home
 } from 'lucide-react';
 
 interface AppHeaderProps {
@@ -16,19 +16,35 @@ interface AppHeaderProps {
   isReadOnly?: boolean;
   onShare?: () => void;
   isShared?: boolean;
+  isOwner?: boolean;
+  lockedBy?: string;
+  lockedByName?: string;
+  onCheckout?: () => void;
+  onForceUnlock?: () => void;
   user?: any;
   onLogout?: () => void;
+  onHome?: () => void;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
   isSidebarOpen, onToggleSidebar, reportTitle, zoomLevel, 
   onSetZoom, onPrint, showSafeMargins, onToggleSafeMargins, isReadOnly,
-  onShare, isShared, user, onLogout
+  onShare, isShared, isOwner, lockedBy, lockedByName, onCheckout, onForceUnlock, user, onLogout, onHome
 }) => {
   return (
     <header className="no-print w-full h-16 bg-white/90 backdrop-blur-md border-b border-slate-200 px-6 flex items-center justify-between z-[1000] sticky top-0 shadow-sm">
       <div className="flex items-center gap-4">
-        {/* Botão de Toggle da Sidebar (Funciona tanto para Edição quanto para Índice em ReadOnly) */}
+        {onHome && (
+          <button 
+            onClick={onHome}
+            className="p-2 text-slate-400 hover:text-[#0079C2] hover:bg-blue-50 rounded-xl transition-all border border-transparent hover:border-blue-100"
+            title="Voltar para a Página Inicial"
+          >
+            <Home size={22} />
+          </button>
+        )}
+        
+        {/* Botão de Toggle da Sidebar */}
         <button 
           onClick={onToggleSidebar} 
           className={`p-2 rounded-xl transition-all ${isSidebarOpen ? 'text-[#0079C2] bg-blue-50' : 'text-slate-400 hover:bg-slate-50 border border-slate-100'}`} 
@@ -44,8 +60,37 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {isReadOnly && (
           <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-lg border border-slate-200">
              <Lock size={14} className="text-slate-400" />
-             <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Modo Visualização</span>
+             <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
+               Modo Visualização
+             </span>
           </div>
+        )}
+
+        {isReadOnly && lockedBy && lockedBy !== user?.uid && (
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-lg border border-amber-200 ml-2">
+             <Lock size={14} className="text-amber-500" />
+             <span className="text-[10px] font-black uppercase text-amber-600 tracking-widest">
+               Em edição por {lockedByName || 'Outro'}
+             </span>
+             {isOwner && onForceUnlock && (
+               <button 
+                 onClick={onForceUnlock}
+                 className="ml-2 text-[9px] underline text-amber-700 hover:text-amber-900"
+                 title="Atenção: Isso pode sobrescrever o trabalho se a pessoa ainda estiver editando."
+               >
+                 Forçar Desbloqueio
+               </button>
+             )}
+          </div>
+        )}
+
+        {isReadOnly && (!lockedBy || lockedBy === user?.uid) && onCheckout && (
+          <button 
+            onClick={onCheckout}
+            className="ml-2 flex items-center gap-2 px-4 py-1.5 bg-emerald-500 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 shadow-sm transition-all"
+          >
+            ✏️ Iniciar Edição
+          </button>
         )}
         <div className="flex flex-col">
           <span className="text-[10px] font-black text-[#0079C2] uppercase tracking-widest leading-none">MAG Canvas</span>
@@ -75,28 +120,41 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       </div>
       
       <div className="flex items-center gap-3">
-        {/* Seletor de Ambiente de Trabalho */}
-        {!isReadOnly && (
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl mr-4">
-            <button 
-              onClick={() => onShare && onShare()}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${!isShared ? 'bg-white text-[#006098] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-            >
-              <Lock size={12} /> Privado
-            </button>
-            <button 
-              onClick={() => onShare && onShare()}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${isShared ? 'bg-[#0079C2] text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-            >
-              <Users size={12} /> Equipe
-            </button>
-          </div>
-        )}
+        {/* Status de Compartilhamento e Ações do Dono */}
+        {!isReadOnly && user && (
+          <div className="flex items-center gap-3 mr-4 border-r border-slate-100 pr-4">
+            {/* Badge de Status Visual */}
+            <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border ${
+              isShared 
+                ? 'bg-emerald-50 border-emerald-100 text-emerald-600' 
+                : 'bg-slate-50 border-slate-200 text-slate-500'
+            }`}>
+              {isShared ? (
+                <>
+                  <Users size={12} className="animate-pulse" />
+                  <span className="text-[9px] font-black uppercase tracking-widest">Colaborativo</span>
+                </>
+              ) : (
+                <>
+                  <Lock size={12} />
+                  <span className="text-[9px] font-black uppercase tracking-widest">Privado</span>
+                </>
+              )}
+            </div>
 
-        {isShared && (
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-lg mr-4 animate-pulse">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-            <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Modo Colaborativo Ativo</span>
+            {/* Ação de Compartilhamento (Apenas para o Dono) */}
+            {isOwner && (
+              <button 
+                onClick={() => onShare && onShare()}
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${
+                  isShared 
+                    ? 'bg-white border border-rose-200 text-rose-500 hover:bg-rose-50' 
+                    : 'bg-[#0079C2] text-white hover:bg-[#006098] shadow-sm'
+                }`}
+              >
+                {isShared ? 'Tornar Privado' : 'Compartilhar com Equipe'}
+              </button>
+            )}
           </div>
         )}
         <button onClick={onPrint} className="bg-[#0079C2] text-white px-5 py-2 rounded-xl shadow-lg flex items-center gap-2 hover:bg-[#006098] transition-all text-[10px] font-black uppercase mr-2">

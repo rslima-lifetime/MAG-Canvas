@@ -56,7 +56,7 @@ const App: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   
   const { user } = useAuth();
-  const { saveProject, getProject } = useFirestoreProjects();
+  const { saveProject, getProject, unlockProject, lockProject } = useFirestoreProjects();
   
   const pageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const mainContainerRef = useRef<HTMLDivElement>(null);
@@ -451,13 +451,73 @@ const App: React.FC = () => {
       return next;
     });
     setShowWelcome(false);
-    setIsReadOnly(false);
+    
+    // Se for um projeto vindo da nuvem, abre em Modo Leitura por padrão
+    if (initData._firestoreId) {
+      setIsReadOnly(true);
+      setIsSidebarOpen(false);
+    } else {
+      setIsReadOnly(false);
+      setIsSidebarOpen(true);
+    }
+    
     clearShareUrl();
   };
 
-  const handleGoHome = () => {
-    const currentDataJson = JSON.stringify(reportData);
-    if (isReadOnly || currentDataJson === lastSavedDataJson.current) {
+  const doUnlockIfNeeded = async () => {
+    if (user && reportData._firestoreId && reportData.lockedBy === user.uid) {
+      await unlockProject(reportData._firestoreId);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (user && reportData._firestoreId) {
+      const success = await lockProject(reportData._firestoreId, user.uid, user.displayName || user.email || 'Usuário');
+      if (success) {
+        setReportData(prev => ({ ...prev, lockedBy: user.uid, lockedByName: user.displayName || user.email || 'Usuário' }));
+        setIsReadOnly(false);
+        setIsSidebarOpen(true);
+      } else {
+        alert("Não foi possível iniciar a edição. Verifique sua conexão.");
+      }
+    }
+  };
+
+  const handleForceUnlock = async () => {
+    if (user && reportData._firestoreId) {
+      if (window.confirm("Atenção: Destravar o arquivo enquanto outra pessoa estiver editando pode sobrescrever o trabalho dela. Deseja forçar o desbloqueio?")) {
+        const success = await unlockProject(reportData._firestoreId);
+        if (success) {
+          setReportData(prev => ({ ...prev, lockedBy: undefined, lockedByName: undefined, lockedAt: undefined }));
+        }
+      }
+    }
+  };
+
+  const hasUnsavedChanges = () => {
+    if (isReadOnly) return false;
+    
+    const normalize = (dataStr: string) => {
+      try {
+        const obj = JSON.parse(dataStr);
+        delete obj.lockedBy;
+        delete obj.lockedByName;
+        delete obj.lockedAt;
+        return JSON.stringify(obj);
+      } catch {
+        return dataStr;
+      }
+    };
+    
+    const currentNorm = normalize(JSON.stringify(reportData));
+    const savedNorm = normalize(lastSavedDataJson.current);
+    
+    return currentNorm !== savedNorm;
+  };
+
+  const handleGoHome = async () => {
+    if (!hasUnsavedChanges()) {
+      await doUnlockIfNeeded();
       setShowWelcome(true);
       setIsReadOnly(false);
       clearShareUrl();
@@ -485,15 +545,17 @@ const App: React.FC = () => {
     if (isOverflowing) setActivePageIndex(pageIdx + 1);
   };
 
-  const handleSaveAndExit = () => {
-    handleSaveLocal();
+  const handleSaveAndExit = async () => {
+    await handleSaveLocal();
+    await doUnlockIfNeeded();
     setShowUnsavedDialog(false);
     setShowWelcome(true);
     setIsReadOnly(false);
     clearShareUrl();
   };
 
-  const handleDiscardExit = () => {
+  const handleDiscardExit = async () => {
+    await doUnlockIfNeeded();
     setShowUnsavedDialog(false);
     setShowWelcome(true);
     setIsReadOnly(false);
@@ -650,6 +712,12 @@ const App: React.FC = () => {
             isReadOnly={isReadOnly}
             onShare={handleToggleWorkspace}
             isShared={!!(reportData as any).isShared}
+            isOwner={!(reportData as any).ownerId || user?.uid === (reportData as any).ownerId}
+            lockedBy={(reportData as any).lockedBy}
+            lockedByName={(reportData as any).lockedByName}
+            onCheckout={handleCheckout}
+            onForceUnlock={handleForceUnlock}
+            onHome={handleGoHome}
             user={user}
             onLogout={() => auth.signOut()}
           />

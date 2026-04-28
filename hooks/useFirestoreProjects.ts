@@ -62,8 +62,8 @@ export const useFirestoreProjects = () => {
       );
       const querySnapshot = await getDocs(q);
       return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
+        ...doc.data(),
+        id: doc.id
       }));
     } catch (err: any) {
       console.error("Erro ao listar projetos do usuário:", err);
@@ -85,8 +85,8 @@ export const useFirestoreProjects = () => {
       );
       const querySnapshot = await getDocs(q);
       return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
+        ...doc.data(),
+        id: doc.id
       }));
     } catch (err: any) {
       console.error("Erro ao listar projetos compartilhados:", err);
@@ -134,12 +134,58 @@ export const useFirestoreProjects = () => {
     }
   }, []);
 
+  const toggleShareProject = useCallback(async (id: string, isShared: boolean) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await updateDoc(doc(db, 'projects', id), { isShared });
+      return true;
+    } catch (err: any) {
+      console.error("Erro ao alterar compartilhamento:", err);
+      setError(err.message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const lockProject = useCallback(async (id: string, userId: string, userName: string) => {
+    try {
+      await updateDoc(doc(db, 'projects', id), {
+        lockedBy: userId,
+        lockedByName: userName,
+        lockedAt: Date.now()
+      });
+      return true;
+    } catch (err: any) {
+      console.error("Erro ao travar projeto:", err);
+      return false;
+    }
+  }, []);
+
+  const unlockProject = useCallback(async (id: string) => {
+    try {
+      await updateDoc(doc(db, 'projects', id), {
+        lockedBy: null,
+        lockedByName: null,
+        lockedAt: null
+      });
+      return true;
+    } catch (err: any) {
+      console.error("Erro ao destravar projeto:", err);
+      return false;
+    }
+  }, []);
+
   return {
     saveProject,
     listUserProjects,
     listSharedProjects,
     getProject,
     deleteProject,
+    toggleShareProject,
+    lockProject,
+    unlockProject,
     loading,
     error
   };
