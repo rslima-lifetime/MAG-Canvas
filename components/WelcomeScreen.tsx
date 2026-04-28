@@ -27,7 +27,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { listProjects, loadLocalProject, deleteLocalProject } = useLocalStorageProjects();
-  const { listUserProjects, listSharedProjects, deleteProject, toggleShareProject } = useFirestoreProjects();
+  const { listUserProjects, listSharedProjects, deleteProject, toggleShareProject, saveProject } = useFirestoreProjects();
   const { user } = useAuth();
   
   const [savedProjects, setSavedProjects] = useState<SavedProjectMeta[]>([]);
@@ -36,6 +36,31 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCloudLoading, setIsCloudLoading] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<{ id: string, type: 'LOCAL' | 'CLOUD' } | null>(null);
+  const [migrationStatus, setMigrationStatus] = useState<Record<string, 'IDLE' | 'MIGRATING' | 'SUCCESS'>>({});
+
+  const handleMigrateToCloud = async (e: React.MouseEvent, projId: string) => {
+    e.stopPropagation();
+    if (!user) return;
+    
+    setMigrationStatus(prev => ({ ...prev, [projId]: 'MIGRATING' }));
+    
+    const data = loadLocalProject(projId);
+    if (data) {
+      const firestoreId = await saveProject(data, user.uid, false);
+      if (firestoreId) {
+        setMigrationStatus(prev => ({ ...prev, [projId]: 'SUCCESS' }));
+        deleteLocalProject(projId);
+        
+        setTimeout(() => {
+          setSavedProjects(listProjects());
+          listUserProjects(user.uid).then(setCloudProjects);
+        }, 1500);
+      } else {
+        alert("Falha ao migrar para a nuvem. Verifique sua conexão.");
+        setMigrationStatus(prev => ({ ...prev, [projId]: 'IDLE' }));
+      }
+    }
+  };
 
   const uniqueCloudProjects = React.useMemo(() => {
     const allProjects = [...cloudProjects, ...sharedProjects];
@@ -87,10 +112,25 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     });
   };
 
-  const handleUseTemplate = (template: TemplateMeta) => {
+  const handleUseTemplate = async (template: TemplateMeta) => {
     // Clona o objeto para evitar referência direta
     const templateData = JSON.parse(JSON.stringify(template.data));
-    onStart(templateData);
+    
+    if (user) {
+      // Salva como projeto privado na nuvem imediatamente
+      const firestoreId = await saveProject(templateData, user.uid, false);
+      if (firestoreId) {
+        onStart({ 
+          ...templateData, 
+          _firestoreId: firestoreId,
+          ownerId: user.uid 
+        });
+      } else {
+        onStart(templateData);
+      }
+    } else {
+      onStart(templateData);
+    }
   };
 
   const handleLoadProject = (id: string) => {
@@ -292,7 +332,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
 
           <div className="flex-1 p-8 overflow-y-auto">
             {activeTab === 'NEW' && (
-              !user ? (
+              false ? (
                 <div className="flex flex-col items-center justify-center h-full text-center p-12 animate-in fade-in zoom-in-95">
                   <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                     <Lock size={32} className="text-slate-400" />
@@ -406,7 +446,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             )}
 
             {activeTab === 'TEMPLATES' && (
-              !user ? (
+              false ? (
                 <div className="flex flex-col items-center justify-center h-full text-center p-12 animate-in fade-in zoom-in-95">
                   <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                     <Lock size={32} className="text-slate-400" />
@@ -578,7 +618,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                   </div>
                 )}
 
-                {!user && (
+                {true && (
                   <>
                     <div className="flex items-center gap-2 mb-4 mt-4">
                       <HardDrive size={16} className="text-slate-400" />
@@ -621,9 +661,30 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                             </div>
                             
                             <div className="flex items-center gap-2">
+                              {user && (
+                                <button 
+                                  onClick={(e) => handleMigrateToCloud(e, proj.id)}
+                                  disabled={migrationStatus[proj.id] === 'MIGRATING'}
+                                  className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 border transition-all shadow-sm ${
+                                    migrationStatus[proj.id] === 'SUCCESS' 
+                                      ? 'bg-emerald-50 text-emerald-600 border-emerald-200 shadow-emerald-100' 
+                                      : 'bg-blue-50 hover:bg-blue-100 text-[#0079C2] border-[#0079C2]/20 hover:border-[#0079C2]'
+                                  }`}
+                                  title="Mover para Nuvem"
+                                >
+                                  {migrationStatus[proj.id] === 'MIGRATING' ? (
+                                     <div className="w-3 h-3 border-2 border-[#0079C2] border-t-transparent rounded-full animate-spin"></div>
+                                  ) : migrationStatus[proj.id] === 'SUCCESS' ? (
+                                     <> <CheckCircle2 size={12} /> Movido! </>
+                                  ) : (
+                                     <> <Cloud size={12} /> Mover p/ Nuvem </>
+                                  )}
+                                </button>
+                              )}
                               <button 
                                 onClick={(e) => handleDeleteProject(e, proj.id, 'LOCAL')}
                                 className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                                title="Excluir Backup Local"
                               >
                                 <Trash2 size={16} />
                               </button>

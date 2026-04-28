@@ -463,7 +463,7 @@ const App: React.FC = () => {
     // Se for um projeto vindo da nuvem, abre em Modo Leitura por padrão
     if (initData._firestoreId) {
       setIsReadOnly(true);
-      setIsSidebarOpen(false);
+      setIsSidebarOpen(true);
     } else {
       setIsReadOnly(false);
       setIsSidebarOpen(true);

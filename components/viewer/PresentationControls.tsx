@@ -26,6 +26,29 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
   const [showIndex, setShowIndex] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHoveringToolbar, setIsHoveringToolbar] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleMouseMove = () => {
+      setIsVisible(true);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (!isHoveringToolbar && !showIndex) {
+          setIsVisible(false);
+        }
+      }, 3000);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    timeoutId = setTimeout(() => setIsVisible(false), 3000);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timeoutId);
+    };
+  }, [isHoveringToolbar, showIndex]);
 
   // Agrupamento de páginas para o índice (mesma lógica do ViewerNavigation)
   const pageGroups = useMemo(() => {
@@ -75,8 +98,8 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
 
-      if (e.key === 'ArrowRight' || e.key === 'Space') onNext();
-      else if (e.key === 'ArrowLeft') onPrev();
+      if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') onNext();
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') onPrev();
       else if (e.key === 'Escape') {
         if (showIndex) setShowIndex(false);
         else onExit();
@@ -179,7 +202,11 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
       <div 
         onMouseEnter={() => setIsHoveringToolbar(true)}
         onMouseLeave={() => setIsHoveringToolbar(false)}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 p-2 bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-2xl border border-white/10 animate-in slide-in-from-bottom-10 fade-in duration-300 cursor-default"
+        className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 p-2 bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-2xl border border-white/10 animate-in slide-in-from-bottom-10 duration-300 cursor-default transition-all ${
+          isVisible || isHoveringToolbar || showIndex 
+            ? 'opacity-100 translate-y-0 pointer-events-auto' 
+            : 'opacity-0 translate-y-10 pointer-events-none'
+        }`}
       >
         
         {/* Navegação */}
