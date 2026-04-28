@@ -1,19 +1,20 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ReportData } from '../../types';
-import { BookOpen, ChevronRight, Hash, Bookmark, Play, Layers } from 'lucide-react';
+import { BookOpen, ChevronRight, Hash, Bookmark, Play, Layers, Share2, Check, Copy } from 'lucide-react';
 
 interface ViewerNavigationProps {
   data: ReportData;
   activePageIndex: number | 'cover' | null;
   onEnterPresentation: () => void;
   onNavigate: (index: number | 'cover') => void;
+  firestoreId?: string;
 }
 
 interface PageGroup {
   title: string;
-  startIndex: number; // Índice da primeira página do grupo
-  pageIndices: number[]; // Todos os índices de página neste grupo
+  startIndex: number;
+  pageIndices: number[];
   sections: Array<{
     id: string;
     title: string;
@@ -21,14 +22,11 @@ interface PageGroup {
   }>;
 }
 
-export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, activePageIndex, onEnterPresentation, onNavigate }) => {
+export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, activePageIndex, onEnterPresentation, onNavigate, firestoreId }) => {
+  const [copied, setCopied] = useState(false);
   
   const handleSectionClick = (section: { id: string, pageIndex: number }) => {
-    // 1. Atualiza o estado da página ativa (Isso dispara o scroll para o topo da página no App.tsx)
     onNavigate(section.pageIndex);
-    
-    // 2. Pequeno delay para garantir que o scroll específico do bloco ocorra APÓS o scroll da página iniciar
-    // e sobreponha o comportamento padrão, aproveitando que o App.tsx desabilita o Observer por 800ms.
     setTimeout(() => {
       const element = document.getElementById(`block-wrapper-${section.id}`);
       if (element) {
@@ -37,7 +35,16 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
     }, 100);
   };
 
-  // Agrupa páginas consecutivas com o mesmo título
+  const handleCopyShareLink = () => {
+    if (!firestoreId) return;
+    const base = window.location.origin + window.location.pathname;
+    const shareUrl = `${base}?p=${firestoreId}&view=presentation`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
+
   const pageGroups = useMemo(() => {
     const groups: PageGroup[] = [];
     
@@ -49,12 +56,10 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
 
       const lastGroup = groups[groups.length - 1];
 
-      // Se existir um grupo anterior E o título for idêntico, agrupa
       if (lastGroup && lastGroup.title === pageTitle) {
         lastGroup.pageIndices.push(index);
         lastGroup.sections.push(...pageSections);
       } else {
-        // Cria novo grupo
         groups.push({
           title: pageTitle,
           startIndex: index,
@@ -70,7 +75,7 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
   return (
     <div className="w-full h-full bg-white flex flex-col font-sans">
       {/* Header do Índice */}
-      <div className="px-6 py-5 border-b bg-white shrink-0 space-y-4">
+      <div className="px-6 py-5 border-b bg-white shrink-0 space-y-3">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-[#0079C2] text-white flex items-center justify-center shadow-md">
             <BookOpen size={16} strokeWidth={2.5} />
@@ -81,6 +86,7 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
           </div>
         </div>
 
+        {/* Botão Modo Apresentação */}
         <button 
           onClick={onEnterPresentation}
           className="w-full py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 hover:scale-[1.02] active:scale-95 transition-all shadow-lg group"
@@ -90,6 +96,30 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
           </div>
           Modo Apresentação
         </button>
+
+        {/* Botão Compartilhar Apresentação */}
+        {firestoreId && (
+          <button
+            onClick={handleCopyShareLink}
+            className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all border ${
+              copied
+                ? 'bg-emerald-50 text-emerald-600 border-emerald-200 shadow-emerald-100 shadow-sm'
+                : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-[#0079C2]/5 hover:text-[#0079C2] hover:border-[#0079C2]/30'
+            }`}
+          >
+            {copied ? (
+              <>
+                <Check size={12} />
+                Link Copiado!
+              </>
+            ) : (
+              <>
+                <Share2 size={12} />
+                Compartilhar Apresentação
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-1">
@@ -111,13 +141,11 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
 
         {/* Lista de Grupos de Páginas */}
         {pageGroups.map((group, groupIdx) => {
-          // O grupo está ativo se a página atual (activePageIndex) estiver dentro dos índices deste grupo
           const isGroupActive = typeof activePageIndex === 'number' && group.pageIndices.includes(activePageIndex);
           const isMultiPage = group.pageIndices.length > 1;
 
           return (
             <div key={groupIdx} className="flex flex-col">
-              {/* Item do Grupo (Título Principal) */}
               <button
                 onClick={() => onNavigate(group.startIndex)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
@@ -149,7 +177,6 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
                 {isGroupActive && <ChevronRight size={14} className="text-[#0079C2]" />}
               </button>
 
-              {/* Sub-itens (Seções consolidadas de todas as páginas do grupo) */}
               {group.sections.length > 0 && (
                 <div className="flex flex-col ml-[19px] border-l border-slate-100 my-1 space-y-0.5">
                   {group.sections.map((section, secIdx) => (

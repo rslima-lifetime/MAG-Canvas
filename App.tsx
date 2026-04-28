@@ -18,7 +18,8 @@ import { LoginModal } from './components/auth/LoginModal';
 import { auth } from './lib/firebase';
 
 const App: React.FC = () => {
-  const [showWelcome, setShowWelcome] = useState(true);
+  const hasUrlProject = typeof window !== 'undefined' && (new URLSearchParams(window.location.search).has('p') || window.location.search.includes('d='));
+  const [showWelcome, setShowWelcome] = useState(!hasUrlProject);
   const { 
     data: reportData, setData: setReportData, undo, redo, canUndo, canRedo,
     updateBlock, removeBlock, moveBlock, duplicateBlock, addBlockAt, updatePage, addPage, pasteBlockAt, duplicatePage, movePage
@@ -646,6 +647,16 @@ const App: React.FC = () => {
 
   if (showWelcome) return <WelcomeScreen onStart={handleStartProject} onImport={importBackup} />;
 
+  // Loading screen while URL project resolves (avoids blank canvas flash)
+  if (hasUrlProject && reportData.pages.length === 0 && !isPresentationMode) {
+    return (
+      <div className="min-h-screen bg-[#0f172a] flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-4 border-[#0079C2] border-t-transparent rounded-full animate-spin" />
+        <p className="text-white/50 text-[11px] font-black uppercase tracking-widest">Carregando apresentação...</p>
+      </div>
+    );
+  }
+
   return (
     <div className={`flex flex-col md:flex-row min-h-screen overflow-hidden print:overflow-visible relative transition-colors duration-700 ${isPresentationMode ? 'bg-[#0f172a]' : 'bg-[#f1f5f9] print:bg-white'}`}>
       
@@ -680,6 +691,7 @@ const App: React.FC = () => {
                 data={reportData} 
                 activePageIndex={activePageIndex} 
                 onNavigate={setActivePageIndex}
+                firestoreId={(reportData as any)._firestoreId}
                 onEnterPresentation={() => {
                   setIsPresentationMode(true);
                   setIsSidebarOpen(false);
