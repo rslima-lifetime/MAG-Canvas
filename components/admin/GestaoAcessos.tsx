@@ -13,7 +13,7 @@ import {
   Shield, KeyRound, Trash2, UserPlus, Mail, Lock, 
   User, RefreshCw, X, AlertCircle, Search, ShieldCheck, CheckCircle2 
 } from 'lucide-react';
-
+import { useAuth } from '../../context/AuthContext';
 interface UserDoc {
   id: string;
   nome: string;
@@ -23,6 +23,7 @@ interface UserDoc {
 }
 
 export const GestaoAcessos: React.FC = () => {
+  const { isAdmin, role: currentRole } = useAuth();
   const [users, setUsers] = useState<UserDoc[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -216,7 +217,30 @@ export const GestaoAcessos: React.FC = () => {
                   <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{u.nome}</h4>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-[9px] font-bold text-slate-400">{u.email}</span>
-                    <span className="text-[8px] px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded-full font-black uppercase tracking-tighter">{u.role}</span>
+                    {(isAdmin || currentRole === 'Master') && u.email !== 'master@mag.com.br' ? (
+                      <select
+                        value={u.role || 'Editor'}
+                        onChange={async (e) => {
+                          const newRole = e.target.value;
+                          try {
+                            const { updateDoc, doc } = await import('firebase/firestore');
+                            await updateDoc(doc(db, 'users', u.id), { role: newRole });
+                            fetchUsers();
+                          } catch (error) {
+                            console.error("Erro ao atualizar perfil:", error);
+                          }
+                        }}
+                        className="text-[9px] font-black uppercase px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded border border-blue-200 outline-none cursor-pointer font-sans"
+                      >
+                        <option value="Editor">Editor</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Master">Master</option>
+                      </select>
+                    ) : (
+                      <span className="text-[8px] px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded-full font-black uppercase tracking-tighter">
+                        {u.role || 'Editor'}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -327,8 +351,8 @@ export const GestaoAcessos: React.FC = () => {
                   className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-[#0079C2] transition-all appearance-none cursor-pointer"
                 >
                   <option value="Editor">Editor</option>
-                  <option value="Visualizador">Visualizador</option>
                   <option value="Admin">Administrador</option>
+                  <option value="Master">Master</option>
                 </select>
               </div>
 

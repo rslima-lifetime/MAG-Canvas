@@ -199,6 +199,7 @@ export interface ReportData {
   lockedAt?: number;
   _firestoreId?: string;
   _localId?: string;
+  allowedTeamId?: string | null;
 }
 
 export interface Block {

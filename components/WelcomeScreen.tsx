@@ -8,10 +8,13 @@ import { DocumentFormat, DesignSystem, ReportData, DEFAULT_REPORT_DATA } from '.
 import { useLocalStorageProjects, SavedProjectMeta } from '../hooks/useLocalStorageProjects';
 import { useFirestoreProjects } from '../hooks/useFirestoreProjects';
 import { useAuth } from '../context/AuthContext';
+import { useFirestoreTeams } from '../hooks/useFirestoreTeams';
 import { LoginModal } from './auth/LoginModal';
-import { auth } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import { TEMPLATES, TemplateMeta } from '../data/templates';
-import { GestaoAcessos } from './admin/GestaoAcessos';
+import { GestaoAdministrativa } from './admin/GestaoAdministrativa';
+import { ShareModal } from './ShareModal';
 
 interface WelcomeScreenProps {
   onStart: (data: Partial<ReportData>) => void;
@@ -30,7 +33,8 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   
   const { listProjects, loadLocalProject, deleteLocalProject } = useLocalStorageProjects();
   const { listUserProjects, listSharedProjects, deleteProject, toggleShareProject, saveProject } = useFirestoreProjects();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  const { listTeamsIAmIn } = useFirestoreTeams();
 
   const [savedProjects, setSavedProjects] = useState<SavedProjectMeta[]>([]);
   const [cloudProjects, setCloudProjects] = useState<any[]>([]);
@@ -38,6 +42,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCloudLoading, setIsCloudLoading] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<{ id: string, type: 'LOCAL' | 'CLOUD' } | null>(null);
+  const [projectToShare, setProjectToShare] = useState<{ id: string, isShared: boolean, allowedTeamId?: string | null } | null>(null);
+  const [allUsers, setAllUsers] = useState<{id: string, nome: string, email: string}[]>([]);
+  const [myTeams, setMyTeams] = useState<any[]>([]);
   const [migrationStatus, setMigrationStatus] = useState<Record<string, 'IDLE' | 'MIGRATING' | 'SUCCESS'>>({});
 
   const handleMigrateToCloud = async (e: React.MouseEvent, projId: string) => {
@@ -75,6 +82,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     return uniqueProjects;
   }, [cloudProjects, sharedProjects]);
 
+
   useEffect(() => {
     // Carrega sempre para a contagem da badge
     setSavedProjects(listProjects());
@@ -83,10 +91,27 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
       setIsCloudLoading(true);
       Promise.all([
         listUserProjects(user.uid),
-        listSharedProjects()
-      ]).then(([userProjs, sharedProjs]) => {
+        listSharedProjects(),
+        listTeamsIAmIn(user.email || ''),
+        getDocs(collection(db, 'users'))
+      ]).then(([userProjs, sharedProjs, userTeams, usersSnap]) => {
         setCloudProjects(userProjs);
-        setSharedProjects(sharedProjs);
+        setMyTeams(userTeams);
+
+        const usersList = usersSnap.docs.map(doc => ({
+          id: doc.id,
+          nome: doc.data().nome || '',
+          email: doc.data().email || ''
+        }));
+        setAllUsers(usersList);
+        
+        const myTeamIds = userTeams.map(t => t.id);
+        const filteredShared = sharedProjs.filter((proj: any) => {
+          if (!proj.allowedTeamId) return true;
+          return myTeamIds.includes(proj.allowedTeamId);
+        });
+
+        setSharedProjects(filteredShared);
         setIsCloudLoading(false);
       });
     } else {
@@ -183,23 +208,21 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     }
   };
 
-  const handleToggleShare = async (e: React.MouseEvent, id: string, currentStatus: boolean) => {
-    e.stopPropagation();
-    const newStatus = !currentStatus;
-    
+  const handleSaveShareSettingsFromWelcome = async (isShared: boolean, teamId: string | null) => {
+    if (!projectToShare) return;
+    const projectId = projectToShare.id;
+
     // Optimistic UI imediato
-    setCloudProjects(prev => prev.map(p => p.id === id ? { ...p, isShared: newStatus } : p));
+    setCloudProjects(prev => prev.map(p => p.id === projectId ? { ...p, isShared, allowedTeamId: teamId } : p));
     
-    if (!newStatus) {
-      // Se parou de compartilhar, removemos da lista de compartilhados caso estivesse lá também
-      setSharedProjects(prev => prev.filter(p => p.id !== id));
+    if (!isShared) {
+      setSharedProjects(prev => prev.filter(p => p.id !== projectId));
     }
 
-    const success = await toggleShareProject(id, newStatus);
+    const success = await toggleShareProject(projectId, isShared, teamId);
     
     if (!success) {
       alert("Não foi possível alterar o compartilhamento na nuvem. Verifique sua conexão.");
-      // Rollback se falhar
       if (user) {
         listUserProjects(user.uid).then(setCloudProjects);
         listSharedProjects().then(setSharedProjects);
@@ -288,13 +311,15 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
               >
                 <LayoutTemplate size={14} /> Modelos Prontos
               </button>
-              {user && (
-                <button 
-                  onClick={() => setActiveTab('ADMIN')}
-                  className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'ADMIN' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
-                >
-                  <ShieldCheck size={14} /> Administração
-                </button>
+              {user && isAdmin && (
+                <>
+                  <button 
+                    onClick={() => setActiveTab('ADMIN')}
+                    className={`text-xs font-black uppercase tracking-widest pb-4 border-b-2 transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === 'ADMIN' ? 'text-[#006098] border-[#006098]' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
+                  >
+                    <ShieldCheck size={14} /> Administração
+                  </button>
+                </>
               )}
             </div>
             
@@ -543,11 +568,17 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                 badgeColor = "bg-slate-100 text-slate-600 border-slate-200";
                                 badgeText = "SEU PROJETO";
                               } else if (isOwner && isShared) {
+                                const team = myTeams.find((t: any) => t.id === proj.allowedTeamId);
+                                const teamName = team ? team.name : 'Público';
                                 badgeColor = "bg-blue-50 text-[#0079C2] border-blue-200";
-                                badgeText = "COMPARTILHADO (POR VOCÊ)";
+                                badgeText = `COMPARTILHADO (${teamName.toUpperCase()})`;
                               } else if (!isOwner && isShared) {
+                                const team = myTeams.find((t: any) => t.id === proj.allowedTeamId);
+                                const teamName = team ? team.name : 'Público';
+                                const ownerUser = allUsers.find((u: any) => u.id === proj.ownerId);
+                                const ownerName = ownerUser ? ownerUser.nome : 'Outro';
                                 badgeColor = "bg-emerald-50 text-emerald-600 border-emerald-200";
-                                badgeText = `DA EQUIPE (Dono: ${proj.ownerName || 'Outro'})`;
+                                badgeText = `EQUIPE: ${teamName.toUpperCase()} (POR: ${ownerName.toUpperCase()})`;
                               }
 
                               return (
@@ -579,7 +610,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                   {isOwner ? (
                                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                       <button 
-                                        onClick={(e) => handleToggleShare(e, proj.id, isShared)}
+                                        onClick={(e) => { e.stopPropagation(); setProjectToShare({ id: proj.id, isShared: proj.isShared, allowedTeamId: proj.allowedTeamId }); }}
                                         className={`p-2 rounded-lg transition-colors border ${
                                           isShared 
                                             ? 'text-[#0079C2] bg-blue-50 border-blue-100 hover:bg-blue-100' 
@@ -694,7 +725,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             )}
 
             {activeTab === 'ADMIN' && (
-              <GestaoAcessos />
+              <GestaoAdministrativa />
             )}
           </div>
         </div>
@@ -798,6 +829,17 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
             </div>
           </div>
         </div>
+      )}
+      
+      {projectToShare && (
+        <ShareModal
+          isOpen={!!projectToShare}
+          onClose={() => setProjectToShare(null)}
+          currentShared={!!projectToShare.isShared}
+          currentTeamId={projectToShare.allowedTeamId}
+          onSave={handleSaveShareSettingsFromWelcome}
+          projectId={projectToShare.id}
+        />
       )}
     </div>
   );

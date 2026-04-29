@@ -134,11 +134,11 @@ export const useFirestoreProjects = () => {
     }
   }, []);
 
-  const toggleShareProject = useCallback(async (id: string, isShared: boolean) => {
+  const toggleShareProject = useCallback(async (id: string, isShared: boolean, allowedTeamId: string | null = null) => {
     setLoading(true);
     setError(null);
     try {
-      await updateDoc(doc(db, 'projects', id), { isShared });
+      await updateDoc(doc(db, 'projects', id), { isShared, allowedTeamId });
       return true;
     } catch (err: any) {
       console.error("Erro ao alterar compartilhamento:", err);

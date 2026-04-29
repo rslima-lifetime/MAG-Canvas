@@ -331,6 +331,27 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
               {isCoverActive && data.cover && (
                 <div className="bg-white relative z-10 shadow-[0_-10px_20px_-15px_rgba(0,0,0,0.1)]">
                   <SidebarCoverSettings cover={data.cover} onUpdateCover={updateCover} />
+                  
+                  <details className="group/details border-t border-slate-100">
+                    <summary className="px-6 py-3 cursor-pointer bg-slate-50/50 hover:bg-slate-100 flex items-center justify-between transition-colors outline-none">
+                      <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><FileJson size={12} /> Editar JSON da Capa</span>
+                      <ChevronDown size={12} className="text-slate-300 group-open/details:rotate-180 transition-transform" />
+                    </summary>
+                    <div className="px-6 py-4 space-y-3">
+                      <p className="text-[10px] text-slate-400 leading-relaxed">
+                        Cole ou edite o JSON da capa diretamente. As alterações são validadas antes de aplicar.
+                      </p>
+                      <button
+                        onClick={() => {
+                          const cover = data.cover;
+                          setPageJsonModal({ open: true, draft: JSON.stringify(cover, null, 2), error: null });
+                        }}
+                        className="w-full py-2.5 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] border border-[#0079C2]/20 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
+                      >
+                        <FileJson size={14} /> Abrir Editor JSON
+                      </button>
+                    </div>
+                  </details>
                 </div>
               )}
 
@@ -349,10 +370,18 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
         open={pageJsonModal.open}
         draft={pageJsonModal.draft}
         error={pageJsonModal.error}
-        pageLabel={typeof activePageIndex === 'number' ? `Página ${activePageIndex + 1}: ${data.pages[activePageIndex]?.title || 'Sem título'}` : ''}
+        pageLabel={
+          activePageIndex === 'cover' 
+            ? 'Capa Corporativa' 
+            : typeof activePageIndex === 'number' 
+              ? `Página ${activePageIndex + 1}: ${data.pages[activePageIndex]?.title || 'Sem título'}` 
+              : ''
+        }
         onDraftChange={(v) => setPageJsonModal(prev => ({ ...prev, draft: v, error: null }))}
         onReset={() => {
-          if (typeof activePageIndex === 'number') {
+          if (activePageIndex === 'cover' && data.cover) {
+            setPageJsonModal(prev => ({ ...prev, draft: JSON.stringify(data.cover, null, 2), error: null }));
+          } else if (typeof activePageIndex === 'number') {
             const page = data.pages[activePageIndex];
             setPageJsonModal(prev => ({ ...prev, draft: JSON.stringify(page, null, 2), error: null }));
           }
@@ -361,12 +390,16 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
         onApply={() => {
           try {
             const parsed = JSON.parse(pageJsonModal.draft);
-            if (!Array.isArray(parsed.blocks)) throw new Error('O campo "blocks" é obrigatório e deve ser um array.');
-            if (typeof activePageIndex !== 'number') return;
-            const newPages = [...data.pages];
-            newPages[activePageIndex] = { ...newPages[activePageIndex], ...parsed };
-            onChange({ ...data, pages: newPages });
-            setPageJsonModal({ open: false, draft: '', error: null });
+            if (activePageIndex === 'cover') {
+              onChange({ ...data, cover: { ...data.cover, ...parsed } });
+              setPageJsonModal({ open: false, draft: '', error: null });
+            } else if (typeof activePageIndex === 'number') {
+              if (!Array.isArray(parsed.blocks)) throw new Error('O campo "blocks" é obrigatório e deve ser um array.');
+              const newPages = [...data.pages];
+              newPages[activePageIndex] = { ...newPages[activePageIndex], ...parsed };
+              onChange({ ...data, pages: newPages });
+              setPageJsonModal({ open: false, draft: '', error: null });
+            }
           } catch (err: any) {
             setPageJsonModal(prev => ({ ...prev, error: err.message || 'JSON inválido. Verifique a sintaxe.' }));
           }

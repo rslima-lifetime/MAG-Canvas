@@ -15,7 +15,9 @@ import { Plus, AlertTriangle, Save, Trash2, X, LogIn, Users, User, Share2 } from
 import { useAuth } from './context/AuthContext';
 import { useFirestoreProjects } from './hooks/useFirestoreProjects';
 import { LoginModal } from './components/auth/LoginModal';
-import { auth } from './lib/firebase';
+import { auth, db } from './lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { ShareModal } from './components/ShareModal';
 
 const App: React.FC = () => {
   const hasUrlProject = typeof window !== 'undefined' && (new URLSearchParams(window.location.search).has('p') || window.location.search.includes('d='));
@@ -55,6 +57,7 @@ const App: React.FC = () => {
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   
   const { user } = useAuth();
   const { saveProject, getProject, unlockProject, lockProject } = useFirestoreProjects();
@@ -138,30 +141,26 @@ const App: React.FC = () => {
     }
   }, [reportData, saveLocalProject, setReportData, user, saveProject]);
 
-  const handleToggleWorkspace = useCallback(async () => {
+  const handleOpenShareModal = useCallback(() => {
     if (!user) {
       setIsLoginModalOpen(true);
       return;
     }
+    setIsShareModalOpen(true);
+  }, [user]);
 
-    const nextShared = !(reportData as any).isShared;
+  const handleSaveShareSettings = useCallback(async (isShared: boolean, teamId: string | null) => {
+    if (!user) return;
     setIsSaving(true);
     
-    // Atualiza estado local imediatamente para feedback visual
-    setReportData(prev => ({ ...prev, isShared: nextShared }));
+    // Atualiza estado local
+    setReportData(prev => ({ ...prev, isShared, allowedTeamId: teamId }));
     
-    // Salva no Firebase com a nova flag
-    const firestoreId = await saveProject({ ...reportData, isShared: nextShared }, user.uid, nextShared);
+    // Salva no Firebase
+    const firestoreId = await saveProject({ ...reportData, isShared, allowedTeamId: teamId }, user.uid, isShared);
     
     if (firestoreId) {
-      setReportData(prev => ({ ...prev, _firestoreId: firestoreId, isShared: nextShared }));
-      
-      // Se acabou de tornar público, podemos também copiar o link (opcional, mas útil)
-      if (nextShared) {
-        const shareUrl = `${window.location.origin}${window.location.pathname}?p=${firestoreId}`;
-        await navigator.clipboard.writeText(shareUrl);
-        // Feedback sutil seria bom aqui, mas vamos manter o foco na persistência
-      }
+      setReportData(prev => ({ ...prev, _firestoreId: firestoreId, isShared, allowedTeamId: teamId }));
     }
     setIsSaving(false);
   }, [user, reportData, saveProject, setReportData]);
@@ -250,10 +249,44 @@ const App: React.FC = () => {
       if (projectId) {
         const cloudData = await getProject(projectId);
         if (cloudData) {
+          // Validação de Acesso por Equipe
+          const isOwner = cloudData.ownerId === user?.uid;
+          const isShared = cloudData.isShared;
+          const allowedTeamId = cloudData.allowedTeamId;
+
+          let hasPermission = false;
+
+          if (isOwner) {
+            hasPermission = true;
+          } else if (isShared) {
+            if (!allowedTeamId) {
+              hasPermission = true; // Compartilhamento Público
+            } else {
+              // Restrito a Equipe
+              if (user?.email) {
+                const teamSnap = await getDoc(doc(db, 'teams', allowedTeamId));
+                if (teamSnap.exists()) {
+                  const teamData = teamSnap.data();
+                  const members: string[] = teamData?.members || [];
+                  if (members.map(m => m.toLowerCase()).includes(user.email.toLowerCase().trim())) {
+                    hasPermission = true;
+                  }
+                }
+              }
+            }
+          }
+
+          if (!hasPermission) {
+            alert("Acesso restrito. Apenas membros da equipe selecionada podem visualizar este projeto.");
+            setShowWelcome(true);
+            clearShareUrl();
+            return;
+          }
+
           setReportData(cloudData);
           lastSavedDataJson.current = JSON.stringify(cloudData);
           setShowWelcome(false);
-          setIsReadOnly(true); // Geralmente links compartilhados são somente leitura inicialmente
+          setIsReadOnly(true); 
           
           if (viewMode === 'presentation') {
             setIsPresentationMode(true);
@@ -284,7 +317,7 @@ const App: React.FC = () => {
     };
 
     loadFromUrl();
-  }, [setReportData, getProject]);
+  }, [setReportData, getProject, user]);
 
   useEffect(() => {
     const container = mainContainerRef.current;
@@ -733,7 +766,7 @@ const App: React.FC = () => {
             showSafeMargins={showSafeMargins}
             onToggleSafeMargins={() => setShowSafeMargins(!showSafeMargins)}
             isReadOnly={isReadOnly}
-            onShare={handleToggleWorkspace}
+            onShare={handleOpenShareModal}
             isShared={!!(reportData as any).isShared}
             isOwner={!(reportData as any).ownerId || user?.uid === (reportData as any).ownerId}
             lockedBy={(reportData as any).lockedBy}
@@ -889,6 +922,14 @@ const App: React.FC = () => {
       </main>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      <ShareModal 
+        isOpen={isShareModalOpen} 
+        onClose={() => setIsShareModalOpen(false)} 
+        currentShared={!!reportData.isShared} 
+        currentTeamId={reportData.allowedTeamId} 
+        onSave={handleSaveShareSettings} 
+        projectId={(reportData as any)._firestoreId || ''} 
+      />
       
       {isSaving && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#006098] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in slide-in-from-bottom-4 z-[300]">
