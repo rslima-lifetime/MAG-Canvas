@@ -24,6 +24,28 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      setError("Por favor, digite seu e-mail acima para recuperar a senha.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const { sendPasswordResetEmail } = await import('firebase/auth');
+      await sendPasswordResetEmail(auth, email.trim());
+      alert(`Um link de redefinição de senha foi enviado para o e-mail: ${email}`);
+    } catch (err: any) {
+      console.error("Erro ao resetar senha:", err);
+      const msg = err.code === 'auth/user-not-found' ? 'E-mail não encontrado no sistema.' :
+                  err.code === 'auth/invalid-email' ? 'Formato de e-mail inválido.' :
+                  'Não foi possível enviar o e-mail de recuperação.';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,15 +63,26 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           nome: name,
           email: email,
           role: 'Editor',
+          status: 'Ativo',
           createdAt: new Date().toISOString()
         });
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        
+        // Validar se o usuário está Ativo
+        const { getDoc, doc } = await import('firebase/firestore');
+        const userSnap = await getDoc(doc(db, "users", userCredential.user.uid));
+        if (userSnap.exists() && userSnap.data().status === 'Inativo') {
+          const { signOut } = await import('firebase/auth');
+          await signOut(auth);
+          throw { code: 'custom/user-inactive', message: 'Sua conta está inativa. Entre em contato com o administrador.' };
+        }
       }
       onClose();
     } catch (err: any) {
       console.error("Erro na autenticação:", err);
       const errorMessage = 
+        err.code === 'custom/user-inactive' ? err.message :
         err.code === 'auth/user-not-found' ? 'Usuário não encontrado.' : 
         err.code === 'auth/wrong-password' ? 'Senha incorreta.' : 
         err.code === 'auth/email-already-in-use' ? 'E-mail já cadastrado.' : 
@@ -139,9 +172,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-1">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sua Senha</label>
-                {!isSignUp && (
-                  <button type="button" className="text-[9px] font-black text-[#0079C2] uppercase hover:underline">Esqueceu?</button>
-                )}
               </div>
               <div className="relative group">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0079C2] transition-colors">
@@ -156,6 +186,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                   className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
                 />
               </div>
+              {!isSignUp && (
+                <div className="flex justify-end pr-1">
+                  <button 
+                    type="button" 
+                    onClick={handleForgotPassword}
+                    className="text-[9px] font-black text-[#0079C2] uppercase hover:underline tracking-wide mt-1"
+                  >
+                    Esqueceu sua senha?
+                  </button>
+                </div>
+              )}
             </div>
 
             {error && (

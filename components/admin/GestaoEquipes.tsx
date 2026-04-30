@@ -3,7 +3,7 @@ import { useFirestoreTeams, TeamDoc } from '../../hooks/useFirestoreTeams';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { Users, UserPlus, Trash2, Mail, AlertCircle, CheckCircle2, RefreshCw, X, Shield } from 'lucide-react';
+import { Users, UserPlus, Trash2, Mail, AlertCircle, CheckCircle2, RefreshCw, X, Shield, ChevronDown, ChevronUp } from 'lucide-react';
 
 export const GestaoEquipes: React.FC = () => {
   const { user } = useAuth();
@@ -18,6 +18,14 @@ export const GestaoEquipes: React.FC = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [expandedTeams, setExpandedTeams] = useState<string[]>([]);
+  const [confirmModal, setConfirmModal] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    type: 'DANGER' | 'INFO';
+  }>({ show: false, title: '', message: '', onConfirm: () => {}, type: 'INFO' });
 
   const fetchUsers = async () => {
     try {
@@ -97,18 +105,41 @@ export const GestaoEquipes: React.FC = () => {
     setSubmitting(false);
   };
 
-  const handleDeleteTeam = async (teamId: string) => {
-    if (!confirm("Tem certeza que deseja excluir esta equipe?")) return;
+  const handleDeleteTeam = (teamId: string) => {
+    const team = teams.find(t => t.id === teamId);
+    const teamName = team ? team.name : 'Equipe';
+
+    setConfirmModal({
+      show: true,
+      title: 'Excluir Equipe',
+      message: `Tem certeza que deseja excluir a equipe "${teamName}"? Todos os projetos vinculados a ela perderão o compartilhamento restrito.`,
+      type: 'DANGER',
+      onConfirm: () => executeDeleteTeam(teamId)
+    });
+  };
+
+  const executeDeleteTeam = async (teamId: string) => {
     setSubmitting(true);
-    const success = await deleteTeam(teamId);
-    if (success) {
-      fetchTeams();
+    setFormError(null);
+    try {
+      const success = await deleteTeam(teamId);
+      if (success) {
+        setFormSuccess("Equipe excluída com sucesso!");
+        fetchTeams();
+      } else {
+        setFormError("Não foi possível excluir a equipe.");
+      }
+    } catch (e: any) {
+      console.error("Erro ao excluir equipe:", e);
+      setFormError("Erro inesperado ao excluir equipe.");
+    } finally {
+      setSubmitting(false);
+      setConfirmModal(prev => ({ ...prev, show: false }));
     }
-    setSubmitting(false);
   };
 
   return (
-    <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-500 relative">
+    <div className="flex flex-col animate-in fade-in slide-in-from-right-4 duration-500 relative">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h3 className="text-sm font-black text-[#006098] uppercase tracking-widest flex items-center gap-2">
@@ -164,62 +195,124 @@ export const GestaoEquipes: React.FC = () => {
           <p className="text-[9px] text-slate-400 mt-1 max-w-xs">Crie uma equipe acima para começar a compartilhar projetos restritos.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 overflow-y-auto pr-2 pb-8">
-          {teams.map(t => (
-            <div key={t.id} className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-start justify-between mb-4 border-b border-slate-100 pb-4">
-                <div>
-                  <h4 className="text-sm font-black text-[#006098] uppercase tracking-tight">{t.name}</h4>
-                  <span className="text-[8px] text-slate-400 font-bold uppercase">{t.members.length} Membros cadastrados</span>
-                </div>
-                <button 
-                  onClick={() => handleDeleteTeam(t.id)}
-                  className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
-                  title="Excluir Equipe"
+        <div className="grid grid-cols-1 gap-4 pb-8">
+          {teams.map(t => {
+            const isExpanded = expandedTeams.includes(t.id);
+            
+            return (
+              <div key={t.id} className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
+                <div 
+                  onClick={() => {
+                    setExpandedTeams(prev => 
+                      isExpanded ? prev.filter(id => id !== t.id) : [...prev, t.id]
+                    );
+                  }}
+                  className="p-5 bg-slate-50/50 hover:bg-slate-50 border-b border-slate-100 flex items-center justify-between cursor-pointer select-none"
                 >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-
-              {/* Lista de Membros */}
-              <div className="space-y-1 mb-4 max-h-[150px] overflow-y-auto">
-                {t.members.map(email => (
-                  <div key={email} className="flex items-center justify-between px-3 py-1.5 bg-slate-50 rounded-lg text-[10px] font-bold text-slate-600">
-                    <span className="flex items-center gap-1.5"><Mail size={12} className="text-slate-400" /> {email}</span>
-                    {email !== user?.email && (
-                      <button 
-                        onClick={() => handleRemoveMember(t.id, email)}
-                        className="text-slate-400 hover:text-rose-500 text-[8px] font-black uppercase tracking-widest"
-                      >
-                        Remover
-                      </button>
-                    )}
+                  <div className="flex items-center gap-3">
+                    {isExpanded ? <ChevronUp size={18} className="text-[#006098]" /> : <ChevronDown size={18} className="text-slate-400" />}
+                    <div>
+                      <h4 className="text-xs font-black text-[#006098] uppercase tracking-tight leading-none">{t.name}</h4>
+                      <span className="text-[8px] text-slate-400 font-bold uppercase flex items-center gap-1 mt-1.5">
+                        <Users size={10} /> {t.members.length} {t.members.length === 1 ? 'Membro' : 'Membros'}
+                      </span>
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleDeleteTeam(t.id); }}
+                    className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
+                    title="Excluir Equipe"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
 
-              {/* Adicionar Membro */}
-              <div className="flex gap-2">
-                <select 
-                  value={newMemberEmail[t.id] || ''} 
-                  onChange={e => setNewMemberEmail(prev => ({ ...prev, [t.id]: e.target.value }))}
-                  className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] font-bold text-slate-700 outline-none focus:border-[#0079C2] transition-all font-sans cursor-pointer"
-                >
-                  <option value="">Selecionar usuário...</option>
-                  {allUsers.filter(u => !t.members.includes(u.email)).map(u => (
-                    <option key={u.id} value={u.email}>{u.nome} ({u.email})</option>
-                  ))}
-                </select>
-                <button 
-                  onClick={() => handleAddMember(t.id)}
-                  disabled={!newMemberEmail[t.id]?.trim()}
-                  className="px-4 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-[#006098] text-[9px] font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50"
-                >
-                  Adicionar
-                </button>
+                {isExpanded && (
+                  <div className="p-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                    {/* Lista de Membros */}
+                    {t.members.length === 0 ? (
+                      <p className="text-[9px] text-slate-400 font-medium italic">Nenhum membro nesta equipe.</p>
+                    ) : (
+                      <div className="space-y-1.5 max-h-[150px] overflow-y-auto pr-1">
+                        {t.members.map(email => {
+                          const foundUser = allUsers.find(u => u.email === email);
+                          const userName = foundUser ? foundUser.nome : 'Usuário Externo';
+                          
+                          return (
+                            <div key={email} className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-xl text-[10px] font-bold text-slate-600 border border-slate-100">
+                              <div className="flex flex-col">
+                                <span className="text-slate-700 font-extrabold uppercase text-[9px] leading-none">{userName}</span>
+                                <span className="text-slate-400 text-[8px] font-medium tracking-tighter mt-1 flex items-center gap-1">
+                                  <Mail size={10} /> {email}
+                                </span>
+                              </div>
+                              {email !== user?.email && (
+                                <button 
+                                  onClick={() => handleRemoveMember(t.id, email)}
+                                  className="text-slate-400 hover:text-rose-500 font-black uppercase tracking-widest text-[7px] px-2 py-1 hover:bg-rose-50 rounded transition-all"
+                                >
+                                  Remover
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Adicionar Membro */}
+                    <div className="flex gap-2 pt-2 border-t border-slate-100">
+                      <select 
+                        value={newMemberEmail[t.id] || ''} 
+                        onChange={e => setNewMemberEmail(prev => ({ ...prev, [t.id]: e.target.value }))}
+                        className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-bold text-slate-700 outline-none focus:border-[#0079C2] transition-all font-sans cursor-pointer"
+                      >
+                        <option value="">Selecionar usuário...</option>
+                        {allUsers.filter(u => !t.members.includes(u.email)).map(u => (
+                          <option key={u.id} value={u.email}>{u.nome} ({u.email})</option>
+                        ))}
+                      </select>
+                      <button 
+                        onClick={() => handleAddMember(t.id)}
+                        disabled={!newMemberEmail[t.id]?.trim()}
+                        className="px-4 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] text-[9px] font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50"
+                      >
+                        Adicionar
+                      </button>
+                    </div>
+                  </div>
+                )}
+                </div>
+              );
+          })}
+        </div>
+      )}
+      {/* Modal de Confirmação Customizado */}
+      {confirmModal.show && (
+        <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-[360px] rounded-[32px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-200">
+            <div className="p-8 text-center">
+              <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center ${confirmModal.type === 'DANGER' ? 'bg-rose-50 text-rose-500' : 'bg-blue-50 text-[#0079C2]'}`}>
+                {confirmModal.type === 'DANGER' ? <AlertCircle size={32} /> : <Users size={32} />}
               </div>
+              <h3 className="text-base font-black text-slate-800 uppercase tracking-tight mb-2">{confirmModal.title}</h3>
+              <p className="text-slate-500 text-xs font-medium leading-relaxed px-2">{confirmModal.message}</p>
             </div>
-          ))}
+            <div className="grid grid-cols-2 border-t border-slate-100 bg-slate-50/80">
+              <button
+                onClick={() => setConfirmModal(prev => ({ ...prev, show: false }))}
+                className="py-4 text-xs font-black uppercase tracking-widest text-slate-400 hover:bg-slate-100 transition-all border-r border-slate-100"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmModal.onConfirm}
+                className={`py-4 text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-100 ${confirmModal.type === 'DANGER' ? 'text-rose-500' : 'text-[#0079C2]'}`}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

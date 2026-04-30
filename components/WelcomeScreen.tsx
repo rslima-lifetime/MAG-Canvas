@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   FileText, Presentation, LayoutPanelTop, Sparkles, 
   ArrowRight, Upload, Clock, HardDrive, Trash2, AlertCircle, FileJson, Save, LayoutTemplate, CheckCircle2,
-  LogIn, Cloud, Users, Share2, Shield, ShieldCheck, LogOut, Lock, PlusCircle, X
+  LogIn, Cloud, Users, Share2, Shield, ShieldCheck, LogOut, Lock, PlusCircle, X, Folder, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { DocumentFormat, DesignSystem, ReportData, DEFAULT_REPORT_DATA } from '../types';
 import { useLocalStorageProjects, SavedProjectMeta } from '../hooks/useLocalStorageProjects';
@@ -46,6 +46,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
   const [allUsers, setAllUsers] = useState<{id: string, nome: string, email: string}[]>([]);
   const [myTeams, setMyTeams] = useState<any[]>([]);
   const [migrationStatus, setMigrationStatus] = useState<Record<string, 'IDLE' | 'MIGRATING' | 'SUCCESS'>>({});
+  const [expandedFolders, setExpandedFolders] = useState<string[]>(['pessoais']);
 
   const handleMigrateToCloud = async (e: React.MouseEvent, projId: string) => {
     e.stopPropagation();
@@ -82,6 +83,25 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
     return uniqueProjects;
   }, [cloudProjects, sharedProjects]);
 
+
+  const groupedCloudProjects = React.useMemo(() => {
+    const groups: Record<string, any[]> = {
+      'pessoais': []
+    };
+    
+    uniqueCloudProjects.forEach(proj => {
+      if (proj.isShared && proj.allowedTeamId) {
+        if (!groups[proj.allowedTeamId]) {
+          groups[proj.allowedTeamId] = [];
+        }
+        groups[proj.allowedTeamId].push(proj);
+      } else {
+        groups['pessoais'].push(proj);
+      }
+    });
+    
+    return groups;
+  }, [uniqueCloudProjects]);
 
   useEffect(() => {
     // Carrega sempre para a contagem da badge
@@ -555,83 +575,128 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                           return <p className="text-[10px] text-slate-400 font-medium italic ml-6">Nenhum projeto salvo na nuvem ainda.</p>;
                         }
 
+                        const groupKeys = Object.keys(groupedCloudProjects);
+                        
                         return (
-                          <div className="grid grid-cols-1 gap-3">
-                            {uniqueCloudProjects.map((proj) => {
-                              const isOwner = proj.ownerId === user.uid;
-                              const isShared = proj.isShared;
+                          <div className="space-y-4">
+                            {groupKeys.map(groupKey => {
+                              const projs = groupedCloudProjects[groupKey];
+                              if (projs.length === 0) return null;
                               
-                              let badgeColor = "bg-slate-100 text-slate-500 border-slate-200";
-                              let badgeText = "PRIVADO";
+                              const isExpanded = expandedFolders.includes(groupKey);
                               
-                              if (isOwner && !isShared) {
-                                badgeColor = "bg-slate-100 text-slate-600 border-slate-200";
-                                badgeText = "SEU PROJETO";
-                              } else if (isOwner && isShared) {
-                                const team = myTeams.find((t: any) => t.id === proj.allowedTeamId);
-                                const teamName = team ? team.name : 'Público';
-                                badgeColor = "bg-blue-50 text-[#0079C2] border-blue-200";
-                                badgeText = `COMPARTILHADO (${teamName.toUpperCase()})`;
-                              } else if (!isOwner && isShared) {
-                                const team = myTeams.find((t: any) => t.id === proj.allowedTeamId);
-                                const teamName = team ? team.name : 'Público';
-                                const ownerUser = allUsers.find((u: any) => u.id === proj.ownerId);
-                                const ownerName = ownerUser ? ownerUser.nome : 'Outro';
-                                badgeColor = "bg-emerald-50 text-emerald-600 border-emerald-200";
-                                badgeText = `EQUIPE: ${teamName.toUpperCase()} (POR: ${ownerName.toUpperCase()})`;
+                              let folderName = "Projetos Pessoais";
+                              if (groupKey !== 'pessoais') {
+                                const team = myTeams.find((t: any) => t.id === groupKey);
+                                folderName = team ? `Equipe: ${team.name}` : 'Equipe Excluída';
                               }
-
+                              
                               return (
-                                <div 
-                                  key={proj.id}
-                                  onClick={() => onStart({ ...proj, _firestoreId: proj.id, ownerId: proj.ownerId })}
-                                  className="group flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-[#0079C2] hover:shadow-md cursor-pointer transition-all"
-                                >
-                                  <div className="flex items-center gap-4">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${isOwner ? 'bg-blue-50 text-[#0079C2] border-blue-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
-                                      {isOwner ? <Cloud size={20} /> : <Users size={20} />}
-                                    </div>
-                                    <div>
-                                      <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{proj.title || 'Sem Título'}</h4>
-                                      <div className="flex items-center gap-3 mt-1">
-                                        <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded border ${badgeColor}`}>
-                                          {badgeText}
-                                        </span>
-                                        <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
-                                          <Clock size={10} /> 
-                                          {proj.updatedAt?.seconds 
-                                            ? new Date(proj.updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
-                                            : 'Recente'
-                                          }
+                                <div key={groupKey} className="bg-slate-50/30 border border-slate-200 rounded-2xl overflow-hidden">
+                                  <div 
+                                    onClick={() => {
+                                      setExpandedFolders(prev => 
+                                        isExpanded ? prev.filter(id => id !== groupKey) : [...prev, groupKey]
+                                      );
+                                    }}
+                                    className="p-4 bg-white border-b border-slate-100 flex items-center justify-between cursor-pointer select-none hover:bg-slate-50 transition-all"
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      {isExpanded ? <ChevronUp size={18} className="text-[#006098]" /> : <ChevronDown size={18} className="text-slate-400" />}
+                                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${groupKey === 'pessoais' ? 'bg-blue-50 text-[#0079C2] border-blue-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                                        <Folder size={16} />
+                                      </div>
+                                      <div>
+                                        <h4 className="text-xs font-black text-[#006098] uppercase tracking-tight">{folderName}</h4>
+                                        <span className="text-[8px] text-slate-400 font-bold uppercase flex items-center gap-1 mt-0.5">
+                                          <Users size={10} /> {projs.length} {projs.length === 1 ? 'Projeto' : 'Projetos'}
                                         </span>
                                       </div>
                                     </div>
                                   </div>
-                                  {isOwner ? (
-                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <button 
-                                        onClick={(e) => { e.stopPropagation(); setProjectToShare({ id: proj.id, isShared: proj.isShared, allowedTeamId: proj.allowedTeamId }); }}
-                                        className={`p-2 rounded-lg transition-colors border ${
-                                          isShared 
-                                            ? 'text-[#0079C2] bg-blue-50 border-blue-100 hover:bg-blue-100' 
-                                            : 'text-slate-300 hover:text-[#0079C2] hover:bg-slate-50 border-transparent'
-                                        }`}
-                                        title={isShared ? "Desfazer Compartilhamento" : "Compartilhar com a Equipe"}
-                                      >
-                                        <Share2 size={16} />
-                                      </button>
-                                      <div className="w-px h-6 bg-slate-100 mx-1"></div>
-                                      <button 
-                                        onClick={(e) => handleDeleteProject(e, proj.id, 'CLOUD')}
-                                        className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
-                                        title="Excluir Projeto"
-                                      >
-                                        <Trash2 size={16} />
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    <div className="text-[8px] font-black text-[#006098] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                                      Abrir para Editar →
+
+                                  {isExpanded && (
+                                    <div className="p-4 grid grid-cols-1 gap-3 animate-in slide-in-from-top-2 duration-300">
+                                      {projs.map((proj) => {
+                                        const isOwner = proj.ownerId === user.uid;
+                                        const isShared = proj.isShared;
+                                        
+                                        let badgeColor = "bg-slate-100 text-slate-500 border-slate-200";
+                                        let badgeText = "PRIVADO";
+                                        
+                                        if (isOwner && !isShared) {
+                                          badgeColor = "bg-slate-100 text-slate-600 border-slate-200";
+                                          badgeText = "SEU PROJETO";
+                                        } else if (isOwner && isShared) {
+                                          const team = myTeams.find((t: any) => t.id === proj.allowedTeamId);
+                                          const teamName = team ? team.name : 'Público';
+                                          badgeColor = "bg-blue-50 text-[#0079C2] border-blue-200";
+                                          badgeText = `COMPARTILHADO (${teamName.toUpperCase()})`;
+                                        } else if (!isOwner && isShared) {
+                                          const team = myTeams.find((t: any) => t.id === proj.allowedTeamId);
+                                          const teamName = team ? team.name : 'Público';
+                                          const ownerUser = allUsers.find((u: any) => u.id === proj.ownerId);
+                                          const ownerName = ownerUser ? ownerUser.nome : 'Outro';
+                                          badgeColor = "bg-emerald-50 text-emerald-600 border-emerald-200";
+                                          badgeText = `EQUIPE: ${teamName.toUpperCase()} (POR: ${ownerName.toUpperCase()})`;
+                                        }
+
+                                        return (
+                                          <div 
+                                            key={proj.id}
+                                            onClick={() => onStart({ ...proj, _firestoreId: proj.id, ownerId: proj.ownerId })}
+                                            className="group flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-[#0079C2] hover:shadow-md cursor-pointer transition-all"
+                                          >
+                                            <div className="flex items-center gap-4">
+                                              <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${isOwner ? 'bg-blue-50 text-[#0079C2] border-blue-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                                                {isOwner ? <Cloud size={20} /> : <Users size={20} />}
+                                              </div>
+                                              <div>
+                                                <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{proj.title || 'Sem Título'}</h4>
+                                                <div className="flex items-center gap-3 mt-1">
+                                                  <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded border ${badgeColor}`}>
+                                                    {badgeText}
+                                                  </span>
+                                                  <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
+                                                    <Clock size={10} /> 
+                                                    {proj.updatedAt?.seconds 
+                                                      ? new Date(proj.updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
+                                                      : 'Recente'
+                                                    }
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            {isOwner ? (
+                                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button 
+                                                  onClick={(e) => { e.stopPropagation(); setProjectToShare({ id: proj.id, isShared: proj.isShared, allowedTeamId: proj.allowedTeamId }); }}
+                                                  className={`p-2 rounded-lg transition-colors border ${
+                                                    isShared 
+                                                      ? 'text-[#0079C2] bg-blue-50 border-blue-100 hover:bg-blue-100' 
+                                                      : 'text-slate-300 hover:text-[#0079C2] hover:bg-slate-50 border-transparent'
+                                                  }`}
+                                                  title={isShared ? "Desfazer Compartilhamento" : "Compartilhar com a Equipe"}
+                                                >
+                                                  <Share2 size={16} />
+                                                </button>
+                                                <div className="w-px h-6 bg-slate-100 mx-1"></div>
+                                                <button 
+                                                  onClick={(e) => handleDeleteProject(e, proj.id, 'CLOUD')}
+                                                  className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                                                  title="Excluir Projeto"
+                                                >
+                                                  <Trash2 size={16} />
+                                                </button>
+                                              </div>
+                                            ) : (
+                                              <div className="text-[8px] font-black text-[#006098] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                                Abrir para Editar →
+                                              </div>
+                                            )}
+                                          </div>
+                                        );
+                                      })}
                                     </div>
                                   )}
                                 </div>

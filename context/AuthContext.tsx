@@ -34,9 +34,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setRole('Master');
         } else {
           try {
-            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-            if (userDoc.exists()) {
-              setRole(userDoc.data().role || 'Editor');
+            const { query, collection, where, getDocs } = await import('firebase/firestore');
+            const q = query(collection(db, 'users'), where('email', '==', currentUser.email));
+            const querySnapshot = await getDocs(q);
+            
+            if (!querySnapshot.empty) {
+              const userData = querySnapshot.docs[0].data();
+              if (userData.status === 'Inativo') {
+                const { signOut } = await import('firebase/auth');
+                await signOut(auth);
+                setRole(null);
+                setUser(null);
+                return;
+              }
+              setRole(userData.role || 'Editor');
             } else {
               setRole('Editor');
             }

@@ -19,6 +19,7 @@ interface UserDoc {
   nome: string;
   email: string;
   role: string;
+  status?: string;
   createdAt?: string;
 }
 
@@ -92,6 +93,7 @@ export const GestaoAcessos: React.FC = () => {
         nome: newNome,
         email: newEmail,
         role: newRole,
+        status: 'Ativo',
         createdAt: new Date().toISOString()
       });
 
@@ -110,6 +112,46 @@ export const GestaoAcessos: React.FC = () => {
 
     } catch (error: any) {
       console.error("Erro ao criar usuário:", error);
+      
+      if (error.code === 'auth/email-already-in-use') {
+        try {
+          const { query, collection, where, getDocs, addDoc, updateDoc } = await import('firebase/firestore');
+          const q = query(collection(db, 'users'), where('email', '==', newEmail));
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            await updateDoc(userDoc.ref, {
+              nome: newNome,
+              role: newRole,
+              status: 'Ativo'
+            });
+            setFormSuccess("Acesso reativado com sucesso!");
+          } else {
+            await addDoc(collection(db, 'users'), {
+              nome: newNome,
+              email: newEmail,
+              role: newRole,
+              status: 'Ativo',
+              createdAt: new Date().toISOString()
+            });
+            setFormSuccess("Acesso restaurado com sucesso!");
+          }
+          
+          setNewNome('');
+          setNewEmail('');
+          setNewPassword('');
+          fetchUsers();
+          setTimeout(() => {
+            setShowAddModal(false);
+            setFormSuccess(null);
+          }, 2000);
+          return;
+        } catch (firestoreErr) {
+          console.error("Erro ao recuperar usuário no Firestore:", firestoreErr);
+        }
+      }
+
       const msg = error.code === 'auth/email-already-in-use' ? 'Este e-mail já está em uso.' :
                   error.code === 'auth/weak-password' ? 'A senha deve ter pelo menos 6 caracteres.' :
                   error.message || "Falha na operação.";
@@ -137,13 +179,15 @@ export const GestaoAcessos: React.FC = () => {
     }
   };
 
-  const executeDeleteUser = async (userId: string) => {
+  const executeToggleUserStatus = async (userId: string, currentStatus: string) => {
     try {
-      await deleteDoc(doc(db, "users", userId));
-      setUsers(prev => prev.filter(u => u.id !== userId));
+      const { updateDoc, doc } = await import('firebase/firestore');
+      const newStatus = currentStatus === 'Inativo' ? 'Ativo' : 'Inativo';
+      await updateDoc(doc(db, "users", userId), { status: newStatus });
+      fetchUsers();
       setConfirmModal(prev => ({ ...prev, show: false }));
     } catch (error) {
-      console.error("Erro ao excluir:", error);
+      console.error("Erro ao alterar status:", error);
     }
   };
 
@@ -157,13 +201,14 @@ export const GestaoAcessos: React.FC = () => {
     });
   };
 
-  const openDeleteConfirm = (user: UserDoc) => {
+  const openToggleStatusConfirm = (user: UserDoc) => {
+    const isCurrentlyActive = user.status !== 'Inativo';
     setConfirmModal({
       show: true,
-      title: 'Excluir Usuário',
-      message: `Tem certeza que deseja remover o acesso de ${user.nome}? Esta ação não pode ser desfeita.`,
-      type: 'DANGER',
-      onConfirm: () => executeDeleteUser(user.id)
+      title: isCurrentlyActive ? 'Desativar Usuário' : 'Ativar Usuário',
+      message: `Tem certeza que deseja ${isCurrentlyActive ? 'desativar' : 'reativar'} o acesso de ${user.nome}?`,
+      type: isCurrentlyActive ? 'DANGER' : 'INFO',
+      onConfirm: () => executeToggleUserStatus(user.id, user.status || 'Ativo')
     });
   };
 
@@ -173,7 +218,7 @@ export const GestaoAcessos: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-500 relative">
+    <div className="flex flex-col animate-in fade-in slide-in-from-right-4 duration-500 relative">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h3 className="text-sm font-black text-[#006098] uppercase tracking-widest flex items-center gap-2">
@@ -217,6 +262,11 @@ export const GestaoAcessos: React.FC = () => {
                   <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{u.nome}</h4>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-[9px] font-bold text-slate-400">{u.email}</span>
+                    {u.status === 'Inativo' && (
+                      <span className="text-[7px] px-1.5 py-0.5 bg-rose-50 text-rose-500 rounded font-black uppercase tracking-wider border border-rose-100">
+                        Inativo
+                      </span>
+                    )}
                     {(isAdmin || currentRole === 'Master') && u.email !== 'master@mag.com.br' ? (
                       <select
                         value={u.role || 'Editor'}
@@ -238,7 +288,7 @@ export const GestaoAcessos: React.FC = () => {
                       </select>
                     ) : (
                       <span className="text-[8px] px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded-full font-black uppercase tracking-tighter">
-                        {u.role || 'Editor'}
+                        {u.email === 'master@mag.com.br' ? 'Master' : (u.role || 'Editor')}
                       </span>
                     )}
                   </div>
@@ -253,12 +303,16 @@ export const GestaoAcessos: React.FC = () => {
                   <KeyRound size={16} />
                 </button>
                 <button 
-                  onClick={() => openDeleteConfirm(u)}
-                  className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all active:scale-90"
-                  title="Remover Usuário"
-                  disabled={primaryAuth.currentUser?.uid === u.id}
+                  onClick={() => openToggleStatusConfirm(u)}
+                  className={`p-2 rounded-lg transition-all active:scale-90 ${
+                    u.status === 'Inativo' 
+                      ? 'text-emerald-500 hover:bg-emerald-50' 
+                      : 'text-slate-400 hover:text-rose-500 hover:bg-rose-50'
+                  }`}
+                  title={u.status === 'Inativo' ? "Ativar Usuário" : "Desativar Usuário"}
+                  disabled={primaryAuth.currentUser?.uid === u.id || u.email === 'master@mag.com.br'}
                 >
-                  <Trash2 size={16} />
+                  {u.status === 'Inativo' ? <CheckCircle2 size={16} /> : <Trash2 size={16} />}
                 </button>
               </div>
             </div>

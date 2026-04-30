@@ -393,6 +393,12 @@ const App: React.FC = () => {
   useEffect(() => {
     if (isPresentationMode) {
       updatePresentationZoom();
+      
+      // Garante que o modo apresentação comece no topo
+      if (mainContainerRef.current) {
+        mainContainerRef.current.scrollTop = 0;
+      }
+      
       window.addEventListener('resize', updatePresentationZoom);
       document.documentElement.requestFullscreen().catch((e) => console.log('Fullscreen denied', e));
     } else {
