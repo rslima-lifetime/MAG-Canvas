@@ -37,7 +37,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
     <label className="flex items-center justify-between cursor-pointer group py-1">
       <div className="flex items-center gap-2">
         <Icon size={12} className={value ? 'text-[#0079C2]' : 'text-slate-300'} />
-        <span className={`text-[10px] font-bold uppercase transition-colors ${value ? 'text-[#006098]' : 'text-slate-400 group-hover:text-slate-500'}`}>
+        <span className={`text-xs font-bold uppercase transition-colors ${value ? 'text-[#006098]' : 'text-slate-400 group-hover:text-slate-500'}`}>
           {label}
         </span>
       </div>
@@ -54,7 +54,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
     <div className="space-y-4 animate-in fade-in duration-200">
       {/* Nome do Indicador Principal */}
       <div className="space-y-1">
-        <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+        <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
           <Type size={10} className="text-[#0079C2]" /> Nome do Indicador (Rótulo Interno)
         </label>
         <input 
@@ -69,7 +69,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
       {/* Seção de Formatação */}
       <div className="space-y-3">
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <Binary size={10} className="text-[#0079C2]" /> Formato do Valor
           </label>
           <select 
@@ -84,7 +84,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
         </div>
 
         <div className="flex items-center justify-between px-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Abreviar (k/mi)</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Abreviar (k/mi)</label>
           <button 
             onClick={() => onUpdate({ abbreviate: !config.abbreviate })}
             className={`w-10 h-6 rounded-full transition-all relative ${config.abbreviate ? 'bg-[#0079C2]' : 'bg-slate-200'}`}
@@ -98,7 +98,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
       <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
         <div className="flex items-center gap-2 mb-1">
           <Eye size={12} className="text-[#0079C2]" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Visibilidade e Recursos</span>
+          <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Visibilidade e Recursos</span>
         </div>
         <div className="grid grid-cols-1 gap-1">
           <Toggle 
@@ -130,7 +130,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Valor Atual</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Valor Atual</label>
           <input 
             type="number" 
             step="any"
@@ -141,7 +141,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
         </div>
         {(config.showDelta !== false) && (
           <div className="space-y-1">
-            <label className="text-[9px] font-bold text-gray-400 uppercase">V. Anterior (Variação)</label>
+            <label className="text-[11px] font-bold text-gray-400 uppercase">V. Anterior (Variação)</label>
             <input 
               type="number" 
               step="any"
@@ -155,7 +155,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
 
       {(config.showGoal !== false) && (
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <Target size={10} className="text-[#0079C2]" /> Valor da Meta (Goal)
           </label>
           <input 
@@ -170,7 +170,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
 
       {(config.showTrend !== false) && (
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <TrendingUp size={10} className="text-[#00A7E7]" /> Dados da Tendência (CSV)
           </label>
           <input 
@@ -178,7 +178,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
             placeholder="Ex: 10, 15, 12, 18, 20"
             value={config.trendData || ''} 
             onChange={(e) => onUpdate({ trendData: e.target.value })}
-            className="w-full p-2 border rounded-xl text-[10px] font-mono"
+            className="w-full p-2 border rounded-xl text-xs font-mono"
           />
         </div>
       )}
@@ -186,7 +186,7 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
       {(config.showSubMeasures !== false) && (
         <div className="space-y-2 pt-4 border-t">
           <div className="flex justify-between items-center">
-            <label className="text-[9px] font-bold text-gray-400 uppercase">Sub-medidas</label>
+            <label className="text-[11px] font-bold text-gray-400 uppercase">Sub-medidas</label>
             <button onClick={addSubMeasure} className="text-[#0079C2] hover:bg-blue-50 p-1 rounded transition-colors">
               <Plus size={14} />
             </button>
@@ -199,14 +199,14 @@ export const KPIBlockEditor: React.FC<KPIBlockEditorProps> = ({ config, onUpdate
                   value={sm.label} 
                   onChange={(e) => updateSubMeasure(i, 'label', e.target.value)}
                   placeholder="Label"
-                  className="flex-1 p-1.5 text-[9px] border rounded"
+                  className="flex-1 p-1.5 text-[11px] border rounded"
                 />
                 <input 
                   type="text" 
                   value={sm.value} 
                   onChange={(e) => updateSubMeasure(i, 'value', e.target.value)}
                   placeholder="Valor"
-                  className="w-16 p-1.5 text-[9px] border rounded font-bold"
+                  className="w-16 p-1.5 text-[11px] border rounded font-bold"
                 />
                 <button onClick={() => removeSubMeasure(i)} className="text-rose-400 opacity-0 group-hover:opacity-100 p-1">
                   <Trash2 size={12} />

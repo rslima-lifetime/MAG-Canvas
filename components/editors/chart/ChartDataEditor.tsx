@@ -142,12 +142,12 @@ export const ChartDataEditor: React.FC<ChartDataEditorProps> = ({ data, onUpdate
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Interface de Dados</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter">Interface de Dados</label>
         <div className="flex bg-slate-100 p-1 rounded-lg gap-1 shadow-inner">
-          <button onClick={() => setViewMode('GRID')} className={`flex-1 flex items-center justify-center gap-1 p-1 rounded text-[8px] font-black uppercase transition-all ${viewMode === 'GRID' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}>
+          <button onClick={() => setViewMode('GRID')} className={`flex-1 flex items-center justify-center gap-1 p-1 rounded text-[10px] font-black uppercase transition-all ${viewMode === 'GRID' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}>
             <LayoutGrid size={10} /> Planilha
           </button>
-          <button onClick={() => setViewMode('TEXT')} className={`flex-1 flex items-center justify-center gap-1 p-1 rounded text-[8px] font-black uppercase transition-all ${viewMode === 'TEXT' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}>
+          <button onClick={() => setViewMode('TEXT')} className={`flex-1 flex items-center justify-center gap-1 p-1 rounded text-[10px] font-black uppercase transition-all ${viewMode === 'TEXT' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}>
             <Type size={10} /> CSV/Texto
           </button>
         </div>
@@ -157,13 +157,13 @@ export const ChartDataEditor: React.FC<ChartDataEditorProps> = ({ data, onUpdate
         <textarea 
           value={data} 
           onChange={(e) => onUpdateData(e.target.value)} 
-          className="w-full p-2 text-[10px] font-mono border rounded h-48 bg-slate-900 text-slate-100 outline-none shadow-lg"
+          className="w-full p-2 text-xs font-mono border rounded h-48 bg-slate-900 text-slate-100 outline-none shadow-lg"
           placeholder="Mês	Série1	Série2&#10;Jan	10	20"
         />
       ) : (
         <div className="border rounded-xl overflow-hidden bg-slate-50 shadow-inner ring-1 ring-slate-200">
           <div className="overflow-x-auto max-h-64">
-            <table className="w-full text-[10px] border-collapse table-fixed">
+            <table className="w-full text-xs border-collapse table-fixed">
               <thead>
                 <tr className="bg-slate-200 sticky top-0 z-10">
                   <th className="p-1 border-r border-slate-300 w-8"></th>
@@ -173,7 +173,7 @@ export const ChartDataEditor: React.FC<ChartDataEditorProps> = ({ data, onUpdate
                         type="text"
                         value={h}
                         onChange={(e) => handleHeaderChange(i, e.target.value)}
-                        className="w-full p-1.5 bg-slate-200 text-[#006098] font-black uppercase text-[9px] outline-none focus:bg-white text-center transition-colors"
+                        className="w-full p-1.5 bg-slate-200 text-[#006098] font-black uppercase text-[11px] outline-none focus:bg-white text-center transition-colors"
                       />
                       {i > 0 && (
                         <button 
@@ -191,7 +191,7 @@ export const ChartDataEditor: React.FC<ChartDataEditorProps> = ({ data, onUpdate
               <tbody>
                 {dataPoints.map((row, rIdx) => (
                   <tr key={rIdx} className="border-b border-slate-200 bg-white group/row hover:bg-blue-50/20">
-                    <td className="p-1 text-center text-slate-300 font-mono text-[8px] border-r">{rIdx + 1}</td>
+                    <td className="p-1 text-center text-slate-300 font-mono text-[10px] border-r">{rIdx + 1}</td>
                     {headers.map((h, hIdx) => (
                       <td key={hIdx} className="p-0 border-r border-slate-100">
                         <input 
@@ -217,8 +217,8 @@ export const ChartDataEditor: React.FC<ChartDataEditorProps> = ({ data, onUpdate
             </table>
           </div>
           <div className="p-2 flex gap-2 bg-slate-100 border-t border-slate-200">
-            <button onClick={addRow} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[9px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Linha</button>
-            <button onClick={addColumn} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[9px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Coluna</button>
+            <button onClick={addRow} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[11px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Linha</button>
+            <button onClick={addColumn} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[11px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Coluna</button>
           </div>
         </div>
       )}

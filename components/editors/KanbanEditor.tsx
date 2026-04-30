@@ -133,19 +133,19 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
       <div className="flex bg-slate-100 p-1 rounded-xl gap-1">
         <button 
           onClick={() => setActiveTab('CARDS')}
-          className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${activeTab === 'CARDS' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}
+          className={`flex-1 py-1.5 rounded-lg text-[11px] font-black uppercase transition-all ${activeTab === 'CARDS' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}
         >
           Cards ({cards.length})
         </button>
         <button 
           onClick={() => setActiveTab('COLUMNS')}
-          className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${activeTab === 'COLUMNS' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}
+          className={`flex-1 py-1.5 rounded-lg text-[11px] font-black uppercase transition-all ${activeTab === 'COLUMNS' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}
         >
           Colunas
         </button>
         <button 
           onClick={() => setActiveTab('TEAM')}
-          className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${activeTab === 'TEAM' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}
+          className={`flex-1 py-1.5 rounded-lg text-[11px] font-black uppercase transition-all ${activeTab === 'TEAM' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}
         >
           Equipe & Tags
         </button>
@@ -154,7 +154,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
       {activeTab === 'TEAM' && (
         <div className="space-y-6 animate-in slide-in-from-right-2 duration-300">
            <div className="space-y-3">
-              <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                  <Users size={12} /> Gestão da Equipe
               </label>
               <div className="flex gap-2">
@@ -164,7 +164,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                     onChange={(e) => setNewMemberName(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addMember()}
                     placeholder="Nome do integrante..."
-                    className="flex-1 p-2 text-[10px] border rounded-lg outline-none focus:ring-2 focus:ring-[#00A7E7]/20"
+                    className="flex-1 p-2 text-xs border rounded-lg outline-none focus:ring-2 focus:ring-[#00A7E7]/20"
                  />
                  <button 
                     onClick={addMember}
@@ -176,7 +176,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
               <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto no-scrollbar p-1">
                  {members.map((m: string) => (
                    <div key={m} className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border rounded-lg group">
-                      <span className="text-[9px] font-bold text-slate-600">{m}</span>
+                      <span className="text-[11px] font-bold text-slate-600">{m}</span>
                       <button onClick={() => onUpdate({ members: members.filter((x: string) => x !== m) })} className="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100">
                         <X size={10} />
                       </button>
@@ -186,14 +186,14 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
            </div>
 
            <div className="space-y-3 pt-4 border-t border-slate-100">
-              <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                  <Tag size={12} /> Paleta de Etiquetas
               </label>
               <div className="space-y-2">
                 {uniqueTags.length > 0 ? (
                   uniqueTags.map(tag => (
                     <div key={tag} className="flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-100 group">
-                       <span className="text-[10px] font-black text-slate-600 uppercase truncate max-w-[100px]">{tag}</span>
+                       <span className="text-xs font-black text-slate-600 uppercase truncate max-w-[100px]">{tag}</span>
                        <div className="flex gap-1">
                           {TAG_COLORS_PALETTE.map(c => (
                             <button 
@@ -209,7 +209,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                   ))
                 ) : (
                   <div className="text-center py-4 bg-slate-50 border border-dashed rounded-xl">
-                     <p className="text-[8px] font-bold text-slate-400 uppercase">Nenhuma tag criada nos cards</p>
+                     <p className="text-[10px] font-bold text-slate-400 uppercase">Nenhuma tag criada nos cards</p>
                   </div>
                 )}
               </div>
@@ -256,7 +256,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
           ))}
           <button 
             onClick={addColumn}
-            className="w-full py-2 border-2 border-dashed border-blue-200 text-[#0079C2] text-[10px] font-black uppercase rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+            className="w-full py-2 border-2 border-dashed border-blue-200 text-[#0079C2] text-xs font-black uppercase rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
           >
             <Plus size={14} /> Nova Coluna
           </button>
@@ -272,7 +272,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                   <select 
                     value={card.columnId}
                     onChange={(e) => updateCard(card.id, { columnId: e.target.value })}
-                    className="text-[9px] font-black uppercase text-[#0079C2] bg-blue-50 px-2 py-1 rounded outline-none"
+                    className="text-[11px] font-black uppercase text-[#0079C2] bg-blue-50 px-2 py-1 rounded outline-none"
                   >
                     {columns.map((col: any) => (
                       <option key={col.id} value={col.id}>{col.title}</option>
@@ -304,7 +304,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                     <select 
                       value={card.owner || ''} 
                       onChange={(e) => updateCard(card.id, { owner: e.target.value })}
-                      className="w-full p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[9px] font-bold outline-none"
+                      className="w-full p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[11px] font-bold outline-none"
                     >
                       <option value="">Não atribuído</option>
                       {members.map((m: string) => (
@@ -317,7 +317,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                     <select 
                       value={card.priority}
                       onChange={(e) => updateCard(card.id, { priority: e.target.value as any })}
-                      className="w-full p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[9px] font-bold"
+                      className="w-full p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[11px] font-bold"
                     >
                       <option value="LOW">Baixa</option>
                       <option value="MEDIUM">Média</option>
@@ -334,14 +334,14 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                     type="date" 
                     value={card.date || ''} 
                     onChange={(e) => updateCard(card.id, { date: e.target.value })}
-                    className="w-full p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[9px] font-bold outline-none focus:border-blue-400"
+                    className="w-full p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[11px] font-bold outline-none focus:border-blue-400"
                   />
                 </div>
 
                 {/* Checklist Editor */}
                 <div className="space-y-2 pt-2 border-t border-slate-100">
                    <div className="flex items-center justify-between">
-                     <label className="text-[8px] font-black uppercase text-slate-400 flex items-center gap-1">
+                     <label className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1">
                         <ListTodo size={10} /> Checklist
                      </label>
                    </div>
@@ -362,7 +362,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                              const newChecklist = (card.checklist || []).map(it => it.id === item.id ? { ...it, text: e.target.value } : it);
                              updateCard(card.id, { checklist: newChecklist });
                            }}
-                           className={`flex-1 text-[10px] outline-none bg-transparent border-b border-transparent focus:border-blue-200 ${item.completed ? 'text-slate-400 line-through italic' : 'text-slate-600 font-medium'}`}
+                           className={`flex-1 text-xs outline-none bg-transparent border-b border-transparent focus:border-blue-200 ${item.completed ? 'text-slate-400 line-through italic' : 'text-slate-600 font-medium'}`}
                          />
                          <button 
                            onClick={() => removeCheckItem(card.id, item.id)}
@@ -380,7 +380,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                        value={checkInputs[card.id] || ''} 
                        onChange={(e) => setCheckInputs(prev => ({ ...prev, [card.id]: e.target.value }))}
                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCheckItem(card.id))}
-                       className="bg-transparent text-[10px] outline-none w-full font-bold text-[#006098]"
+                       className="bg-transparent text-xs outline-none w-full font-bold text-[#006098]"
                        placeholder="Novo item do checklist..."
                      />
                    </div>
@@ -392,7 +392,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                       {card.tags?.map((t, ti) => {
                         const colorHex = tagColors[t] || '#0079C2';
                         return (
-                          <span key={ti} className="flex items-center gap-1 text-[8px] font-black uppercase px-2 py-0.5 rounded border" style={{ backgroundColor: colorHex + '10', color: colorHex, borderColor: colorHex + '30' }}>
+                          <span key={ti} className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded border" style={{ backgroundColor: colorHex + '10', color: colorHex, borderColor: colorHex + '30' }}>
                             {t}
                             <button onClick={() => removeTag(card.id, t)} className="hover:opacity-50"><X size={8} /></button>
                           </span>
@@ -413,7 +413,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
                           }
                         }}
                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag(card.id))}
-                        className="bg-transparent text-[9px] outline-none w-full"
+                        className="bg-transparent text-[11px] outline-none w-full"
                         placeholder="Adicionar tags (separadas por vírgula)"
                       />
                    </div>
@@ -425,7 +425,7 @@ export const KanbanEditor: React.FC<KanbanEditorProps> = ({ config, onUpdate }) 
           {columns.length > 0 && (
             <button 
               onClick={() => onUpdate({ cards: [...cards, { id: `card-${Date.now()}`, columnId: columns[0].id, title: 'Nova Tarefa', priority: 'MEDIUM', tags: [], owner: '', date: new Date().toISOString().split('T')[0], checklist: [] }] })}
-              className="w-full py-3 bg-[#0079C2] text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#006098] transition-all shadow-lg"
+              className="w-full py-3 bg-[#0079C2] text-white rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#006098] transition-all shadow-lg"
             >
               <Plus size={16} /> Adicionar Novo Cartão
             </button>

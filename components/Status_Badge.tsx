@@ -19,7 +19,7 @@ const Status_Badge: React.FC<Status_BadgeProps> = ({ status }) => {
   };
 
   return (
-    <div className={`px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-tighter ${styles[status]}`}>
+    <div className={`px-3 py-1 rounded-full text-sm font-bold border uppercase tracking-tighter ${styles[status]}`}>
       {label[status]}
     </div>
   );

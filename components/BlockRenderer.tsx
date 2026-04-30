@@ -521,7 +521,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
         <div className={`mt-4 pt-2 border-t rounded-lg flex gap-2 shrink-0 transition-all ${isBlueTheme ? 'border-white/10 bg-white/5 p-1.5' : 'border-slate-100 bg-slate-50/40 p-1.5'} ${isHighlighted ? 'ring-1 ring-blue-400/20' : ''}`}>
           <MessageSquareQuote size={10} className="text-[#00A7E7] shrink-0 mt-0.5" />
           <div className="flex flex-col w-full">
-            <span className={`text-[7px] font-black uppercase tracking-widest mb-0.5 ${isBlueTheme ? 'text-blue-300' : 'text-[#0079C2]'}`}>Comentários</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest mb-0.5 ${isBlueTheme ? 'text-blue-300' : 'text-[#0079C2]'}`}>Comentários</span>
             <p 
               contentEditable={isHighlighted}
               suppressContentEditableWarning
@@ -529,7 +529,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
               onBlur={handleAnnotationBlur}
               onPaste={handleAnnotationPaste}
               onClick={(e) => isHighlighted && e.stopPropagation()}
-              className={`annotation-placeholder text-[9px] font-medium leading-relaxed italic outline-none w-full min-h-[1em] ${isBlueTheme ? 'text-blue-100/70' : 'text-[#415364]'} ${isHighlighted ? 'bg-white/10 cursor-text' : ''}`}
+              className={`annotation-placeholder text-[11px] font-medium leading-relaxed italic outline-none w-full min-h-[1em] ${isBlueTheme ? 'text-blue-100/70' : 'text-[#415364]'} ${isHighlighted ? 'bg-white/10 cursor-text' : ''}`}
               dangerouslySetInnerHTML={{ __html: block.config.annotation || "" }}
             />
           </div>

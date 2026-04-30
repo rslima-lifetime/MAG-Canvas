@@ -78,7 +78,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({
 
   const getTextStyle = () => {
     const textColor = isBlueTheme ? 'text-white' : (isFuture ? '#002B49' : '#415364');
-    let base = `text-[13px] leading-relaxed w-full min-h-[2em] outline-none block relative z-10 ${isEditable ? 'cursor-text' : ''}`;
+    let base = `text-base leading-relaxed w-full min-h-[2em] outline-none block relative z-10 ${isEditable ? 'cursor-text' : ''}`;
 
     if (style === 'INSIGHT' || style === 'OBJECTIVE' || style === 'CONCLUSION') {
       return `${base} font-bold ${isBlueTheme ? 'text-white' : (isFuture ? 'text-[#002B49]' : 'text-[#006098]')}`;
@@ -116,7 +116,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({
               <div className="w-7 h-7 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: item.color }}>
                 <item.icon size={16} className="text-white" strokeWidth={2.5} />
               </div>
-              <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${isBlueTheme ? 'text-white' : 'text-slate-500'}`}>{item.label}</span>
+              <span className={`text-sm font-black uppercase tracking-[0.2em] ${isBlueTheme ? 'text-white' : 'text-slate-500'}`}>{item.label}</span>
             </div>
             <div 
               ref={item.ref}
@@ -125,7 +125,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({
               data-placeholder={item.placeholder}
               onBlur={updatePar}
               onClick={(e) => isEditable && e.stopPropagation()}
-              className={`text-[11px] font-medium leading-relaxed outline-none rich-placeholder min-h-[4em] ${isBlueTheme ? 'text-blue-50' : 'text-[#415364]'} ${item.label === 'Resultado' ? 'text-[12.5px] font-black' : ''}`}
+              className={`text-sm font-medium leading-relaxed outline-none rich-placeholder min-h-[4em] ${isBlueTheme ? 'text-blue-50' : 'text-[#415364]'} ${item.label === 'Resultado' ? 'text-sm font-black' : ''}`}
             />
             <item.icon size={64} className="absolute -bottom-4 -right-4 opacity-[0.03] pointer-events-none rotate-12" style={{ color: item.color }} />
           </div>
@@ -161,7 +161,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({
       {!isPlain && (
         <div className="flex items-center gap-2 mb-3 select-none pointer-events-none w-full shrink-0">
           <currentStyle.icon size={12} style={{ color: currentStyle.color }} className="shrink-0" />
-          <span className={`text-[8px] font-black uppercase tracking-[0.2em] whitespace-nowrap ${isFuture ? 'font-mono' : ''}`} style={{ color: currentStyle.color }}>{currentStyle.label}</span>
+          <span className={`text-xs font-black uppercase tracking-[0.2em] whitespace-nowrap ${isFuture ? 'font-mono' : ''}`} style={{ color: currentStyle.color }}>{currentStyle.label}</span>
         </div>
       )}
       <div 

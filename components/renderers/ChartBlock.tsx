@@ -100,7 +100,7 @@ export const ChartBlock: React.FC<ChartBlockProps> = ({
         style={{ height: `${containerHeight}px` }}
       >
         <BarChart3 size={24} className={`${isBlueTheme ? 'text-white/20' : 'text-[#00A7E7] opacity-20'}`} />
-        <p className={`text-[9px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>Aguardando Dados</p>
+        <p className={`text-[11px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>Aguardando Dados</p>
       </div>
     );
   }

@@ -1,5 +1,49 @@
 
-import * as LucideIcons from 'lucide-react';
+import { 
+  HelpCircle, MapPin, BarChart3, DollarSign, PieChart, AlertCircle, CheckCircle2, 
+  ArrowRight, TrendingUp, Users, Calendar, Clock, Target, Zap, Award, Star, 
+  Activity, ShieldCheck, FileText, Settings, Search, Filter, Plus, Trash2, 
+  Edit3, MoreHorizontal, MoreVertical, ChevronDown, ChevronRight, ChevronLeft, 
+  ChevronUp, Layout, Briefcase, Mail, Phone, Globe, Rocket, Code, Server, 
+  Database, Cpu, Layers, Box, Package, Truck, ShoppingCart, CreditCard, 
+  Lock, Unlock, User, UserPlus, UserCheck, UserX, Smile, Frown, Meh, 
+  ThumbsUp, ThumbsDown, Heart, MessageSquare, MessageCircle, Camera, 
+  Video, Mic, Image, Music, Play, Pause, StopCircle, Volume2, Wifi, 
+  Bluetooth, Battery, Sun, Moon, Cloud, CloudRain, Link, ExternalLink, 
+  Menu, X, Flag, Compass, Route, Milestone, Mountain, Trophy, Medal, 
+  Goal, Crosshair, LineChart, TrendingDown, Sigma, Table, FileSpreadsheet, 
+  Binary, Variable, GanttChart, ScatterChart, AreaChart, UserCog, UserSearch, 
+  UserRound, UsersRound, HeartHandshake, Speech, GraduationCap, Backpack, 
+  Code2, Terminal, Laptop, Smartphone, Monitor, Keyboard, Mouse, HardDrive, 
+  Network, Sliders, Flashlight, Wrench, Hammer, Cog, Workflow, 
+  Factory, ClipboardList, Wallet, Banknote, Coins, PiggyBank, Receipt, 
+  Percent, Calculator, Gem, Diamond, Timer, Hourglass, History, Watch, 
+  AlarmClock, CalendarDays, List, Check, Minus, AlertTriangle, Info, 
+  Eye, EyeOff, Copy, Share2, Save
+} from 'lucide-react';
+
+const Icons: Record<string, any> = {
+  HelpCircle, MapPin, BarChart3, DollarSign, PieChart, AlertCircle, CheckCircle2, 
+  ArrowRight, TrendingUp, Users, Calendar, Clock, Target, Zap, Award, Star, 
+  Activity, ShieldCheck, FileText, Settings, Search, Filter, Plus, Trash2, 
+  Edit3, MoreHorizontal, MoreVertical, ChevronDown, ChevronRight, ChevronLeft, 
+  ChevronUp, Layout, Briefcase, Mail, Phone, Globe, Rocket, Code, Server, 
+  Database, Cpu, Layers, Box, Package, Truck, ShoppingCart, CreditCard, 
+  Lock, Unlock, User, UserPlus, UserCheck, UserX, Smile, Frown, Meh, 
+  ThumbsUp, ThumbsDown, Heart, MessageSquare, MessageCircle, Camera, 
+  Video, Mic, Image, Music, Play, Pause, StopCircle, Volume2, Wifi, 
+  Bluetooth, Battery, Sun, Moon, Cloud, CloudRain, Link, ExternalLink, 
+  Menu, X, Flag, Compass, Route, Milestone, Mountain, Trophy, Medal, 
+  Goal, Crosshair, LineChart, TrendingDown, Sigma, Table, FileSpreadsheet, 
+  Binary, Variable, GanttChart, ScatterChart, AreaChart, UserCog, UserSearch, 
+  UserRound, UsersRound, HeartHandshake, Speech, GraduationCap, Backpack, 
+  Code2, Terminal, Laptop, Smartphone, Monitor, Keyboard, Mouse, HardDrive, 
+  Network, Sliders, Flashlight, Wrench, Hammer, Cog, Workflow, 
+  Factory, ClipboardList, Wallet, Banknote, Coins, PiggyBank, Receipt, 
+  Percent, Calculator, Gem, Diamond, Timer, Hourglass, History, Watch, 
+  AlarmClock, CalendarDays, List, Check, Minus, AlertTriangle, Info, 
+  Eye, EyeOff, Copy, Share2, Save
+};
 
 // Mapeamento de nomes legados (kebab-case) para componentes Lucide (PascalCase)
 const LEGACY_MAPPING: Record<string, string> = {
@@ -103,21 +147,21 @@ export const ALL_ICONS_FLAT = Object.values(ICON_CATEGORIES).flat();
  * Suporta nomes em PascalCase ('MapPin') e kebab-case ('map-pin').
  */
 export const resolveIconComponent = (iconName: string) => {
-  if (!iconName) return LucideIcons.HelpCircle;
+  if (!iconName) return HelpCircle;
 
   // 1. Tenta pegar pelo nome direto (PascalCase)
-  let Component = (LucideIcons as any)[iconName];
+  let Component = Icons[iconName];
 
   // 2. Se não achou, tenta mapear de kebab-case para PascalCase
   if (!Component && LEGACY_MAPPING[iconName]) {
-    Component = (LucideIcons as any)[LEGACY_MAPPING[iconName]];
+    Component = Icons[LEGACY_MAPPING[iconName]];
   }
 
   // 3. Fallback: Tenta converter kebab-case para PascalCase manualmente
   if (!Component && iconName.includes('-')) {
     const pascal = iconName.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('');
-    Component = (LucideIcons as any)[pascal];
+    Component = Icons[pascal];
   }
 
-  return Component || LucideIcons.HelpCircle;
+  return Component || HelpCircle;
 };

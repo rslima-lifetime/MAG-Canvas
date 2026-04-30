@@ -142,24 +142,24 @@ export const GestaoEquipes: React.FC = () => {
     <div className="flex flex-col animate-in fade-in slide-in-from-right-4 duration-500 relative">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h3 className="text-sm font-black text-[#006098] uppercase tracking-widest flex items-center gap-2">
+          <h3 className="text-base font-black text-[#006098] uppercase tracking-widest flex items-center gap-2">
             <Users size={18} className="text-[#00A7E7]" /> Gestão de Equipes
           </h3>
-          <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">Crie grupos de acesso restrito para seus projetos</p>
+          <p className="text-xs text-slate-400 font-bold uppercase mt-1">Crie grupos de acesso restrito para seus projetos</p>
         </div>
       </div>
 
       {/* Formulário de Criação */}
       <form onSubmit={handleCreateTeam} className="mb-8 bg-slate-50 p-6 rounded-2xl border border-slate-200 flex gap-3 items-end">
         <div className="flex-1 space-y-2">
-          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nome da Nova Equipe</label>
+          <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Nome da Nova Equipe</label>
           <input 
             type="text" 
             required 
             value={newTeamName} 
             onChange={e => setNewTeamName(e.target.value)}
             placeholder="Ex: Diretoria Financeira, Equipe People Analytics..."
-            className="w-full p-4 bg-white border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-[#0079C2] transition-all"
+            className="w-full p-4 bg-white border border-slate-200 rounded-xl text-base font-bold outline-none focus:border-[#0079C2] transition-all"
           />
         </div>
         <button 
@@ -172,13 +172,13 @@ export const GestaoEquipes: React.FC = () => {
       </form>
 
       {formError && (
-        <div className="p-4 mb-4 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl text-[10px] font-bold flex items-center gap-2">
+        <div className="p-4 mb-4 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl text-xs font-bold flex items-center gap-2">
           <AlertCircle size={14} /> {formError}
         </div>
       )}
 
       {formSuccess && (
-        <div className="p-4 mb-4 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl text-[10px] font-bold flex items-center gap-2">
+        <div className="p-4 mb-4 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl text-xs font-bold flex items-center gap-2">
           <CheckCircle2 size={14} /> {formSuccess}
         </div>
       )}
@@ -186,13 +186,13 @@ export const GestaoEquipes: React.FC = () => {
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center py-12">
           <RefreshCw size={32} className="text-[#0079C2] animate-spin mb-4" />
-          <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Carregando equipes...</span>
+          <span className="text-xs font-black uppercase text-slate-400 tracking-widest">Carregando equipes...</span>
         </div>
       ) : teams.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center py-12 text-center border border-dashed border-slate-200 rounded-3xl bg-white">
           <Users size={40} className="text-slate-300 mb-3" />
           <p className="text-[11px] font-black uppercase text-slate-400 tracking-wider">Nenhuma equipe criada.</p>
-          <p className="text-[9px] text-slate-400 mt-1 max-w-xs">Crie uma equipe acima para começar a compartilhar projetos restritos.</p>
+          <p className="text-[11px] text-slate-400 mt-1 max-w-xs">Crie uma equipe acima para começar a compartilhar projetos restritos.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 pb-8">
@@ -212,8 +212,8 @@ export const GestaoEquipes: React.FC = () => {
                   <div className="flex items-center gap-3">
                     {isExpanded ? <ChevronUp size={18} className="text-[#006098]" /> : <ChevronDown size={18} className="text-slate-400" />}
                     <div>
-                      <h4 className="text-xs font-black text-[#006098] uppercase tracking-tight leading-none">{t.name}</h4>
-                      <span className="text-[8px] text-slate-400 font-bold uppercase flex items-center gap-1 mt-1.5">
+                      <h4 className="text-sm font-black text-[#006098] uppercase tracking-tight leading-none">{t.name}</h4>
+                      <span className="text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1 mt-1.5">
                         <Users size={10} /> {t.members.length} {t.members.length === 1 ? 'Membro' : 'Membros'}
                       </span>
                     </div>
@@ -231,7 +231,7 @@ export const GestaoEquipes: React.FC = () => {
                   <div className="p-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
                     {/* Lista de Membros */}
                     {t.members.length === 0 ? (
-                      <p className="text-[9px] text-slate-400 font-medium italic">Nenhum membro nesta equipe.</p>
+                      <p className="text-[11px] text-slate-400 font-medium italic">Nenhum membro nesta equipe.</p>
                     ) : (
                       <div className="space-y-1.5 max-h-[150px] overflow-y-auto pr-1">
                         {t.members.map(email => {
@@ -239,10 +239,10 @@ export const GestaoEquipes: React.FC = () => {
                           const userName = foundUser ? foundUser.nome : 'Usuário Externo';
                           
                           return (
-                            <div key={email} className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-xl text-[10px] font-bold text-slate-600 border border-slate-100">
+                            <div key={email} className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-600 border border-slate-100">
                               <div className="flex flex-col">
-                                <span className="text-slate-700 font-extrabold uppercase text-[9px] leading-none">{userName}</span>
-                                <span className="text-slate-400 text-[8px] font-medium tracking-tighter mt-1 flex items-center gap-1">
+                                <span className="text-slate-700 font-extrabold uppercase text-[11px] leading-none">{userName}</span>
+                                <span className="text-slate-400 text-[10px] font-medium tracking-tighter mt-1 flex items-center gap-1">
                                   <Mail size={10} /> {email}
                                 </span>
                               </div>
@@ -265,7 +265,7 @@ export const GestaoEquipes: React.FC = () => {
                       <select 
                         value={newMemberEmail[t.id] || ''} 
                         onChange={e => setNewMemberEmail(prev => ({ ...prev, [t.id]: e.target.value }))}
-                        className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-bold text-slate-700 outline-none focus:border-[#0079C2] transition-all font-sans cursor-pointer"
+                        className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-[#0079C2] transition-all font-sans cursor-pointer"
                       >
                         <option value="">Selecionar usuário...</option>
                         {allUsers.filter(u => !t.members.includes(u.email)).map(u => (
@@ -275,7 +275,7 @@ export const GestaoEquipes: React.FC = () => {
                       <button 
                         onClick={() => handleAddMember(t.id)}
                         disabled={!newMemberEmail[t.id]?.trim()}
-                        className="px-4 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] text-[9px] font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50"
+                        className="px-4 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] text-[11px] font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50"
                       >
                         Adicionar
                       </button>
@@ -296,18 +296,18 @@ export const GestaoEquipes: React.FC = () => {
                 {confirmModal.type === 'DANGER' ? <AlertCircle size={32} /> : <Users size={32} />}
               </div>
               <h3 className="text-base font-black text-slate-800 uppercase tracking-tight mb-2">{confirmModal.title}</h3>
-              <p className="text-slate-500 text-xs font-medium leading-relaxed px-2">{confirmModal.message}</p>
+              <p className="text-slate-500 text-sm font-medium leading-relaxed px-2">{confirmModal.message}</p>
             </div>
             <div className="grid grid-cols-2 border-t border-slate-100 bg-slate-50/80">
               <button
                 onClick={() => setConfirmModal(prev => ({ ...prev, show: false }))}
-                className="py-4 text-xs font-black uppercase tracking-widest text-slate-400 hover:bg-slate-100 transition-all border-r border-slate-100"
+                className="py-4 text-sm font-black uppercase tracking-widest text-slate-400 hover:bg-slate-100 transition-all border-r border-slate-100"
               >
                 Cancelar
               </button>
               <button
                 onClick={confirmModal.onConfirm}
-                className={`py-4 text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-100 ${confirmModal.type === 'DANGER' ? 'text-rose-500' : 'text-[#0079C2]'}`}
+                className={`py-4 text-sm font-black uppercase tracking-widest transition-all hover:bg-slate-100 ${confirmModal.type === 'DANGER' ? 'text-rose-500' : 'text-[#0079C2]'}`}
               >
                 Confirmar
               </button>

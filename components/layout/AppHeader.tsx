@@ -60,7 +60,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {isReadOnly && (
           <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-lg border border-slate-200">
              <Lock size={14} className="text-slate-400" />
-             <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
+             <span className="text-sm font-black uppercase text-slate-500 tracking-widest">
                Modo Visualização
              </span>
           </div>
@@ -69,13 +69,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {isReadOnly && lockedBy && lockedBy !== user?.uid && (
           <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-lg border border-amber-200 ml-2">
              <Lock size={14} className="text-amber-500" />
-             <span className="text-[10px] font-black uppercase text-amber-600 tracking-widest">
+             <span className="text-sm font-black uppercase text-amber-600 tracking-widest">
                Em edição por {lockedByName || 'Outro'}
              </span>
              {isOwner && onForceUnlock && (
                <button 
                  onClick={onForceUnlock}
-                 className="ml-2 text-[9px] underline text-amber-700 hover:text-amber-900"
+                 className="ml-2 text-[11px] underline text-amber-700 hover:text-amber-900"
                  title="Atenção: Isso pode sobrescrever o trabalho se a pessoa ainda estiver editando."
                >
                  Forçar Desbloqueio
@@ -87,13 +87,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {isReadOnly && (!lockedBy || lockedBy === user?.uid) && onCheckout && (
           <button 
             onClick={onCheckout}
-            className="ml-2 flex items-center gap-2 px-4 py-1.5 bg-emerald-500 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 shadow-sm transition-all"
+            className="ml-2 flex items-center gap-2 px-4 py-1.5 bg-emerald-500 text-white rounded-lg text-sm font-black uppercase tracking-widest hover:bg-emerald-600 shadow-sm transition-all"
           >
             ✏️ Iniciar Edição
           </button>
         )}
         <div className="flex flex-col">
-          <span className="text-[10px] font-black text-[#0079C2] uppercase tracking-widest leading-none">MAG Canvas</span>
+          <span className="text-sm font-black text-[#0079C2] uppercase tracking-widest leading-none">MAG Canvas</span>
           <span className="text-[12px] font-bold text-slate-400 truncate max-w-[200px]">{reportTitle}</span>
         </div>
       </div>
@@ -110,7 +110,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {!isReadOnly && (
           <button 
             onClick={onToggleSafeMargins}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${showSafeMargins ? 'bg-[#00A7E7] text-white shadow-md shadow-blue-200' : 'text-slate-500 bg-white border border-slate-100'}`}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${showSafeMargins ? 'bg-[#00A7E7] text-white shadow-md shadow-blue-200' : 'text-slate-500 bg-white border border-slate-100'}`}
             title="Simular Margens de Impressão (Etapa 4)"
           >
             <Eye size={16} />
@@ -132,12 +132,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               {isShared ? (
                 <>
                   <Users size={12} className="animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-widest">Colaborativo</span>
+                  <span className="text-[11px] font-black uppercase tracking-widest">Colaborativo</span>
                 </>
               ) : (
                 <>
                   <Lock size={12} />
-                  <span className="text-[9px] font-black uppercase tracking-widest">Privado</span>
+                  <span className="text-[11px] font-black uppercase tracking-widest">Privado</span>
                 </>
               )}
             </div>
@@ -146,7 +146,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             {isOwner && (
               <button 
                 onClick={() => onShare && onShare()}
-                className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all ${
                   isShared 
                     ? 'bg-white border border-rose-200 text-rose-500 hover:bg-rose-50' 
                     : 'bg-[#0079C2] text-white hover:bg-[#006098] shadow-sm'
@@ -157,17 +157,17 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             )}
           </div>
         )}
-        <button onClick={onPrint} className="bg-[#0079C2] text-white px-5 py-2 rounded-xl shadow-lg flex items-center gap-2 hover:bg-[#006098] transition-all text-[10px] font-black uppercase mr-2">
+        <button onClick={onPrint} className="bg-[#0079C2] text-white px-5 py-2 rounded-xl shadow-lg flex items-center gap-2 hover:bg-[#006098] transition-all text-sm font-black uppercase mr-2">
           <Printer size={16} /> PDF
         </button>
 
         {user && (
           <div className="flex items-center gap-3 pl-4 border-l border-slate-100">
             <div className="flex flex-col items-end">
-              <span className="text-[10px] font-black text-[#006098] uppercase leading-none">{user.displayName || 'Usuário'}</span>
+              <span className="text-sm font-black text-[#006098] uppercase leading-none">{user.displayName || 'Usuário'}</span>
               <button 
                 onClick={onLogout} 
-                className="flex items-center gap-1 text-[8px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-600 transition-colors mt-1 group"
+                className="flex items-center gap-1 text-xs font-black text-rose-500 uppercase tracking-widest hover:text-rose-600 transition-colors mt-1 group"
               >
                 <LogOut size={10} className="group-hover:-translate-x-0.5 transition-transform" /> Sair
               </button>

@@ -61,12 +61,12 @@ export const NineBoxBlock: React.FC<NineBoxBlockProps> = ({ data = [], isEditabl
         
         {/* Eixo Vertical (Potencial) */}
         <div className="absolute left-4 top-2 bottom-10 flex flex-col justify-between py-4 z-20 select-none">
-          <span className={`text-[8px] font-black uppercase tracking-widest rotate-[-90deg] origin-center ${isBlueTheme ? 'text-blue-300' : 'text-[#0079C2]'}`}>Alto</span>
-          <span className={`text-[8px] font-black uppercase tracking-widest rotate-[-90deg] origin-center ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Médio</span>
-          <span className={`text-[8px] font-black uppercase tracking-widest rotate-[-90deg] origin-center ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Baixo</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest rotate-[-90deg] origin-center ${isBlueTheme ? 'text-blue-300' : 'text-[#0079C2]'}`}>Alto</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest rotate-[-90deg] origin-center ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Médio</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest rotate-[-90deg] origin-center ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Baixo</span>
           
           <div className="absolute -left-6 top-0 bottom-0 w-[14px] flex items-center justify-center pointer-events-none">
-             <div className={`rotate-[-90deg] whitespace-nowrap px-2 py-0.5 rounded-sm text-[8px] font-black uppercase tracking-[0.2em] shadow-sm ${
+             <div className={`rotate-[-90deg] whitespace-nowrap px-2 py-0.5 rounded-sm text-[10px] font-black uppercase tracking-[0.2em] shadow-sm ${
                isBlueTheme ? 'bg-[#00A7E7] text-white' : 'bg-[#006098] text-white'
              }`}>
                 Potencial
@@ -93,7 +93,7 @@ export const NineBoxBlock: React.FC<NineBoxBlockProps> = ({ data = [], isEditabl
                     contentEditable={isEditable}
                     suppressContentEditableWarning
                     onBlur={(e) => handleUpdate(dataIdx, 'label', e.currentTarget.textContent || '')}
-                    className={`text-[8px] font-black uppercase leading-tight tracking-tighter outline-none ${textColor} opacity-80 break-words min-w-[30px] ${isEditable ? 'focus:bg-white/10 px-0.5 rounded' : ''}`}
+                    className={`text-[10px] font-black uppercase leading-tight tracking-tighter outline-none ${textColor} opacity-80 break-words min-w-[30px] ${isEditable ? 'focus:bg-white/10 px-0.5 rounded' : ''}`}
                   >
                     {item.label}
                   </h4>
@@ -119,12 +119,12 @@ export const NineBoxBlock: React.FC<NineBoxBlockProps> = ({ data = [], isEditabl
 
         {/* Eixo Horizontal (Desempenho) */}
         <div className="absolute bottom-2 left-10 right-2 flex justify-between px-4 select-none">
-          <span className={`text-[8px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Baixo</span>
-          <span className={`text-[8px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Médio</span>
-          <span className={`text-[8px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-300' : 'text-[#0079C2]'}`}>Alto</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Baixo</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}`}>Médio</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-300' : 'text-[#0079C2]'}`}>Alto</span>
           
           <div className="absolute -bottom-7 left-0 right-0 h-[18px] flex items-center justify-center pointer-events-none">
-             <div className={`whitespace-nowrap px-3 py-0.5 rounded-sm text-[8px] font-black uppercase tracking-[0.2em] shadow-sm ${
+             <div className={`whitespace-nowrap px-3 py-0.5 rounded-sm text-[10px] font-black uppercase tracking-[0.2em] shadow-sm ${
                isBlueTheme ? 'bg-[#00A7E7] text-white' : 'bg-[#006098] text-white'
              }`}>
                 Desempenho

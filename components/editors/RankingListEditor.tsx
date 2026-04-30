@@ -53,12 +53,12 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
       {/* Configuração do Hero Icon */}
       <div className="space-y-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
         <div className="flex justify-between items-center">
-          <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+          <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
             <Award size={12} className="text-[#00A7E7]" />
             Ícone de Destaque (Hero)
           </label>
           {config.heroIcon && (
-            <button onClick={() => onUpdate({ heroIcon: null })} className="text-[8px] text-rose-500 font-bold hover:underline">Remover</button>
+            <button onClick={() => onUpdate({ heroIcon: null })} className="text-[10px] text-rose-500 font-bold hover:underline">Remover</button>
           )}
         </div>
         
@@ -71,13 +71,13 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
               <CurrentHeroIcon size={16} />
             </div>
             <div className="flex flex-col items-start">
-               <span className="text-[10px] font-bold text-slate-600 uppercase">
+               <span className="text-xs font-bold text-slate-600 uppercase">
                  {config.heroIcon || "Sem Ícone"}
                </span>
-               <span className="text-[8px] text-slate-400">Exibido ao lado do ranking</span>
+               <span className="text-[10px] text-slate-400">Exibido ao lado do ranking</span>
             </div>
           </div>
-          <span className="text-[9px] font-black text-[#0079C2] uppercase">
+          <span className="text-[11px] font-black text-[#0079C2] uppercase">
             {showIconPicker ? 'Fechar' : 'Alterar'}
           </span>
         </button>
@@ -92,7 +92,7 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
         )}
         
         <div className="flex items-center justify-between pt-2 border-t border-slate-200 mt-2">
-           <span className="text-[9px] font-bold text-slate-500 uppercase">Barra de Progresso (Fundo)</span>
+           <span className="text-[11px] font-bold text-slate-500 uppercase">Barra de Progresso (Fundo)</span>
            <button 
              onClick={() => onUpdate({ showBar: config.showBar !== false ? false : true })}
              className={`w-8 h-4 rounded-full transition-all relative ${config.showBar !== false ? 'bg-[#0079C2]' : 'bg-slate-300'}`}
@@ -104,7 +104,7 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
 
       {/* Lista de Itens */}
       <div className="space-y-2">
-        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
           <List size={10} /> Itens do Ranking
         </label>
         
@@ -116,7 +116,7 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
                    <button onClick={() => moveItem(idx, 'UP')} className="text-slate-300 hover:text-[#0079C2]"><GripVertical size={10} /></button>
                 </div>
                 
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${idx < 3 ? 'bg-[#0079C2] text-white' : 'bg-slate-100 text-slate-400'}`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black shrink-0 ${idx < 3 ? 'bg-[#0079C2] text-white' : 'bg-slate-100 text-slate-400'}`}>
                   {idx + 1}
                 </div>
 
@@ -125,14 +125,14 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
                     type="text" 
                     value={item.label} 
                     onChange={(e) => updateItem(idx, { label: e.target.value })}
-                    className="w-full text-[10px] font-bold border-b border-transparent focus:border-blue-200 outline-none text-[#006098]"
+                    className="w-full text-xs font-bold border-b border-transparent focus:border-blue-200 outline-none text-[#006098]"
                     placeholder="Nome / Rótulo"
                   />
                   <input 
                     type="text" 
                     value={item.description || ''} 
                     onChange={(e) => updateItem(idx, { description: e.target.value })}
-                    className="w-full text-[9px] text-slate-500 border-b border-slate-50 focus:border-blue-200 outline-none"
+                    className="w-full text-[11px] text-slate-500 border-b border-slate-50 focus:border-blue-200 outline-none"
                     placeholder="Cargo / Subtítulo"
                   />
                   <div className="flex gap-2">
@@ -140,14 +140,14 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
                       type="text" 
                       value={item.formattedValue || ''} 
                       onChange={(e) => updateItem(idx, { formattedValue: e.target.value })}
-                      className="w-1/2 text-[9px] bg-slate-50 rounded px-1 text-slate-600 outline-none"
+                      className="w-1/2 text-[11px] bg-slate-50 rounded px-1 text-slate-600 outline-none"
                       placeholder="Texto (ex: R$ 1k)"
                     />
                     <input 
                       type="number" 
                       value={item.value} 
                       onChange={(e) => updateItem(idx, { value: parseFloat(e.target.value) || 0 })}
-                      className="w-1/2 text-[9px] bg-slate-50 rounded px-1 text-slate-400 outline-none"
+                      className="w-1/2 text-[11px] bg-slate-50 rounded px-1 text-slate-400 outline-none"
                       placeholder="Valor Num."
                     />
                   </div>
@@ -165,7 +165,7 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
                     type="text" 
                     value={item.image || ''} 
                     onChange={(e) => updateItem(idx, { image: e.target.value })}
-                    className="flex-1 text-[9px] bg-transparent border-none outline-none text-slate-500 placeholder-slate-300 focus:text-blue-600"
+                    className="flex-1 text-[11px] bg-transparent border-none outline-none text-slate-500 placeholder-slate-300 focus:text-blue-600"
                     placeholder="URL da foto (ex: https://site.com/foto.jpg)"
                  />
               </div>
@@ -175,7 +175,7 @@ export const RankingListEditor: React.FC<RankingListEditorProps> = ({
 
         <button 
           onClick={addItem}
-          className="w-full py-2 bg-slate-50 border border-slate-200 rounded-lg text-[9px] font-black text-slate-500 uppercase hover:bg-blue-50 hover:text-[#0079C2] hover:border-blue-200 transition-all flex items-center justify-center gap-2"
+          className="w-full py-2 bg-slate-50 border border-slate-200 rounded-lg text-[11px] font-black text-slate-500 uppercase hover:bg-blue-50 hover:text-[#0079C2] hover:border-blue-200 transition-all flex items-center justify-center gap-2"
         >
           <Plus size={12} /> Adicionar Posição
         </button>

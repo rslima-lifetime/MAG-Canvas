@@ -117,17 +117,17 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
             {isLinked ? <Link2 size={14} /> : <Link2Off size={14} />}
           </div>
           <div className="flex flex-col">
-            <span className={`text-[10px] font-black uppercase tracking-tight ${isLinked ? 'text-emerald-700' : 'text-slate-500'}`}>
+            <span className={`text-xs font-black uppercase tracking-tight ${isLinked ? 'text-emerald-700' : 'text-slate-500'}`}>
               {isLinked ? 'Dados Vinculados' : 'Dados Independentes'}
             </span>
-            <span className="text-[8px] font-medium opacity-70 leading-tight">
+            <span className="text-[10px] font-medium opacity-70 leading-tight">
               {isLinked ? 'Alterações replicam em cópias.' : 'Alterações apenas neste bloco.'}
             </span>
           </div>
         </div>
         <button 
           onClick={toggleSync}
-          className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all shadow-sm border ${
+          className={`px-3 py-1.5 rounded-lg text-[11px] font-black uppercase transition-all shadow-sm border ${
             isLinked 
               ? 'bg-white border-emerald-200 text-emerald-600 hover:text-rose-500 hover:border-rose-200' 
               : 'bg-white border-slate-200 text-slate-500 hover:text-[#0079C2] hover:border-[#0079C2]'
@@ -138,23 +138,23 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
       </div>
 
       <div className="space-y-1">
-        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Modo de Visão</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter">Modo de Visão</label>
         <div className="flex bg-slate-100 p-1 rounded-lg gap-1 shadow-inner">
           <button 
             onClick={() => onUpdate({ viewMode: 'MONTH' })} 
-            className={`flex-1 flex items-center justify-center gap-1 p-1.5 rounded text-[8px] font-black uppercase transition-all ${config.viewMode === 'MONTH' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
+            className={`flex-1 flex items-center justify-center gap-1 p-1.5 rounded text-[10px] font-black uppercase transition-all ${config.viewMode === 'MONTH' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
           >
             <LayoutGrid size={10} /> Mensal
           </button>
           <button 
             onClick={() => onUpdate({ viewMode: 'WEEK' })} 
-            className={`flex-1 flex items-center justify-center gap-1 p-1.5 rounded text-[8px] font-black uppercase transition-all ${config.viewMode === 'WEEK' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
+            className={`flex-1 flex items-center justify-center gap-1 p-1.5 rounded text-[10px] font-black uppercase transition-all ${config.viewMode === 'WEEK' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
           >
             <CalendarDays size={10} /> Semana
           </button>
           <button 
             onClick={() => onUpdate({ viewMode: 'LIST' })} 
-            className={`flex-1 flex items-center justify-center gap-1 p-1.5 rounded text-[8px] font-black uppercase transition-all ${config.viewMode === 'LIST' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
+            className={`flex-1 flex items-center justify-center gap-1 p-1.5 rounded text-[10px] font-black uppercase transition-all ${config.viewMode === 'LIST' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
           >
             <List size={10} /> Agenda
           </button>
@@ -166,21 +166,21 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
           onClick={() => onUpdate({ showPriorityTags: !showPriorityTags })}
           className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-all ${showPriorityTags ? 'bg-white border-[#0079C2] text-[#0079C2]' : 'bg-slate-50 border-transparent text-slate-400'}`}
         >
-          <span className="text-[9px] font-black uppercase">Tags (Cores)</span>
+          <span className="text-[11px] font-black uppercase">Tags (Cores)</span>
           {showPriorityTags ? <Eye size={12} /> : <EyeOff size={12} />}
         </button>
         <button 
           onClick={() => onUpdate({ showLegend: !showLegend })}
           className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-all ${showLegend ? 'bg-white border-[#0079C2] text-[#0079C2]' : 'bg-slate-50 border-transparent text-slate-400'}`}
         >
-          <span className="text-[9px] font-black uppercase">Legenda</span>
+          <span className="text-[11px] font-black uppercase">Legenda</span>
           {showLegend ? <Eye size={12} /> : <EyeOff size={12} />}
         </button>
       </div>
 
       {config.viewMode === 'LIST' ? (
         <div className="space-y-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
-          <label className="text-[9px] font-black text-gray-500 uppercase flex items-center gap-2">
+          <label className="text-[11px] font-black text-gray-500 uppercase flex items-center gap-2">
             <CalendarDays size={12} className="text-[#00A7E7]" />
             <span>Período da Agenda</span>
           </label>
@@ -191,7 +191,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
                 type="date" 
                 value={config.listRangeStart || ''} 
                 onChange={(e) => onUpdate({ listRangeStart: e.target.value })}
-                className="w-full p-1.5 text-[10px] border rounded font-bold text-[#006098] bg-white"
+                className="w-full p-1.5 text-xs border rounded font-bold text-[#006098] bg-white"
               />
             </div>
             <div className="space-y-1">
@@ -200,29 +200,29 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
                 type="date" 
                 value={config.listRangeEnd || ''} 
                 onChange={(e) => onUpdate({ listRangeEnd: e.target.value })}
-                className="w-full p-1.5 text-[10px] border rounded font-bold text-[#006098] bg-white"
+                className="w-full p-1.5 text-xs border rounded font-bold text-[#006098] bg-white"
               />
             </div>
           </div>
           <div className="flex justify-end">
-             <button onClick={() => onUpdate({ listRangeStart: '', listRangeEnd: '' })} className="text-[8px] text-slate-400 underline hover:text-rose-500">Limpar período</button>
+             <button onClick={() => onUpdate({ listRangeStart: '', listRangeEnd: '' })} className="text-[10px] text-slate-400 underline hover:text-rose-500">Limpar período</button>
           </div>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Mês Base</label>
+            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter">Mês Base</label>
             <input 
               type="month" 
               value={config.currentMonth ? config.currentMonth.substring(0, 7) : ''}
               onChange={handleMonthChange}
-              className="w-full p-2 text-[10px] border rounded-lg bg-white outline-none font-bold text-[#006098]"
+              className="w-full p-2 text-xs border rounded-lg bg-white outline-none font-bold text-[#006098]"
             />
           </div>
           <div className="space-y-1">
             <div className="flex justify-between items-center">
-              <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1"><MoveVertical size={10} /> Densidade</label>
-              <span className="text-[9px] font-black text-[#0079C2]">{currentRowHeight}px</span>
+              <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1"><MoveVertical size={10} /> Densidade</label>
+              <span className="text-[11px] font-black text-[#0079C2]">{currentRowHeight}px</span>
             </div>
             <input 
               type="range" 
@@ -238,7 +238,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
       )}
 
       <div className="space-y-2 p-3 bg-slate-50 border rounded-xl">
-        <label className="text-[9px] font-black text-gray-500 uppercase flex items-center gap-2 mb-2">
+        <label className="text-[11px] font-black text-gray-500 uppercase flex items-center gap-2 mb-2">
           <Tag size={12} className="text-[#00A7E7]" />
           <span>Editor de Legendas (Farol)</span>
         </label>
@@ -249,7 +249,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
               type="text" 
               value={currentPriorityLabels.HIGH} 
               onChange={(e) => updatePriorityLabel('HIGH', e.target.value)}
-              className="w-full p-1.5 text-[9px] border rounded font-bold text-[#415364]"
+              className="w-full p-1.5 text-[11px] border rounded font-bold text-[#415364]"
             />
           </div>
           <div className="space-y-1">
@@ -258,7 +258,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
               type="text" 
               value={currentPriorityLabels.MEDIUM} 
               onChange={(e) => updatePriorityLabel('MEDIUM', e.target.value)}
-              className="w-full p-1.5 text-[9px] border rounded font-bold text-[#415364]"
+              className="w-full p-1.5 text-[11px] border rounded font-bold text-[#415364]"
             />
           </div>
           <div className="space-y-1">
@@ -267,7 +267,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
               type="text" 
               value={currentPriorityLabels.LOW} 
               onChange={(e) => updatePriorityLabel('LOW', e.target.value)}
-              className="w-full p-1.5 text-[9px] border rounded font-bold text-[#415364]"
+              className="w-full p-1.5 text-[11px] border rounded font-bold text-[#415364]"
             />
           </div>
         </div>
@@ -276,7 +276,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
       <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl">
         <div className="flex items-center gap-2 mb-3">
           <CalendarIcon size={12} className="text-[#0079C2]" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-[#006098]">Gerenciar Dia</span>
+          <span className="text-[11px] font-black uppercase tracking-widest text-[#006098]">Gerenciar Dia</span>
         </div>
         <input 
           type="date" 
@@ -288,7 +288,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
         <div className="space-y-3">
           {dayData.projects.length === 0 ? (
             <div className="py-6 text-center border border-dashed rounded-lg border-blue-200 bg-white/50">
-               <p className="text-[8px] font-black text-blue-300 uppercase">Nenhum projeto para este dia</p>
+               <p className="text-[10px] font-black text-blue-300 uppercase">Nenhum projeto para este dia</p>
             </div>
           ) : (
             dayData.projects.map((project: CalendarProject) => (
@@ -300,7 +300,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
                       value={project.title}
                       onChange={(e) => updateProject(project.id, { title: e.target.value })}
                       placeholder="Título do Projeto"
-                      className="w-full bg-transparent text-[10px] font-black text-[#006098] outline-none border-b border-transparent focus:border-[#0079C2] uppercase"
+                      className="w-full bg-transparent text-xs font-black text-[#006098] outline-none border-b border-transparent focus:border-[#0079C2] uppercase"
                     />
                   </div>
                   
@@ -326,7 +326,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
                       value={project.description || ''}
                       onChange={(e) => updateProject(project.id, { description: e.target.value })}
                       placeholder="Adicionar descrição ou comentário (visível apenas na Agenda)"
-                      className="w-full p-2 text-[9px] border rounded-lg bg-slate-50 min-h-[50px] outline-none focus:bg-white focus:ring-1 focus:ring-blue-100 resize-y"
+                      className="w-full p-2 text-[11px] border rounded-lg bg-slate-50 min-h-[50px] outline-none focus:bg-white focus:ring-1 focus:ring-blue-100 resize-y"
                     />
                   </div>
                 )}
@@ -337,7 +337,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
                     <select 
                       value={project.status}
                       onChange={(e) => updateProject(project.id, { status: e.target.value as ProjectStatus })}
-                      className="w-full p-1 text-[8px] border rounded font-bold"
+                      className="w-full p-1 text-[10px] border rounded font-bold"
                     >
                       <option value="NOT_STARTED">Não Iniciado</option>
                       <option value="IN_PROGRESS">Em Andamento</option>
@@ -350,7 +350,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
                     <select 
                       value={project.priority}
                       onChange={(e) => updateProject(project.id, { priority: e.target.value as ProjectPriority })}
-                      className="w-full p-1 text-[8px] border rounded font-bold"
+                      className="w-full p-1 text-[10px] border rounded font-bold"
                     >
                       <option value="HIGH">{currentPriorityLabels.HIGH}</option>
                       <option value="MEDIUM">{currentPriorityLabels.MEDIUM}</option>
@@ -364,7 +364,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
 
           <button 
             onClick={addProject}
-            className="w-full py-2 bg-[#0079C2] text-white rounded-lg text-[9px] font-black uppercase flex items-center justify-center gap-2 hover:bg-[#006098] transition-all"
+            className="w-full py-2 bg-[#0079C2] text-white rounded-lg text-[11px] font-black uppercase flex items-center justify-center gap-2 hover:bg-[#006098] transition-all"
           >
             <Plus size={14} /> Adicionar Projeto ao Dia
           </button>
@@ -373,7 +373,7 @@ export const ProjectCalendarEditor: React.FC<ProjectCalendarEditorProps> = ({ co
       
       <div className="flex gap-2 p-3 bg-slate-50 rounded-xl border">
         <Info size={16} className="text-slate-400 shrink-0" />
-        <p className="text-[8px] text-slate-500 font-medium leading-tight uppercase">
+        <p className="text-[10px] text-slate-500 font-medium leading-tight uppercase">
           No modo Agenda, use o "Período da Agenda" para visualizar eventos de múltiplos meses.
         </p>
       </div>

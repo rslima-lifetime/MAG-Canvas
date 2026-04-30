@@ -31,7 +31,7 @@ export const TextEditor: React.FC<TextEditorProps> = ({ content = "", style, onU
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <label className="text-[9px] font-bold text-gray-400 uppercase">Estilo da Narrativa</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase">Estilo da Narrativa</label>
         <select 
           value={style} 
           onChange={(e) => onUpdate({ style: e.target.value as TextStyle })} 
@@ -51,46 +51,46 @@ export const TextEditor: React.FC<TextEditorProps> = ({ content = "", style, onU
       {style === 'PAR_MODEL' ? (
         <div className="space-y-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
           <div className="space-y-1">
-            <label className="text-[8px] font-black text-rose-500 uppercase flex items-center gap-1">
+            <label className="text-[10px] font-black text-rose-500 uppercase flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Problema
             </label>
             <textarea 
               value={parParts.problema} 
               onChange={(e) => updatePARField('p', e.target.value)}
-              className="w-full p-2 text-[10px] border rounded h-16 leading-tight outline-none focus:ring-1 focus:ring-rose-200"
+              className="w-full p-2 text-xs border rounded h-16 leading-tight outline-none focus:ring-1 focus:ring-rose-200"
               placeholder="Descreva o desafio encontrado..."
             />
           </div>
           <div className="space-y-1">
-            <label className="text-[8px] font-black text-blue-500 uppercase flex items-center gap-1">
+            <label className="text-[10px] font-black text-blue-500 uppercase flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Ação
             </label>
             <textarea 
               value={parParts.acao} 
               onChange={(e) => updatePARField('a', e.target.value)}
-              className="w-full p-2 text-[10px] border rounded h-16 leading-tight outline-none focus:ring-1 focus:ring-blue-200"
+              className="w-full p-2 text-xs border rounded h-16 leading-tight outline-none focus:ring-1 focus:ring-blue-200"
               placeholder="O que foi feito para resolver?"
             />
           </div>
           <div className="space-y-1">
-            <label className="text-[8px] font-black text-emerald-500 uppercase flex items-center gap-1">
+            <label className="text-[10px] font-black text-emerald-500 uppercase flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Resultado
             </label>
             <textarea 
               value={parParts.resultado} 
               onChange={(e) => updatePARField('r', e.target.value)}
-              className="w-full p-2 text-[10px] border rounded h-16 leading-tight outline-none focus:ring-1 focus:ring-emerald-200 font-bold"
+              className="w-full p-2 text-xs border rounded h-16 leading-tight outline-none focus:ring-1 focus:ring-emerald-200 font-bold"
               placeholder="Qual foi o impacto gerado?"
             />
           </div>
         </div>
       ) : (
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Conteúdo</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Conteúdo</label>
           <textarea 
             value={content} 
             onChange={(e) => onUpdate({ content: e.target.value })} 
-            className="w-full p-2 text-xs border rounded min-h-[150px] leading-relaxed outline-none focus:ring-1 focus:ring-[#0079C2] shadow-inner" 
+            className="w-full p-2 text-sm border rounded min-h-[150px] leading-relaxed outline-none focus:ring-1 focus:ring-[#0079C2] shadow-inner" 
             placeholder="Digite sua análise aqui..." 
           />
         </div>

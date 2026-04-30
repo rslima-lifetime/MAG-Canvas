@@ -79,7 +79,7 @@ export const SidebarBlockList: React.FC<SidebarBlockListProps> = ({
     <div className="p-4 space-y-3 animate-in slide-in-from-top-1 duration-200">
       {blocks.length === 0 ? (
         <div className="py-8 text-center border-2 border-dashed rounded-2xl border-slate-200">
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Nenhum bloco inserido</p>
+          <p className="text-xs font-black text-slate-300 uppercase tracking-widest">Nenhum bloco inserido</p>
         </div>
       ) : (
         blocks.map((block) => {
@@ -95,7 +95,7 @@ export const SidebarBlockList: React.FC<SidebarBlockListProps> = ({
                 <div className="flex items-center gap-3 truncate">
                   <GripVertical size={14} className="text-slate-300" />
                   <div className="flex flex-col truncate">
-                    <span className="text-[8px] font-black text-[#00A7E7] uppercase tracking-tighter">
+                    <span className="text-[10px] font-black text-[#00A7E7] uppercase tracking-tighter">
                       {BLOCK_LABELS[block.type] || block.type.replace('_', ' ')}
                     </span>
                     <span className={`text-[11px] font-bold truncate ${isExpanded ? 'text-[#006098]' : 'text-slate-600'}`}>{block.title || 'Sem título'}</span>
@@ -107,11 +107,11 @@ export const SidebarBlockList: React.FC<SidebarBlockListProps> = ({
                 <div className="p-5 space-y-5 bg-white animate-in fade-in duration-200">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[9px] font-bold text-gray-400 uppercase">Largura</label>
+                      <label className="text-[11px] font-bold text-gray-400 uppercase">Largura</label>
                       <select 
                         value={block.width} 
                         onChange={(e) => updateBlockConfig(block.id, { width: e.target.value as BlockWidth })} 
-                        className="w-full p-2 text-[10px] font-bold border rounded-xl bg-slate-50 outline-none"
+                        className="w-full p-2 text-xs font-bold border rounded-xl bg-slate-50 outline-none"
                       >
                         <option value="FULL">100% (Total)</option>
                         <option value="THREE_QUARTERS">75% (Três Quartos)</option>
@@ -120,11 +120,11 @@ export const SidebarBlockList: React.FC<SidebarBlockListProps> = ({
                         <option value="QUARTER">25% (Quarto)</option>
                       </select>
                     </div>
-                    <div className="space-y-1"><label className="text-[9px] font-bold text-gray-400 uppercase">Título da Seção</label><input type="text" value={block.title} onChange={(e) => updateBlockConfig(block.id, { title: e.target.value })} className="w-full p-2 text-[11px] font-bold border rounded-xl outline-none" /></div>
+                    <div className="space-y-1"><label className="text-[11px] font-bold text-gray-400 uppercase">Título da Seção</label><input type="text" value={block.title} onChange={(e) => updateBlockConfig(block.id, { title: e.target.value })} className="w-full p-2 text-[11px] font-bold border rounded-xl outline-none" /></div>
                   </div>
                   
                   {block.type !== 'SECTION' && (
-                    <div className="space-y-1"><label className="text-[9px] font-bold text-gray-400 uppercase">Indicador Narrativo (Badge)</label><select value={block.config.narrativeBadge || 'NONE'} onChange={(e) => updateBlockConfig(block.id, { config: { ...block.config, narrativeBadge: e.target.value as NarrativeBadge } })} className="w-full p-2 text-[10px] font-bold border rounded-xl bg-white"><option value="NONE">Sem Indicador</option><option value="SUCCESS">Sucesso (Verde)</option><option value="WARNING">Atenção (Laranja)</option><option value="CRITICAL">Crítico (Vermelho)</option><option value="INFO">Informação (Azul)</option><option value="TREND">Tendência (Cinza)</option></select></div>
+                    <div className="space-y-1"><label className="text-[11px] font-bold text-gray-400 uppercase">Indicador Narrativo (Badge)</label><select value={block.config.narrativeBadge || 'NONE'} onChange={(e) => updateBlockConfig(block.id, { config: { ...block.config, narrativeBadge: e.target.value as NarrativeBadge } })} className="w-full p-2 text-xs font-bold border rounded-xl bg-white"><option value="NONE">Sem Indicador</option><option value="SUCCESS">Sucesso (Verde)</option><option value="WARNING">Atenção (Laranja)</option><option value="CRITICAL">Crítico (Vermelho)</option><option value="INFO">Informação (Azul)</option><option value="TREND">Tendência (Cinza)</option></select></div>
                   )}
 
                   <div className="pt-2 border-t">
@@ -151,13 +151,13 @@ export const SidebarBlockList: React.FC<SidebarBlockListProps> = ({
                   
                   {block.type !== 'SECTION' && (
                     <div className="space-y-1 pt-4 border-t border-slate-100">
-                      <label className="text-[9px] font-bold text-[#00A7E7] uppercase flex items-center gap-2">
+                      <label className="text-[11px] font-bold text-[#00A7E7] uppercase flex items-center gap-2">
                         <MessageSquare size={10} /> Comentários
                       </label>
                       <textarea 
                         value={block.config.annotation || ''} 
                         onChange={(e) => updateBlockConfig(block.id, { config: { ...block.config, annotation: e.target.value } })} 
-                        className="w-full p-3 text-[10px] border rounded-xl h-24 leading-relaxed italic bg-slate-50 outline-none focus:bg-white transition-all" 
+                        className="w-full p-3 text-xs border rounded-xl h-24 leading-relaxed italic bg-slate-50 outline-none focus:bg-white transition-all" 
                         placeholder="Adicione um comentário ou anotação para este bloco..." 
                       />
                     </div>

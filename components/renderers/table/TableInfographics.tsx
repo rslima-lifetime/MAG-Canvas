@@ -45,7 +45,7 @@ export const TableInfographics: React.FC<TableInfographicsProps> = ({
           <div className={`w-full rounded-full overflow-hidden ${trackHeight} ${isBlueTheme ? 'bg-white/5' : 'bg-slate-100'}`}>
             <div className={`h-full transition-all`} style={{ width: `${Math.min(goalPercent, 100)}%`, backgroundColor: goalColor }} />
           </div>
-          <span className={`font-black ${paddingVal <= 6 ? 'text-[6px]' : 'text-[8px]'} mt-0.5 ${goalPercent >= 100 ? 'text-emerald-400' : (isBlueTheme ? 'text-blue-200/40' : 'text-slate-400')}`}>
+          <span className={`font-black ${paddingVal <= 6 ? 'text-[6px]' : 'text-[10px]'} mt-0.5 ${goalPercent >= 100 ? 'text-emerald-400' : (isBlueTheme ? 'text-blue-200/40' : 'text-slate-400')}`}>
             {goalPercent.toFixed(0)}%
           </span>
         </div>

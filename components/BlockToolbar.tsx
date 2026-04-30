@@ -111,7 +111,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
               title="Tipo de Gráfico"
             >
               <CurrentChartIcon size={14} />
-              <span className="text-[10px] font-black uppercase tracking-tight hidden sm:inline">{CHART_TYPES.find(t => t.id === block.config.type)?.label}</span>
+              <span className="text-xs font-black uppercase tracking-tight hidden sm:inline">{CHART_TYPES.find(t => t.id === block.config.type)?.label}</span>
               <ChevronDown size={10} className="opacity-50" />
             </button>
             {activeMenu === 'CHART_TYPE' && (
@@ -120,7 +120,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
                   <button
                     key={t.id}
                     onClick={() => { updateConfig({ type: t.id }); setActiveMenu(null); }}
-                    className={`flex items-center gap-2 px-2 py-2 rounded-lg text-[10px] font-bold uppercase transition-all ${block.config.type === t.id ? 'bg-[#0079C2] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                    className={`flex items-center gap-2 px-2 py-2 rounded-lg text-xs font-bold uppercase transition-all ${block.config.type === t.id ? 'bg-[#0079C2] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
                   >
                     <t.icon size={14} />
                     {t.label}
@@ -142,15 +142,15 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
               </button>
               {activeMenu === 'CHART_STACK' && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-1 flex flex-col gap-0.5 min-w-[140px] animate-in zoom-in-95 duration-150 z-[900]">
-                  <button onClick={() => { updateConfig({ stackMode: 'GROUPED' }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-[10px] font-bold uppercase ${(!stackMode || stackMode === 'GROUPED') ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}>
+                  <button onClick={() => { updateConfig({ stackMode: 'GROUPED' }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold uppercase ${(!stackMode || stackMode === 'GROUPED') ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}>
                     <span className="flex items-center gap-2"><LayoutGrid size={12} /> Agrupado</span>
                     {(!stackMode || stackMode === 'GROUPED') && <Check size={10} />}
                   </button>
-                  <button onClick={() => { updateConfig({ stackMode: 'STACKED' }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-[10px] font-bold uppercase ${stackMode === 'STACKED' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}>
+                  <button onClick={() => { updateConfig({ stackMode: 'STACKED' }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold uppercase ${stackMode === 'STACKED' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}>
                     <span className="flex items-center gap-2"><Layers size={12} /> Empilhado</span>
                     {stackMode === 'STACKED' && <Check size={10} />}
                   </button>
-                  <button onClick={() => { updateConfig({ stackMode: 'PERCENT' }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-[10px] font-bold uppercase ${stackMode === 'PERCENT' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}>
+                  <button onClick={() => { updateConfig({ stackMode: 'PERCENT' }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold uppercase ${stackMode === 'PERCENT' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}>
                     <span className="flex items-center gap-2"><Percent size={12} /> 100% Prop.</span>
                     {stackMode === 'PERCENT' && <Check size={10} />}
                   </button>
@@ -162,7 +162,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
           {/* Tamanho da Fonte */}
           <div className="flex items-center gap-0.5 bg-slate-50 rounded-full px-1 py-0.5 border border-slate-100 mx-1">
             <button onClick={() => handleChartFontSize(-1)} className="p-1 hover:bg-white rounded-full text-slate-400 hover:text-[#0079C2]"><Minus size={10} /></button>
-            <span className="text-[9px] font-black text-[#006098] w-3 text-center">{chartFontSize}</span>
+            <span className="text-[11px] font-black text-[#006098] w-3 text-center">{chartFontSize}</span>
             <button onClick={() => handleChartFontSize(1)} className="p-1 hover:bg-white rounded-full text-slate-400 hover:text-[#0079C2]"><Plus size={10} /></button>
           </div>
 
@@ -179,32 +179,32 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
             {activeMenu === 'CHART_VIEW' && (
               <div className="absolute top-full left-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-2 flex flex-col gap-1 min-w-[180px] animate-in zoom-in-95 duration-150 z-[900]">
                 <button onClick={() => updateConfig({ showLabels: !block.config.showLabels })} className="flex items-center justify-between px-3 py-2 hover:bg-slate-50 rounded-lg group">
-                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase text-slate-600">
+                   <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-600">
                       {block.config.showLabels ? <Eye size={12} className="text-[#0079C2]" /> : <EyeOff size={12} className="text-slate-400" />} Rótulos
                    </div>
                    {block.config.showLabels && <Check size={10} className="text-[#0079C2]" />}
                 </button>
                 <button onClick={() => updateConfig({ showLegend: block.config.showLegend === undefined ? (isPieType ? false : true) : !block.config.showLegend })} className="flex items-center justify-between px-3 py-2 hover:bg-slate-50 rounded-lg group">
-                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase text-slate-600">
+                   <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-600">
                       <List size={12} /> Legenda
                    </div>
                    {(block.config.showLegend !== false) && <Check size={10} className="text-[#0079C2]" />}
                 </button>
                 <button onClick={() => updateConfig({ showXAxis: !block.config.showXAxis })} className="flex items-center justify-between px-3 py-2 hover:bg-slate-50 rounded-lg group">
-                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase text-slate-600">
+                   <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-600">
                       <ArrowLeftRight size={12} /> Eixo X
                    </div>
                    {block.config.showXAxis && <Check size={10} className="text-[#0079C2]" />}
                 </button>
                 <button onClick={() => updateConfig({ abbreviateValues: !block.config.abbreviateValues })} className="flex items-center justify-between px-3 py-2 hover:bg-slate-50 rounded-lg group">
-                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase text-slate-600">
+                   <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-600">
                       <Hash size={12} /> Abreviar
                    </div>
                    {block.config.abbreviateValues && <Check size={10} className="text-[#0079C2]" />}
                 </button>
                 {!isPieType && stackMode !== 'PERCENT' && (
                   <div className="pt-2 mt-1 border-t border-slate-100 px-2 py-1 flex items-center justify-between">
-                     <button onClick={() => updateConfig({ showGoalLine: !block.config.showGoalLine })} className="flex items-center gap-2 text-[10px] font-bold uppercase text-slate-600 hover:text-[#0079C2]">
+                     <button onClick={() => updateConfig({ showGoalLine: !block.config.showGoalLine })} className="flex items-center gap-2 text-xs font-bold uppercase text-slate-600 hover:text-[#0079C2]">
                        <Target size={12} className={block.config.showGoalLine ? "text-amber-500" : "text-slate-400"} /> Meta
                      </button>
                      {block.config.showGoalLine && (
@@ -213,7 +213,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
                          value={block.config.goalValue}
                          onClick={(e) => e.stopPropagation()}
                          onChange={(e) => updateConfig({ goalValue: parseFloat(e.target.value) || 0 })}
-                         className="w-12 p-0.5 text-[9px] font-black text-right border rounded bg-slate-50 outline-none text-[#006098]"
+                         className="w-12 p-0.5 text-[11px] font-black text-right border rounded bg-slate-50 outline-none text-[#006098]"
                          placeholder="100"
                        />
                      )}
@@ -237,7 +237,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
             {activeMenu === 'SIZE' && (
               <div className="absolute top-full mt-2 left-0 bg-white shadow-2xl border border-slate-200 rounded-xl p-1 z-[810] min-w-[100px] flex flex-col animate-in fade-in slide-in-from-top-1">
                 {FONT_SIZES.map(s => (
-                  <button key={s.value} onMouseDown={(e) => { e.preventDefault(); format('fontSize', s.value); }} className="px-3 py-2 text-[10px] font-bold text-slate-600 hover:bg-slate-50 rounded-lg text-left">{s.label}</button>
+                  <button key={s.value} onMouseDown={(e) => { e.preventDefault(); format('fontSize', s.value); }} className="px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg text-left">{s.label}</button>
                 ))}
               </div>
             )}
@@ -284,7 +284,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
             <div className="relative">
               <button 
                 onClick={() => setActiveMenu(activeMenu === 'STYLE' ? null : 'STYLE')}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-black uppercase ${activeMenu === 'STYLE' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-black uppercase ${activeMenu === 'STYLE' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 {TEXT_STYLES.find(s => s.value === block.config.style)?.label || 'Estilo'}
                 <ChevronDown size={10} />
@@ -292,7 +292,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
               {activeMenu === 'STYLE' && (
                 <div className="absolute top-full mt-2 left-0 bg-white shadow-2xl border border-slate-200 rounded-xl p-1 z-[810] min-w-[140px] flex flex-col gap-0.5 animate-in fade-in slide-in-from-top-1">
                   {TEXT_STYLES.map((opt) => (
-                    <button key={opt.value} onClick={() => { updateConfig({ style: opt.value }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-left text-[10px] font-bold transition-all hover:bg-slate-50 ${block.config.style === opt.value ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-600'}`}>
+                    <button key={opt.value} onClick={() => { updateConfig({ style: opt.value }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs font-bold transition-all hover:bg-slate-50 ${block.config.style === opt.value ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-600'}`}>
                       {opt.label}
                       {block.config.style === opt.value && <Check size={12} />}
                     </button>
@@ -306,7 +306,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
           <div className="relative">
             <button 
               onClick={() => setActiveMenu(activeMenu === 'WIDTH' ? null : 'WIDTH')}
-              className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-black uppercase ${activeMenu === 'WIDTH' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}
+              className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-black uppercase ${activeMenu === 'WIDTH' ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}
             >
               <Layers size={12} />
               {WIDTH_OPTIONS.find(w => w.value === block.width)?.label || '100%'}
@@ -315,7 +315,7 @@ export const BlockToolbar: React.FC<BlockToolbarProps> = ({
             {activeMenu === 'WIDTH' && (
               <div className="absolute top-full mt-2 left-0 bg-white shadow-2xl border border-slate-200 rounded-xl p-1 z-[810] min-w-[120px] flex flex-col gap-0.5 animate-in fade-in slide-in-from-top-1">
                 {WIDTH_OPTIONS.map((opt) => (
-                  <button key={opt.value} onClick={() => { onUpdate({ width: opt.value }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-left text-[10px] font-bold transition-all hover:bg-slate-50 ${block.width === opt.value ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-600'}`}>
+                  <button key={opt.value} onClick={() => { onUpdate({ width: opt.value }); setActiveMenu(null); }} className={`flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs font-bold transition-all hover:bg-slate-50 ${block.width === opt.value ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-600'}`}>
                     {opt.label}
                     {block.width === opt.value && <Check size={12} />}
                   </button>

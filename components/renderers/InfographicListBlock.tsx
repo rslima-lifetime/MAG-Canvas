@@ -92,7 +92,7 @@ export const InfographicListBlock: React.FC<InfographicListBlockProps> = ({
     const scales: Record<string, any> = {
       SM: { title: 'text-[9.5px]', body: 'text-[9.5px]', tag: 'text-[6px]', featureTitle: 'text-[13px]', featureBody: 'text-[11px]' },
       MD: { title: 'text-[10.5px]', body: 'text-[10.5px]', tag: 'text-[7px]', featureTitle: 'text-[15px]', featureBody: 'text-[12px]' },
-      LG: { title: 'text-[12.5px]', body: 'text-[12.5px]', tag: 'text-[8px]', featureTitle: 'text-[17px]', featureBody: 'text-[14px]' },
+      LG: { title: 'text-[12.5px]', body: 'text-[12.5px]', tag: 'text-[10px]', featureTitle: 'text-[17px]', featureBody: 'text-[14px]' },
     };
     const s = scales[textScale] || scales.MD;
     if (feature) return baseSize === 'title' ? s.featureTitle : s.featureBody;
@@ -307,7 +307,7 @@ export const InfographicListBlock: React.FC<InfographicListBlockProps> = ({
                       suppressContentEditableWarning
                       onBlur={(e) => onUpdateItem?.(idx, { tag: e.currentTarget.textContent || '' })}
                       onClick={(e) => isActive && e.stopPropagation()}
-                      className={`shrink-0 font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full border max-w-[100px] truncate outline-none ${isActive ? 'cursor-text' : ''} ${isFeature || isGallery ? 'text-[8px] -translate-y-0.5' : (getFontSize('tag', false) + ' -translate-y-[2px]')}`}
+                      className={`shrink-0 font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full border max-w-[100px] truncate outline-none ${isActive ? 'cursor-text' : ''} ${isFeature || isGallery ? 'text-[10px] -translate-y-0.5' : (getFontSize('tag', false) + ' -translate-y-[2px]')}`}
                       style={{ 
                         backgroundColor: tagColor, 
                         borderColor: isBlueTheme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
@@ -345,7 +345,7 @@ export const InfographicListBlock: React.FC<InfographicListBlockProps> = ({
               }`}
             >
               <Plus size={14} strokeWidth={3} />
-              <span className="text-[9px] font-black uppercase tracking-widest">Novo</span>
+              <span className="text-[11px] font-black uppercase tracking-widest">Novo</span>
             </button>
           </div>
         )}
@@ -366,7 +366,7 @@ export const InfographicListBlock: React.FC<InfographicListBlockProps> = ({
                 >
                   <ArrowLeft size={14} strokeWidth={3} />
                 </button>
-                <span className="text-[8px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
+                <span className="text-[10px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleMoveItem(activeSubItemIndex!, 'RIGHT'); }}
                   disabled={activeSubItemIndex === items.length - 1}
@@ -459,7 +459,7 @@ export const InfographicListBlock: React.FC<InfographicListBlockProps> = ({
                 <div className="relative">
                   <button 
                     onClick={(e) => { e.stopPropagation(); setActiveMenu(activeMenu === 'WIDTH' ? null : 'WIDTH'); }}
-                    className={`flex items-center gap-1 px-2 py-1.5 rounded-lg transition-all font-black text-[9px] border ${activeMenu === 'WIDTH' ? 'bg-[#0079C2] border-[#0079C2] text-white' : 'bg-white text-slate-500 border-slate-100 hover:border-slate-300'}`}
+                    className={`flex items-center gap-1 px-2 py-1.5 rounded-lg transition-all font-black text-[11px] border ${activeMenu === 'WIDTH' ? 'bg-[#0079C2] border-[#0079C2] text-white' : 'bg-white text-slate-500 border-slate-100 hover:border-slate-300'}`}
                   >
                     <Maximize2 size={12} />
                     {items[activeSubItemIndex]?.itemWidth || '50'}%
@@ -470,7 +470,7 @@ export const InfographicListBlock: React.FC<InfographicListBlockProps> = ({
                          <button 
                             key={w} 
                             onClick={(e) => { e.stopPropagation(); onUpdateItem?.(activeSubItemIndex!, { itemWidth: w as any }); setActiveMenu(null); }}
-                            className={`px-3 py-2 text-[10px] font-black rounded-lg transition-colors text-left ${items[activeSubItemIndex!].itemWidth === w ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}
+                            className={`px-3 py-2 text-xs font-black rounded-lg transition-colors text-left ${items[activeSubItemIndex!].itemWidth === w ? 'bg-blue-50 text-[#0079C2]' : 'text-slate-500 hover:bg-slate-50'}`}
                          >
                            {w}%
                          </button>

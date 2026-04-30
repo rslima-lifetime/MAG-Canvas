@@ -105,14 +105,14 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
   // Calcula o estilo dinâmico com base na altura da linha (rowHeight)
   const getDynamicStyles = (height: number) => {
     if (viewMode === 'LIST') return {
-      padding: 'p-3', gap: 'gap-2', dateText: 'text-sm', projectText: 'text-[10px]', projectPadding: 'p-3', statusText: 'text-[8px]', addButtonSize: 'w-6 h-6', showStatusBadge: true
+      padding: 'p-3', gap: 'gap-2', dateText: 'text-base', projectText: 'text-xs', projectPadding: 'p-3', statusText: 'text-[10px]', addButtonSize: 'w-6 h-6', showStatusBadge: true
     };
 
     if (height < 90) { // Modo Compacto
       return {
         padding: 'p-0.5',
         gap: 'gap-0.5',
-        dateText: 'text-[8px]',
+        dateText: 'text-[10px]',
         projectText: 'text-[7px]',
         projectPadding: 'p-0.5',
         statusText: 'text-[6px]',
@@ -123,10 +123,10 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
       return {
         padding: 'p-2',
         gap: 'gap-2',
-        dateText: 'text-[10px]',
-        projectText: 'text-[9px]',
+        dateText: 'text-xs',
+        projectText: 'text-[11px]',
         projectPadding: 'p-2',
-        statusText: 'text-[8px]',
+        statusText: 'text-[10px]',
         addButtonSize: 'w-5 h-5',
         showStatusBadge: true
       };
@@ -134,8 +134,8 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
       return {
         padding: 'p-1',
         gap: 'gap-1',
-        dateText: 'text-[9px]',
-        projectText: 'text-[8px]',
+        dateText: 'text-[11px]',
+        projectText: 'text-[10px]',
         projectPadding: 'p-1.5',
         statusText: 'text-[7px]',
         addButtonSize: 'w-4 h-4',
@@ -392,7 +392,7 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
                   }
                   if (e.key === 'Escape') setEditingProjectId(null);
                 }}
-                className={`w-full text-[8px] font-medium text-slate-500 outline-none bg-slate-50 px-1 py-0.5 rounded border border-transparent focus:border-slate-200 focus:bg-white resize-none leading-tight whitespace-pre-wrap overflow-hidden italic`}
+                className={`w-full text-[10px] font-medium text-slate-500 outline-none bg-slate-50 px-1 py-0.5 rounded border border-transparent focus:border-slate-200 focus:bg-white resize-none leading-tight whitespace-pre-wrap overflow-hidden italic`}
                 style={{ minHeight: '1.2em' }}
                 placeholder="Adicionar comentário... (Alt+Enter para nova linha)"
               />
@@ -410,7 +410,7 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
         {/* Descrição em Texto (Aparece apenas em List View) */}
         {isListView && hasDescription && (
           <div className="mt-1 px-0.5">
-            <p className="text-[9px] text-slate-500 font-medium leading-relaxed whitespace-pre-wrap">
+            <p className="text-[11px] text-slate-500 font-medium leading-relaxed whitespace-pre-wrap">
               {project.description}
             </p>
           </div>
@@ -429,7 +429,7 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
         <div className="flex items-center justify-between mb-4 border-b pb-2 px-1">
           <div className="flex items-center gap-2">
              <List size={16} className={isBlueTheme ? 'text-[#00A7E7]' : 'text-[#0079C2]'} />
-             <h3 className={`text-xs font-black uppercase tracking-widest ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>
+             <h3 className={`text-sm font-black uppercase tracking-widest ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>
                 {getHeaderTitle()}
              </h3>
           </div>
@@ -450,8 +450,8 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
         {sortedDays.length === 0 ? (
           <div className="py-12 flex flex-col items-center justify-center opacity-50">
              <CalendarIcon size={32} className="mb-2 text-slate-300" />
-             <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Nenhum evento registrado no período</span>
-             {isHighlighted && <span className="text-[8px] mt-1 text-slate-400">Use o painel lateral para adicionar projetos ou ajustar datas</span>}
+             <span className="text-xs font-black uppercase text-slate-400 tracking-widest">Nenhum evento registrado no período</span>
+             {isHighlighted && <span className="text-[10px] mt-1 text-slate-400">Use o painel lateral para adicionar projetos ou ajustar datas</span>}
           </div>
         ) : (
           <div className="flex flex-col gap-0 relative">
@@ -471,7 +471,7 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
                     {/* Coluna Data */}
                     <div className="flex flex-col items-end w-[45px] shrink-0 pt-1">
                        <span className={`text-lg font-black leading-none ${isBlueTheme ? 'text-white' : 'text-[#0079C2]'}`}>{dayNum}</span>
-                       <span className={`text-[8px] font-bold uppercase tracking-widest ${isBlueTheme ? 'text-blue-300' : 'text-slate-400'}`}>{weekDay.replace('.', '')}</span>
+                       <span className={`text-[10px] font-bold uppercase tracking-widest ${isBlueTheme ? 'text-blue-300' : 'text-slate-400'}`}>{weekDay.replace('.', '')}</span>
                     </div>
 
                     {/* Dot Timeline */}
@@ -513,7 +513,7 @@ export const ProjectCalendarBlock: React.FC<ProjectCalendarBlockProps> = ({
 
       <div className={`grid grid-cols-5 gap-px bg-slate-200 border border-slate-200 rounded-lg overflow-hidden`}>
         {['Seg', 'Ter', 'Qua', 'Qui', 'Sex'].map(d => (
-          <div key={d} className={`py-1 text-center text-[8px] font-black uppercase tracking-widest ${isBlueTheme ? 'bg-[#006098] text-white/80' : 'bg-slate-50 text-[#0079C2]'}`}>{d}</div>
+          <div key={d} className={`py-1 text-center text-[10px] font-black uppercase tracking-widest ${isBlueTheme ? 'bg-[#006098] text-white/80' : 'bg-slate-50 text-[#0079C2]'}`}>{d}</div>
         ))}
         {calendarDays.map((d, i) => {
           const dateKey = toLocalDateKey(d.date);

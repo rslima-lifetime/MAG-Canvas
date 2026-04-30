@@ -123,7 +123,7 @@ export const RankingListBlock: React.FC<RankingListBlockProps> = ({
                         onError={(e) => { e.currentTarget.style.display = 'none'; }}
                       />
                       {/* Badge de Rank Flutuante */}
-                      <div className={`absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow-md border-2 border-white ${rankConfig.badgeBg} ${rankConfig.text}`}>
+                      <div className={`absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shadow-md border-2 border-white ${rankConfig.badgeBg} ${rankConfig.text}`}>
                         {idx + 1}
                       </div>
                     </div>
@@ -163,12 +163,12 @@ export const RankingListBlock: React.FC<RankingListBlockProps> = ({
                       type="text"
                       value={item.description || ''}
                       onChange={(e) => onUpdateItem?.(idx, { description: e.target.value })}
-                      className="bg-transparent outline-none font-medium text-[10px] w-full border-b border-blue-100 text-slate-400 mt-0.5"
+                      className="bg-transparent outline-none font-medium text-xs w-full border-b border-blue-100 text-slate-400 mt-0.5"
                       placeholder="Cargo / Descrição"
                     />
                   ) : (
                     item.description && (
-                      <span className={`text-[10px] font-medium truncate leading-tight mt-0.5 ${isBlueTheme ? 'text-blue-100/70' : 'text-slate-400'}`}>
+                      <span className={`text-xs font-medium truncate leading-tight mt-0.5 ${isBlueTheme ? 'text-blue-100/70' : 'text-slate-400'}`}>
                         {item.description}
                       </span>
                     )
@@ -195,7 +195,7 @@ export const RankingListBlock: React.FC<RankingListBlockProps> = ({
                           type="number"
                           value={item.value}
                           onChange={(e) => onUpdateItem?.(idx, { value: parseFloat(e.target.value) || 0 })}
-                          className="bg-transparent outline-none font-medium text-[9px] text-right w-16 text-slate-400"
+                          className="bg-transparent outline-none font-medium text-[11px] text-right w-16 text-slate-400"
                           placeholder="Numérico"
                         />
                     </div>

@@ -71,7 +71,7 @@ export const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
             onBlur={onInputBlur} 
             onKeyDown={onInputKeyDown} 
             onPaste={(e) => e.stopPropagation()} 
-            className={`w-full bg-white text-[#006098] p-0.5 outline-none font-black text-[10px] rounded uppercase shadow-inner ${getAlignClass(index)}`} 
+            className={`w-full bg-white text-[#006098] p-0.5 outline-none font-black text-xs rounded uppercase shadow-inner ${getAlignClass(index)}`} 
           />
         ) : (
           <span className="w-full truncate drop-shadow-sm">{label || "Coluna"}</span>

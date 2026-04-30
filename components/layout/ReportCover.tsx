@@ -117,8 +117,8 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
         <div className="absolute bottom-12 right-12 z-10 flex flex-col items-end">
            <img src={LOGO_WHITE} alt="MAG" className="w-[120px] mb-4" />
            <div className="flex items-center gap-2">
-             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#00A7E7]">O Futuro é</span>
-             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white">MAG</span>
+             <span className="text-xs font-black uppercase tracking-[0.4em] text-[#00A7E7]">O Futuro é</span>
+             <span className="text-xs font-black uppercase tracking-[0.4em] text-white">MAG</span>
            </div>
         </div>
       </div>
@@ -141,7 +141,7 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
           
           <div className="flex justify-between items-start">
             <img src={isBlue ? LOGO_WHITE : LOGO_COLOR} alt="MAG" className="w-[160px]" />
-            <span className={`text-[9px] font-black uppercase tracking-[0.3em] ${isBlue ? 'text-white/30' : 'text-slate-300'}`}>Confidencial</span>
+            <span className={`text-[11px] font-black uppercase tracking-[0.3em] ${isBlue ? 'text-white/30' : 'text-slate-300'}`}>Confidencial</span>
           </div>
 
           <div className="flex flex-col justify-center flex-1 pr-10">
@@ -150,7 +150,7 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
               <span 
                 contentEditable={isActive && !isReadOnly} suppressContentEditableWarning
                 onBlur={(e) => handleBlur('topLabel', e)}
-                className={`text-[10px] font-black uppercase tracking-[0.3em] ${isBlue ? 'text-blue-200' : 'text-slate-400'} ${editableClass}`}
+                className={`text-xs font-black uppercase tracking-[0.3em] ${isBlue ? 'text-blue-200' : 'text-slate-400'} ${editableClass}`}
               >
                 {cover.topLabel || "Apresentação Executiva"}
               </span>
@@ -187,7 +187,7 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
           <div className="space-y-2">
             <div className={`flex items-center gap-2 mb-1 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}>
               <Building2 size={16} strokeWidth={2.5} />
-              <span className="text-[8px] font-black uppercase tracking-widest opacity-70">Diretoria</span>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Diretoria</span>
             </div>
             <span contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('author', e)} className={`text-[12px] font-bold uppercase leading-tight block ${editableClass}`}>
               {cover.author}
@@ -197,7 +197,7 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
           <div className="space-y-2">
             <div className={`flex items-center gap-2 mb-1 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}>
               <Briefcase size={16} strokeWidth={2.5} />
-              <span className="text-[8px] font-black uppercase tracking-widest opacity-70">Gerência</span>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Gerência</span>
             </div>
             <span contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('manager', e)} className={`text-[12px] font-bold uppercase leading-tight block ${editableClass}`}>
               {cover.manager}
@@ -207,7 +207,7 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
           <div className="space-y-2">
             <div className={`flex items-center gap-2 mb-1 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}>
               <Layers size={16} strokeWidth={2.5} />
-              <span className="text-[8px] font-black uppercase tracking-widest opacity-70">Núcleo</span>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Núcleo</span>
             </div>
             <span contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('department', e)} className={`text-[12px] font-bold uppercase leading-tight block ${editableClass}`}>
               {cover.department}
@@ -216,7 +216,7 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
 
           <div className={`h-[1px] w-12 ${isBlue ? 'bg-white/10' : 'bg-slate-200'}`} />
 
-          <div contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('date', e)} className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-[10px] font-black uppercase ${isBlue ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200'} ${editableClass}`}>
+          <div contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('date', e)} className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-xs font-black uppercase ${isBlue ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200'} ${editableClass}`}>
             <Calendar size={14} className={isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'} />
             {cover.date}
           </div>
@@ -237,7 +237,7 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
       <div className="flex justify-between items-start z-10 shrink-0">
         <img src={isBlue ? LOGO_WHITE : LOGO_COLOR} alt="MAG" className="w-[180px]" />
         <div className={`text-right ${isBlue ? 'text-blue-300/40' : 'text-slate-300'}`}>
-          <span className="text-[10px] font-black uppercase tracking-[0.5em] leading-none">Confidencial</span>
+          <span className="text-xs font-black uppercase tracking-[0.5em] leading-none">Confidencial</span>
         </div>
       </div>
 
@@ -260,22 +260,22 @@ export const ReportCover: React.FC<ReportCoverProps> = ({
       <div className={`mt-auto z-10 shrink-0`}>
          <div className={`grid grid-cols-3 gap-8 pb-4 md:pb-8 border-b ${isBlue ? 'border-white/10' : 'border-slate-100'}`}>
             <div className="flex flex-col gap-2">
-              <div className={`flex items-center gap-2 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}><Building2 size={14} strokeWidth={2.5} /><span className="text-[8px] font-black uppercase tracking-widest opacity-60">Diretoria</span></div>
+              <div className={`flex items-center gap-2 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}><Building2 size={14} strokeWidth={2.5} /><span className="text-[10px] font-black uppercase tracking-widest opacity-60">Diretoria</span></div>
               <span contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('author', e)} className={`text-[12px] font-bold uppercase leading-tight ${editableClass}`}>{cover.author}</span>
             </div>
             <div className="flex flex-col gap-2">
-              <div className={`flex items-center gap-2 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}><Briefcase size={14} strokeWidth={2.5} /><span className="text-[8px] font-black uppercase tracking-widest opacity-60">Gerência</span></div>
+              <div className={`flex items-center gap-2 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}><Briefcase size={14} strokeWidth={2.5} /><span className="text-[10px] font-black uppercase tracking-widest opacity-60">Gerência</span></div>
               <span contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('manager', e)} className={`text-[12px] font-bold uppercase leading-tight ${editableClass}`}>{cover.manager}</span>
             </div>
             <div className="flex flex-col gap-2">
-              <div className={`flex items-center gap-2 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}><Layers size={14} strokeWidth={2.5} /><span className="text-[8px] font-black uppercase tracking-widest opacity-60">Área / Núcleo</span></div>
+              <div className={`flex items-center gap-2 ${isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'}`}><Layers size={14} strokeWidth={2.5} /><span className="text-[10px] font-black uppercase tracking-widest opacity-60">Área / Núcleo</span></div>
               <span contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('department', e)} className={`text-[12px] font-bold uppercase leading-tight ${editableClass}`}>{cover.department}</span>
             </div>
          </div>
          <div className="flex justify-between items-center py-4">
            <div className="flex items-center gap-6">
              <span className={`text-[7px] font-black uppercase tracking-[0.2em] ${isBlue ? 'text-white/30' : 'text-slate-400'}`}>© {new Date().getFullYear()} MAG SEGUROS • NÚCLEO PEOPLE ANALYTICS</span>
-             <div contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('date', e)} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[9px] font-bold ${isBlue ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-100'} ${editableClass}`}><Calendar size={11} className={isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'} />{cover.date}</div>
+             <div contentEditable={isActive && !isReadOnly} suppressContentEditableWarning onBlur={(e) => handleBlur('date', e)} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[11px] font-bold ${isBlue ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-100'} ${editableClass}`}><Calendar size={11} className={isBlue ? 'text-[#00A7E7]' : 'text-[#0079C2]'} />{cover.date}</div>
            </div>
          </div>
       </div>

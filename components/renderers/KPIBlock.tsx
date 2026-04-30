@@ -156,11 +156,11 @@ export const KPIBlock: React.FC<KPIBlockProps> = ({
               onChange={(e) => handleUpdate('label', e.target.value)}
               onKeyDown={handleKeyDown}
               autoFocus
-              className={`w-full text-[9px] font-black uppercase tracking-widest outline-none border rounded px-2 py-0.5 ${inputBaseStyle}`}
+              className={`w-full text-[11px] font-black uppercase tracking-widest outline-none border rounded px-2 py-0.5 ${inputBaseStyle}`}
               placeholder="KPI LABEL"
             />
           ) : (
-            <span className={`text-[9px] font-black uppercase tracking-widest truncate ${isBlueTheme ? 'text-blue-200/60' : 'text-slate-400'} ${isCompact ? 'text-[8px]' : ''}`}>
+            <span className={`text-[11px] font-black uppercase tracking-widest truncate ${isBlueTheme ? 'text-blue-200/60' : 'text-slate-400'} ${isCompact ? 'text-[10px]' : ''}`}>
               {label || 'Título KPI'}
             </span>
           )}
@@ -172,7 +172,7 @@ export const KPIBlock: React.FC<KPIBlockProps> = ({
           {isActive && isHighlighted ? (
             <div className="flex items-center gap-2 w-full">
               <div className="relative flex items-center w-full">
-                  {currentFormatInfo?.prefix && !isCompact && <span className="absolute left-2 text-[10px] font-black text-slate-400 pointer-events-none">{currentFormatInfo.prefix}</span>}
+                  {currentFormatInfo?.prefix && !isCompact && <span className="absolute left-2 text-xs font-black text-slate-400 pointer-events-none">{currentFormatInfo.prefix}</span>}
                   <input 
                     type="text"
                     value={localCurrent}
@@ -188,7 +188,7 @@ export const KPIBlock: React.FC<KPIBlockProps> = ({
                 {formatValue(current ?? 0, format, abbreviate)}
               </span>
               {showDelta && (
-                <div className={`flex items-center gap-0.5 font-black px-1.5 py-0.5 rounded-full ${isCompact ? 'text-[6px]' : 'text-[8px]'} ${
+                <div className={`flex items-center gap-0.5 font-black px-1.5 py-0.5 rounded-full ${isCompact ? 'text-[6px]' : 'text-[10px]'} ${
                   isZero ? 'text-slate-400 bg-slate-100' : (isPositive ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50')
                 }`}>
                   {isZero ? <MinusIcon size={isCompact ? 5 : 7} /> : (isPositive ? <ArrowUpIcon size={isCompact ? 5 : 7} /> : <ArrowDownIcon size={isCompact ? 5 : 7} />)}
@@ -239,7 +239,7 @@ export const KPIBlock: React.FC<KPIBlockProps> = ({
             {subMeasures.map((sm, i) => (
               <div key={i} className="flex flex-col">
                 <span className={`text-[6.5px] font-black uppercase tracking-tighter opacity-50 ${isBlueTheme ? 'text-white' : 'text-slate-500'}`}>{sm.label}</span>
-                <span className={`text-[9px] font-bold ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>{sm.value}</span>
+                <span className={`text-[11px] font-bold ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>{sm.value}</span>
               </div>
             ))}
           </div>

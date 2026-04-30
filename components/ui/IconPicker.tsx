@@ -53,7 +53,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({ selectedIcon, onSelect }
             placeholder="Buscar ícone (ex: user, chart, goal)..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-8 pr-8 py-1.5 text-[10px] font-medium border rounded-lg outline-none focus:border-[#0079C2] focus:ring-1 focus:ring-blue-100 bg-white"
+            className="w-full pl-8 pr-8 py-1.5 text-xs font-medium border rounded-lg outline-none focus:border-[#0079C2] focus:ring-1 focus:ring-blue-100 bg-white"
           />
           {searchTerm && (
             <button 
@@ -75,7 +75,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({ selectedIcon, onSelect }
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1 px-3 py-2 text-[9px] font-black uppercase tracking-tight whitespace-nowrap transition-colors border-b-2 ${
+              className={`flex items-center gap-1 px-3 py-2 text-[11px] font-black uppercase tracking-tight whitespace-nowrap transition-colors border-b-2 ${
                 isActive 
                   ? 'text-[#0079C2] border-[#0079C2] bg-blue-50/30' 
                   : 'text-slate-400 border-transparent hover:text-slate-600 hover:bg-slate-50'
@@ -93,7 +93,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({ selectedIcon, onSelect }
         {filteredIcons.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-slate-400">
             <Search size={24} className="mb-2 opacity-20" />
-            <span className="text-[10px] font-medium">Nenhum ícone encontrado</span>
+            <span className="text-xs font-medium">Nenhum ícone encontrado</span>
           </div>
         ) : (
           <div className="grid grid-cols-6 gap-1.5">

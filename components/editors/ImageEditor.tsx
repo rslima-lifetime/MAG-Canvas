@@ -40,7 +40,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ config, onUpdate }) =>
         
         <button 
           onClick={() => fileInputRef.current?.click()}
-          className="w-full py-2 bg-white border border-slate-300 rounded-lg text-[10px] font-black uppercase text-slate-600 hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-2 shadow-sm"
+          className="w-full py-2 bg-white border border-slate-300 rounded-lg text-xs font-black uppercase text-slate-600 hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-2 shadow-sm"
         >
           <Upload size={14} />
           {config.imageUrl ? 'Trocar Imagem' : 'Carregar Imagem'}
@@ -52,32 +52,32 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ config, onUpdate }) =>
           accept="image/*" 
           onChange={handleFileChange} 
         />
-        <p className="text-[8px] text-slate-400 text-center px-4">
+        <p className="text-[10px] text-slate-400 text-center px-4">
           Dica: Você também pode colar (Ctrl+V) uma imagem diretamente no bloco.
         </p>
       </div>
 
       <div className="space-y-3">
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <Maximize size={10} className="text-[#0079C2]" /> Ajuste da Imagem (Fit)
           </label>
           <div className="flex bg-slate-100 p-1 rounded-lg gap-1">
             <button 
               onClick={() => onUpdate({ fit: 'cover' })} 
-              className={`flex-1 py-1.5 rounded text-[8px] font-black uppercase transition-all ${config.fit === 'cover' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex-1 py-1.5 rounded text-[10px] font-black uppercase transition-all ${config.fit === 'cover' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
             >
               Cobrir
             </button>
             <button 
               onClick={() => onUpdate({ fit: 'contain' })} 
-              className={`flex-1 py-1.5 rounded text-[8px] font-black uppercase transition-all ${config.fit === 'contain' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex-1 py-1.5 rounded text-[10px] font-black uppercase transition-all ${config.fit === 'contain' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
             >
               Conter
             </button>
             <button 
               onClick={() => onUpdate({ fit: 'fill' })} 
-              className={`flex-1 py-1.5 rounded text-[8px] font-black uppercase transition-all ${config.fit === 'fill' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex-1 py-1.5 rounded text-[10px] font-black uppercase transition-all ${config.fit === 'fill' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
             >
               Esticar
             </button>
@@ -85,7 +85,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ config, onUpdate }) =>
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <Type size={10} className="text-[#0079C2]" /> Legenda
           </label>
           <input 
@@ -98,7 +98,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ config, onUpdate }) =>
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <AlignCenter size={10} className="text-[#0079C2]" /> Altura Fixa (px)
           </label>
           <input 
@@ -108,7 +108,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ config, onUpdate }) =>
             className="w-full p-2.5 text-[11px] border rounded-xl outline-none focus:ring-2 focus:ring-blue-100"
             placeholder="Auto (Padrão)"
           />
-          <p className="text-[8px] text-slate-400">Deixe vazio para altura automática.</p>
+          <p className="text-[10px] text-slate-400">Deixe vazio para altura automática.</p>
         </div>
       </div>
     </div>

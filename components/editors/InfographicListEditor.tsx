@@ -83,26 +83,26 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
       <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
         <div className="flex items-center gap-2 mb-2">
           <Type size={14} className="text-[#0079C2]" />
-          <span className="text-[10px] font-black uppercase text-[#006098] tracking-widest">Estilo e Visibilidade</span>
+          <span className="text-xs font-black uppercase text-[#006098] tracking-widest">Estilo e Visibilidade</span>
         </div>
 
         {/* Estilo da Imagem */}
         <div className="space-y-2">
-          <label className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Formato da Imagem</label>
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Formato da Imagem</label>
           <div className="grid grid-cols-2 gap-2">
              <button 
                 onClick={() => onUpdate({ imageStyle: 'SQUARE' })}
                 className={`flex items-center justify-center gap-2 p-2 rounded-xl border transition-all ${(!config.imageStyle || config.imageStyle === 'SQUARE') ? 'bg-white border-[#0079C2] text-[#0079C2] shadow-sm' : 'bg-slate-100 text-slate-400 border-transparent'}`}
              >
                 <SquareIcon size={14} />
-                <span className="text-[9px] font-black uppercase">Box (16:9)</span>
+                <span className="text-[11px] font-black uppercase">Box (16:9)</span>
              </button>
              <button 
                 onClick={() => onUpdate({ imageStyle: 'ROUND' })}
                 className={`flex items-center justify-center gap-2 p-2 rounded-xl border transition-all ${config.imageStyle === 'ROUND' ? 'bg-white border-[#0079C2] text-[#0079C2] shadow-sm' : 'bg-slate-100 text-slate-400 border-transparent'}`}
              >
                 <CircleIcon size={14} />
-                <span className="text-[9px] font-black uppercase">Perfil (1:1)</span>
+                <span className="text-[11px] font-black uppercase">Perfil (1:1)</span>
              </button>
           </div>
         </div>
@@ -116,14 +116,14 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
             <div className={`p-1.5 rounded-lg ${config.showDescription !== false ? 'bg-blue-100 text-[#0079C2]' : 'bg-slate-100 text-slate-400'}`}>
               {config.showDescription !== false ? <Eye size={14} /> : <EyeOff size={14} />}
             </div>
-            <span className="text-[10px] font-black text-[#006098] uppercase tracking-tight">Exibir Descrições</span>
+            <span className="text-xs font-black text-[#006098] uppercase tracking-tight">Exibir Descrições</span>
           </div>
           {config.showDescription !== false ? <ToggleRight size={22} className="text-[#00A7E7]" /> : <ToggleLeft size={22} className="text-slate-300" />}
         </button>
 
         {/* Escala de Texto */}
         <div className="space-y-2 pt-2 border-t border-slate-200/60">
-          <label className="text-[8px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1">
              <Maximize2 size={10} /> Escala Global (A- / A+)
           </label>
           <div className="grid grid-cols-3 gap-1">
@@ -135,7 +135,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
               <button
                 key={scale.id}
                 onClick={() => onUpdate({ textScale: scale.id })}
-                className={`py-1.5 rounded-lg border text-[8px] font-black uppercase transition-all ${
+                className={`py-1.5 rounded-lg border text-[10px] font-black uppercase transition-all ${
                   (config.textScale || 'MD') === scale.id 
                     ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' 
                     : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
@@ -155,7 +155,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
           >
             <div className="flex items-center gap-2">
               <Bold size={12} className={config.bodyWeight === 'bold' ? 'text-[#0079C2]' : 'text-slate-300'} />
-              <span className="text-[9px] font-bold text-slate-500 uppercase">Texto em Negrito</span>
+              <span className="text-[11px] font-bold text-slate-500 uppercase">Texto em Negrito</span>
             </div>
             {config.bodyWeight === 'bold' ? <ToggleRight size={20} className="text-[#00A7E7]" /> : <ToggleLeft size={20} className="text-slate-300" />}
           </button>
@@ -166,7 +166,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
           >
             <div className="flex items-center gap-2">
               <Palette size={12} className={config.colorizeTitle !== false ? 'text-[#0079C2]' : 'text-slate-300'} />
-              <span className="text-[9px] font-bold text-slate-500 uppercase">Título Colorido</span>
+              <span className="text-[11px] font-bold text-slate-500 uppercase">Título Colorido</span>
             </div>
             {config.colorizeTitle !== false ? <ToggleRight size={20} className="text-[#00A7E7]" /> : <ToggleLeft size={20} className="text-slate-300" />}
           </button>
@@ -174,7 +174,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
       </div>
 
       <div className="space-y-2">
-        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Layout do Bloco</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Layout do Bloco</label>
         <div className="grid grid-cols-4 gap-2">
           <button 
             onClick={() => onUpdate({ layout: 'GRID' })} 
@@ -244,9 +244,9 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
                       <ChevronDown size={12} />
                     </button>
                   </div>
-                  <span className={`text-[9px] font-black uppercase ${isActive ? 'text-[#006098]' : 'text-slate-400'}`}>Card #{idx + 1}</span>
+                  <span className={`text-[11px] font-black uppercase ${isActive ? 'text-[#006098]' : 'text-slate-400'}`}>Card #{idx + 1}</span>
                   {isActive && (
-                    <div className="flex items-center gap-1 text-[8px] font-black uppercase text-[#0079C2] animate-pulse">
+                    <div className="flex items-center gap-1 text-[10px] font-black uppercase text-[#0079C2] animate-pulse">
                       <Target size={10} /> Ativo no Preview
                     </div>
                   )}
@@ -257,24 +257,24 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
               <div className="grid grid-cols-4 gap-3" onClick={e => e.stopPropagation()}>
                 {/* Título e Tag */}
                 <div className="col-span-3 space-y-1">
-                  <label className="text-[8px] font-bold text-gray-400 uppercase">Título</label>
-                  <input type="text" value={item.title} onChange={e => updateItem(idx, { title: e.target.value })} className="w-full p-2 text-[10px] font-bold border rounded-lg outline-none focus:ring-1 focus:ring-blue-300" />
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Título</label>
+                  <input type="text" value={item.title} onChange={e => updateItem(idx, { title: e.target.value })} className="w-full p-2 text-xs font-bold border rounded-lg outline-none focus:ring-1 focus:ring-blue-300" />
                 </div>
                 <div className="col-span-1 space-y-1">
-                  <label className="text-[8px] font-bold text-gray-400 uppercase">Tag</label>
-                  <input type="text" value={item.tag || ''} onChange={e => updateItem(idx, { tag: e.target.value })} className="w-full p-2 text-[10px] border rounded-lg outline-none focus:ring-1 focus:ring-blue-300" />
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Tag</label>
+                  <input type="text" value={item.tag || ''} onChange={e => updateItem(idx, { tag: e.target.value })} className="w-full p-2 text-xs border rounded-lg outline-none focus:ring-1 focus:ring-blue-300" />
                 </div>
 
                 {/* Largura do Card */}
                 {(config.layout === 'GRID' || config.layout === 'GALLERY') && (
                   <div className="col-span-4 space-y-2">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase flex items-center gap-1"><Maximize2 size={10} /> Tamanho do Card (%)</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1"><Maximize2 size={10} /> Tamanho do Card (%)</label>
                     <div className="grid grid-cols-4 gap-1">
                       {['25', '33', '50', '100'].map(w => (
                         <button 
                           key={w} 
                           onClick={() => updateItem(idx, { itemWidth: w as any })}
-                          className={`py-1 rounded-md text-[8px] font-black border transition-all ${item.itemWidth === w ? 'bg-[#0079C2] text-white border-[#0079C2]' : 'bg-white text-slate-400 border-slate-200'}`}
+                          className={`py-1 rounded-md text-[10px] font-black border transition-all ${item.itemWidth === w ? 'bg-[#0079C2] text-white border-[#0079C2]' : 'bg-white text-slate-400 border-slate-200'}`}
                         >
                           {w}%
                         </button>
@@ -285,14 +285,14 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
 
                 {config.showDescription !== false && (
                   <div className="col-span-4 space-y-1">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase">Descrição Contextual</label>
-                    <textarea value={item.description} onChange={e => updateItem(idx, { description: e.target.value })} className="w-full p-2 text-[10px] border rounded-lg h-16 leading-tight outline-none focus:ring-1 focus:ring-blue-300" />
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Descrição Contextual</label>
+                    <textarea value={item.description} onChange={e => updateItem(idx, { description: e.target.value })} className="w-full p-2 text-xs border rounded-lg h-16 leading-tight outline-none focus:ring-1 focus:ring-blue-300" />
                   </div>
                 )}
                 
                 {/* Cor da Tag */}
                 <div className="col-span-4 space-y-1 pt-1">
-                  <label className="text-[8px] font-bold text-gray-400 uppercase">Cor da Tag</label>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Cor da Tag</label>
                   <div className="flex flex-wrap gap-2">
                     {TAG_COLORS.map(c => (
                       <button 
@@ -307,7 +307,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
 
                 {/* IMAGEM / LOGO */}
                 <div className="col-span-4 space-y-2 pt-2 border-t">
-                  <label className="text-[8px] font-bold text-gray-400 uppercase flex items-center gap-1">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1">
                     <ImageIcon size={10} /> {config.layout === 'GALLERY' ? 'Foto da Galeria' : 'Logo / Imagem'}
                   </label>
                   <div className="flex gap-2">
@@ -317,7 +317,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
                         value={item.imageUrl || ''} 
                         onChange={e => updateItem(idx, { imageUrl: e.target.value })}
                         placeholder="URL da imagem..."
-                        className="w-full p-2 text-[9px] border rounded-lg bg-white outline-none focus:ring-1 focus:ring-blue-300"
+                        className="w-full p-2 text-[11px] border rounded-lg bg-white outline-none focus:ring-1 focus:ring-blue-300"
                       />
                     </div>
                     <label className="w-10 h-10 border-2 border-dashed border-slate-200 rounded-lg flex items-center justify-center cursor-pointer hover:border-[#0079C2] text-slate-300 hover:text-[#0079C2] transition-all shrink-0">
@@ -333,25 +333,25 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
                   
                   {item.imageUrl && (
                     <div className="space-y-1 mt-2">
-                      <label className="text-[8px] font-bold text-gray-400 uppercase flex items-center gap-1">
+                      <label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1">
                         <Maximize size={10} className="text-[#0079C2]" /> Ajuste da Imagem
                       </label>
                       <div className="flex bg-slate-100 p-1 rounded-lg gap-1">
                         <button 
                           onClick={() => updateItem(idx, { imageFit: 'cover' })} 
-                          className={`flex-1 py-1.5 rounded text-[8px] font-black uppercase transition-all ${(!item.imageFit || item.imageFit === 'cover') ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                          className={`flex-1 py-1.5 rounded text-[10px] font-black uppercase transition-all ${(!item.imageFit || item.imageFit === 'cover') ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                           Cortar
                         </button>
                         <button 
                           onClick={() => updateItem(idx, { imageFit: 'contain' })} 
-                          className={`flex-1 py-1.5 rounded text-[8px] font-black uppercase transition-all ${item.imageFit === 'contain' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                          className={`flex-1 py-1.5 rounded text-[10px] font-black uppercase transition-all ${item.imageFit === 'contain' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                           Conter
                         </button>
                         <button 
                           onClick={() => updateItem(idx, { imageFit: 'fill' })} 
-                          className={`flex-1 py-1.5 rounded text-[8px] font-black uppercase transition-all ${item.imageFit === 'fill' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                          className={`flex-1 py-1.5 rounded text-[10px] font-black uppercase transition-all ${item.imageFit === 'fill' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                           Esticar
                         </button>
@@ -363,7 +363,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
                 {/* Ícone e Cor do Ícone (Fallback) */}
                 {!item.imageUrl && (
                   <div className="col-span-4 space-y-2 pt-2 border-t">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase">Ícone (Fallback)</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Ícone (Fallback)</label>
                     
                     <button 
                       onClick={() => setShowPickerFor(isPicking ? null : idx)}
@@ -373,9 +373,9 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
                         <div className="w-8 h-8 bg-slate-100 rounded flex items-center justify-center text-[#006098]">
                           <CurrentIcon size={16} />
                         </div>
-                        <span className="text-[10px] font-medium text-slate-600">{item.icon || 'Selecionar...'}</span>
+                        <span className="text-xs font-medium text-slate-600">{item.icon || 'Selecionar...'}</span>
                       </div>
-                      <span className="text-[9px] font-black uppercase text-[#0079C2]">{isPicking ? 'Fechar' : 'Alterar'}</span>
+                      <span className="text-[11px] font-black uppercase text-[#0079C2]">{isPicking ? 'Fechar' : 'Alterar'}</span>
                     </button>
 
                     {isPicking && (
@@ -407,7 +407,7 @@ export const InfographicListEditor: React.FC<InfographicListEditorProps> = ({
 
       <button 
         onClick={addItem}
-        className="w-full py-3 border-2 border-dashed border-blue-200 text-[#0079C2] text-[10px] font-black uppercase rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+        className="w-full py-3 border-2 border-dashed border-blue-200 text-[#0079C2] text-xs font-black uppercase rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
       >
         <Plus size={14} /> Adicionar Novo Card Visual
       </button>

@@ -35,7 +35,7 @@ export const ComparisonEditor: React.FC<ComparisonEditorProps> = ({ config, onUp
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl flex gap-3">
         <Layout size={20} className="text-[#0079C2] shrink-0" />
-        <p className="text-[10px] text-[#006098] font-medium leading-tight">
+        <p className="text-xs text-[#006098] font-medium leading-tight">
           Utilize o comparativo para confrontar opções, cenários ou planos. Você pode marcar uma opção como <strong>Recomendada</strong> para destaque visual automático.
         </p>
       </div>
@@ -44,7 +44,7 @@ export const ComparisonEditor: React.FC<ComparisonEditorProps> = ({ config, onUp
         {items.map((item: any, idx: number) => (
           <div key={item.id} className="p-4 bg-white border border-slate-200 rounded-2xl space-y-4 shadow-sm group relative hover:border-[#0079C2] transition-colors">
             <div className="flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase text-slate-400">Coluna #{idx + 1}</span>
+              <span className="text-xs font-black uppercase text-slate-400">Coluna #{idx + 1}</span>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => {
@@ -64,7 +64,7 @@ export const ComparisonEditor: React.FC<ComparisonEditorProps> = ({ config, onUp
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <label className="text-[8px] font-bold text-gray-400 uppercase">Título da Opção</label>
+                <label className="text-[10px] font-bold text-gray-400 uppercase">Título da Opção</label>
                 <input 
                   type="text"
                   value={item.title}
@@ -73,21 +73,21 @@ export const ComparisonEditor: React.FC<ComparisonEditorProps> = ({ config, onUp
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[8px] font-bold text-gray-400 uppercase">Resumo / Descrição</label>
+                <label className="text-[10px] font-bold text-gray-400 uppercase">Resumo / Descrição</label>
                 <textarea 
                   value={item.description}
                   onChange={(e) => updateItem(idx, { description: e.target.value })}
-                  className="w-full p-2 text-[10px] border rounded-xl italic leading-relaxed h-16"
+                  className="w-full p-2 text-xs border rounded-xl italic leading-relaxed h-16"
                 />
               </div>
             </div>
 
             <div className="space-y-2 border-t pt-3">
-              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-between">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-between">
                  <span>Atributos</span>
                  <span className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">{item.attributes.length}</span>
               </label>
-              <p className="text-[8px] text-slate-400 italic">Dica: Adicione e edite atributos diretamente no preview para melhor precisão visual.</p>
+              <p className="text-[10px] text-slate-400 italic">Dica: Adicione e edite atributos diretamente no preview para melhor precisão visual.</p>
             </div>
           </div>
         ))}
@@ -96,7 +96,7 @@ export const ComparisonEditor: React.FC<ComparisonEditorProps> = ({ config, onUp
       <button 
         onClick={addItem}
         disabled={items.length >= 4}
-        className="w-full py-4 border-2 border-dashed border-blue-200 text-[#0079C2] text-[10px] font-black uppercase rounded-2xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2 disabled:opacity-30"
+        className="w-full py-4 border-2 border-dashed border-blue-200 text-[#0079C2] text-xs font-black uppercase rounded-2xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2 disabled:opacity-30"
       >
         <Plus size={16} strokeWidth={3} /> Adicionar Nova Coluna
       </button>

@@ -67,13 +67,13 @@ export const FunnelBlock: React.FC<FunnelBlockProps> = ({
       padding: 'p-4', 
       valSize: 'text-[24px]', 
       lblSize: 'text-[12px]', 
-      badgeSize: 'text-[9px]',
+      badgeSize: 'text-[11px]',
       gap: 'mt-2'
     };
     return { 
       padding: 'p-2.5', 
       valSize: 'text-[16px]', 
-      lblSize: 'text-[9px]', 
+      lblSize: 'text-[11px]', 
       badgeSize: 'text-[7px]',
       gap: 'mt-1'
     };
@@ -337,7 +337,7 @@ export const FunnelBlock: React.FC<FunnelBlockProps> = ({
           <div className="w-full px-4 mt-2 mb-2 no-print">
             <button 
               onClick={(e) => { e.stopPropagation(); onAddStage(); }}
-              className="w-full py-2 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center gap-2 text-[10px] font-black uppercase text-slate-400 hover:border-[#0079C2] hover:text-[#0079C2] hover:bg-blue-50 transition-all"
+              className="w-full py-2 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center gap-2 text-xs font-black uppercase text-slate-400 hover:border-[#0079C2] hover:text-[#0079C2] hover:bg-blue-50 transition-all"
             >
               <Plus size={12} strokeWidth={3} />
               Adicionar Etapa
@@ -348,7 +348,7 @@ export const FunnelBlock: React.FC<FunnelBlockProps> = ({
       
       {isHighlighted && stages.length === 0 && !onAddStage && (
         <div className="text-center p-8 border-2 border-dashed border-slate-200 rounded-lg">
-          <p className="text-[10px] text-slate-400 font-bold uppercase">Adicione etapas ao funil via menu lateral</p>
+          <p className="text-xs text-slate-400 font-bold uppercase">Adicione etapas ao funil via menu lateral</p>
         </div>
       )}
     </div>

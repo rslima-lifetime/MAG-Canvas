@@ -181,7 +181,7 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
       
       {/* SELETOR DE TEMA DA TABELA */}
       <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
-        <label className="text-[9px] font-black text-gray-500 uppercase flex items-center gap-2 mb-1">
+        <label className="text-[11px] font-black text-gray-500 uppercase flex items-center gap-2 mb-1">
           <Palette size={12} className="text-[#00A7E7]" />
           <span>Tema Cromático</span>
         </label>
@@ -203,17 +203,17 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
       </div>
 
       <div className="flex items-center justify-between">
-        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Entrada de Dados</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter">Entrada de Dados</label>
         <div className="flex bg-slate-100 p-1 rounded-lg gap-1 shadow-inner">
           <button 
             onClick={() => setViewMode('GRID')} 
-            className={`flex items-center gap-1 px-3 py-1 rounded text-[8px] font-black uppercase transition-all ${viewMode === 'GRID' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
+            className={`flex items-center gap-1 px-3 py-1 rounded text-[10px] font-black uppercase transition-all ${viewMode === 'GRID' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
           >
             <LayoutGrid size={10} /> Planilha
           </button>
           <button 
             onClick={() => setViewMode('TEXT')} 
-            className={`flex items-center gap-1 px-3 py-1 rounded text-[8px] font-black uppercase transition-all ${viewMode === 'TEXT' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
+            className={`flex items-center gap-1 px-3 py-1 rounded text-[10px] font-black uppercase transition-all ${viewMode === 'TEXT' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
           >
             <Type size={10} /> CSV/Texto
           </button>
@@ -225,20 +225,20 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
           <textarea 
             value={config.data} 
             onChange={(e) => onUpdate({ data: e.target.value })} 
-            className="w-full p-2 text-[10px] font-mono border rounded h-40 bg-slate-900 text-white shadow-inner outline-none focus:ring-1 focus:ring-[#0079C2]"
+            className="w-full p-2 text-xs font-mono border rounded h-40 bg-slate-900 text-white shadow-inner outline-none focus:ring-1 focus:ring-[#0079C2]"
             placeholder="Cargos\tMeta\tReal\nCEO\t100\t98"
           />
         </div>
       ) : (
         <div className="border rounded-xl overflow-hidden bg-slate-50 shadow-inner ring-1 ring-slate-200">
           <div className="overflow-x-auto max-h-64">
-            <table className="w-full text-[10px] border-collapse table-fixed">
+            <table className="w-full text-xs border-collapse table-fixed">
               <thead>
                 <tr className="bg-slate-200 sticky top-0 z-10">
                   <th className="p-1 border-r border-slate-300 w-8"></th>
                   {headers.map((h, i) => (
                     <th key={i} className="p-0 border-r border-slate-300 min-w-[120px] relative group/header-cell">
-                      <input type="text" value={h} onChange={(e) => handleHeaderChange(i, e.target.value)} onPaste={(e) => e.stopPropagation()} className="w-full p-1.5 bg-slate-200 text-[#006098] font-black uppercase text-[9px] outline-none focus:bg-white text-center transition-colors" />
+                      <input type="text" value={h} onChange={(e) => handleHeaderChange(i, e.target.value)} onPaste={(e) => e.stopPropagation()} className="w-full p-1.5 bg-slate-200 text-[#006098] font-black uppercase text-[11px] outline-none focus:bg-white text-center transition-colors" />
                       {i > 0 && <button onClick={() => removeColumn(i)} className="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-rose-500 opacity-0 group-hover/header-cell:opacity-100 transition-opacity bg-slate-200/80 rounded"><X size={10} strokeWidth={3} /></button>}
                     </th>
                   ))}
@@ -248,7 +248,7 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
               <tbody>
                 {dataPoints.map((row, rIdx) => (
                   <tr key={rIdx} className="border-b border-slate-200 bg-white group/row hover:bg-blue-50/20">
-                    <td className="p-1 text-center text-slate-300 font-mono text-[8px] border-r">{rIdx + 1}</td>
+                    <td className="p-1 text-center text-slate-300 font-mono text-[10px] border-r">{rIdx + 1}</td>
                     {headers.map((h, hIdx) => (
                       <td key={hIdx} className="p-0 border-r border-slate-100">
                         <input type="text" value={row[h] ?? ''} onChange={(e) => handleCellChange(rIdx, h, e.target.value)} onPaste={(e) => handleSmartPaste(e, rIdx, h)} className={`w-full p-2 bg-transparent outline-none focus:bg-blue-50/50 ${hIdx === 0 ? 'font-bold text-slate-700' : 'text-center text-slate-500'}`} />
@@ -261,16 +261,16 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
             </table>
           </div>
           <div className="p-2 flex gap-2 bg-slate-100 border-t border-slate-200">
-            <button onClick={addRow} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[9px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Linha</button>
-            <button onClick={addColumn} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[9px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Coluna</button>
+            <button onClick={addRow} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[11px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Linha</button>
+            <button onClick={addColumn} className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-[11px] font-black text-[#415364] uppercase hover:text-[#0079C2] hover:border-[#0079C2] transition-all flex items-center justify-center gap-1 shadow-sm"><Plus size={10} strokeWidth={3} /> Coluna</button>
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Modo Infográfico</label>
-          <select value={config.infographicMode || 'NONE'} onChange={(e) => onUpdate({ infographicMode: e.target.value as InfographicMode })} className="w-full p-1.5 text-[10px] border rounded bg-white font-bold text-[#006098]">
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Modo Infográfico</label>
+          <select value={config.infographicMode || 'NONE'} onChange={(e) => onUpdate({ infographicMode: e.target.value as InfographicMode })} className="w-full p-1.5 text-xs border rounded bg-white font-bold text-[#006098]">
             <option value="NONE">Tabela Padrão</option>
             <option value="SPARKBAR">Sparkbar (Barras)</option>
             <option value="GOAL">Atingimento % (Goal)</option>
@@ -279,13 +279,13 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
           </select>
         </div>
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Meta Geral</label>
-          <input type="number" value={config.goalValue || 100} onChange={(e) => onUpdate({ goalValue: parseFloat(e.target.value) })} className="w-full p-1.5 text-[10px] border rounded" />
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Meta Geral</label>
+          <input type="number" value={config.goalValue || 100} onChange={(e) => onUpdate({ goalValue: parseFloat(e.target.value) })} className="w-full p-1.5 text-xs border rounded" />
         </div>
       </div>
 
       <div className="space-y-2 p-3 bg-slate-50 border rounded-xl">
-        <label className="text-[9px] font-black text-gray-500 uppercase flex items-center gap-2 mb-2">
+        <label className="text-[11px] font-black text-gray-500 uppercase flex items-center gap-2 mb-2">
           <Sparkles size={12} className="text-[#00A7E7]" />
           <span>Formatação Visual</span>
         </label>
@@ -294,7 +294,7 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
             const colIdx = i + 1;
             const isSelected = config.targetColumns?.includes(colIdx);
             return (
-              <button key={colIdx} onClick={() => toggleTargetColumn(colIdx)} className={`px-3 py-1.5 rounded-full border text-[9px] font-black uppercase transition-all flex items-center gap-2 ${isSelected ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-md' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}>
+              <button key={colIdx} onClick={() => toggleTargetColumn(colIdx)} className={`px-3 py-1.5 rounded-full border text-[11px] font-black uppercase transition-all flex items-center gap-2 ${isSelected ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-md' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}>
                 {isSelected && <Target size={10} />}
                 {h}
               </button>
@@ -304,12 +304,12 @@ export const TableEditor: React.FC<TableEditorProps> = ({ config, onUpdate }) =>
       </div>
 
       <div className="flex flex-col gap-2 p-3 bg-blue-50/30 rounded-lg border border-blue-100">
-        <label className="flex items-center justify-between cursor-pointer group"><span className="text-[10px] font-bold text-[#006098] uppercase group-hover:text-[#00A7E7]">Total Geral (Última linha)</span><div onClick={() => onUpdate({ lastRowIsTotal: !config.lastRowIsTotal })} className={`transition-colors ${config.lastRowIsTotal ? 'text-[#00A7E7]' : 'text-slate-300'}`}>{config.lastRowIsTotal ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}</div></label>
-        <label className="flex items-center justify-between cursor-pointer group pt-1 border-t border-blue-100/50"><span className="text-[10px] font-bold text-[#006098] uppercase group-hover:text-[#00A7E7]">Quebrar linhas</span><div onClick={() => onUpdate({ wrapText: !config.wrapText })} className={`transition-colors ${config.wrapText ? 'text-[#00A7E7]' : 'text-slate-300'}`}>{config.wrapText ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}</div></label>
+        <label className="flex items-center justify-between cursor-pointer group"><span className="text-xs font-bold text-[#006098] uppercase group-hover:text-[#00A7E7]">Total Geral (Última linha)</span><div onClick={() => onUpdate({ lastRowIsTotal: !config.lastRowIsTotal })} className={`transition-colors ${config.lastRowIsTotal ? 'text-[#00A7E7]' : 'text-slate-300'}`}>{config.lastRowIsTotal ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}</div></label>
+        <label className="flex items-center justify-between cursor-pointer group pt-1 border-t border-blue-100/50"><span className="text-xs font-bold text-[#006098] uppercase group-hover:text-[#00A7E7]">Quebrar linhas</span><div onClick={() => onUpdate({ wrapText: !config.wrapText })} className={`transition-colors ${config.wrapText ? 'text-[#00A7E7]' : 'text-slate-300'}`}>{config.wrapText ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}</div></label>
       </div>
 
       <div className="space-y-1">
-        <div className="flex justify-between items-center text-[9px] font-bold text-gray-400 uppercase tracking-tighter mb-2"><div className="flex items-center gap-1"><MoveVertical size={10} className="text-[#00A7E7]" /><span>Espaçamento</span></div><span className="text-[#0079C2] font-black">{currentDensity}px</span></div>
+        <div className="flex justify-between items-center text-[11px] font-bold text-gray-400 uppercase tracking-tighter mb-2"><div className="flex items-center gap-1"><MoveVertical size={10} className="text-[#00A7E7]" /><span>Espaçamento</span></div><span className="text-[#0079C2] font-black">{currentDensity}px</span></div>
         <div className="px-1"><input type="range" min="2" max="32" step="2" value={currentDensity} onChange={(e) => onUpdate({ density: parseInt(e.target.value) })} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#00A7E7] hover:accent-[#0079C2] transition-all" /></div>
       </div>
     </div>

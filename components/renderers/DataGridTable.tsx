@@ -338,7 +338,7 @@ export const DataGridTable: React.FC<DataGridTableProps> = ({
   const paddingValue = typeof density === 'number' ? density : 10;
   const getFontSizeClass = (p: number) => {
     if (p <= 4) return 'text-[8.5px]';
-    if (p <= 8) return 'text-[10px]';
+    if (p <= 8) return 'text-xs';
     if (p <= 16) return 'text-[11.5px]';
     return 'text-[13px]';
   };
@@ -394,7 +394,7 @@ export const DataGridTable: React.FC<DataGridTableProps> = ({
           )}
           <button onClick={handleDeleteActive} className="p-1.5 hover:bg-rose-50 text-rose-500 rounded-lg flex items-center gap-1.5 pr-2">
             <Trash2 size={14} />
-            {hasRangeSelection && <span className="text-[10px] font-black uppercase">Excluir Intervalo</span>}
+            {hasRangeSelection && <span className="text-xs font-black uppercase">Excluir Intervalo</span>}
           </button>
         </div>
       )}
@@ -453,7 +453,7 @@ export const DataGridTable: React.FC<DataGridTableProps> = ({
           })}
         </tbody>
       </table>
-      {isHighlighted && isTableActive && <div className="absolute -bottom-6 right-0 text-[8px] font-black uppercase animate-pulse" style={{color: colors.accent}}>Modo Tabela Ativo • ESC para sair</div>}
+      {isHighlighted && isTableActive && <div className="absolute -bottom-6 right-0 text-[10px] font-black uppercase animate-pulse" style={{color: colors.accent}}>Modo Tabela Ativo • ESC para sair</div>}
     </div>
   );
 };

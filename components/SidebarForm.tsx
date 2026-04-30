@@ -163,13 +163,13 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
 
       {/* BARRA DE AÇÃO RÁPIDA (SALVAR) */}
       <div className="px-6 py-3 bg-slate-50/80 backdrop-blur-sm border-b border-slate-200 flex items-center justify-between z-10">
-        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+        <span className="text-sm font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span> Edição em Tempo Real
         </span>
         <button 
           onClick={handleManualSave} 
           disabled={saveStatus !== 'IDLE'} 
-          className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5 border transition-all shadow-sm ${
+          className={`px-4 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5 border transition-all shadow-sm ${
             saveStatus === 'SAVED' 
               ? 'bg-emerald-50 text-emerald-600 border-emerald-200 shadow-emerald-100' 
               : 'bg-white hover:bg-slate-50 text-[#0079C2] border-[#0079C2]/30 hover:border-[#0079C2] hover:shadow-md'
@@ -194,7 +194,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
             className={`w-full flex items-center justify-between px-6 py-4 transition-all ${openSections.config ? 'bg-[#0079C2]/5 border-l-4 border-[#0079C2] pl-[20px]' : 'hover:bg-slate-50 border-l-4 border-transparent'}`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border transition-all ${openSections.config ? 'bg-[#0079C2] text-white border-[#006098]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>1</div>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-black border transition-all ${openSections.config ? 'bg-[#0079C2] text-white border-[#006098]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>1</div>
               <span className="text-[11px] font-black uppercase text-[#006098] tracking-widest">Configuração Global</span>
             </div>
             <ChevronDown size={14} className={`text-slate-300 transition-transform ${openSections.config ? 'rotate-180' : ''}`} />
@@ -202,22 +202,22 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
           {openSections.config && (
             <div className="px-6 pb-6 space-y-5 animate-in slide-in-from-top-2 duration-200">
               <div className="space-y-1">
-                <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter flex items-center gap-1"><Edit3 size={10} /> Nome do Projeto</label>
-                <input type="text" value={data.title} onChange={(e) => onChange({ ...data, title: e.target.value })} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-[#006098] outline-none focus:ring-2 focus:ring-[#00A7E7]/20 transition-all placeholder-slate-300" placeholder="Ex: Report Mensal de KPIs" />
+                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter flex items-center gap-1"><Edit3 size={10} /> Nome do Projeto</label>
+                <input type="text" value={data.title} onChange={(e) => onChange({ ...data, title: e.target.value })} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-base font-bold text-[#006098] outline-none focus:ring-2 focus:ring-[#00A7E7]/20 transition-all placeholder-slate-300" placeholder="Ex: Report Mensal de KPIs" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Formato do Arquivo</label>
+                  <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter">Formato do Arquivo</label>
                   <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
-                    <button onClick={() => onChange({ ...data, layoutFormat: 'REPORT' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-[8px] font-black uppercase transition-all gap-1 ${data.layoutFormat === 'REPORT' ? 'bg-white text-[#0079C2] shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}><FileText size={14} /> A4 Vertical</button>
-                    <button onClick={() => onChange({ ...data, layoutFormat: 'PRESENTATION' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-[8px] font-black uppercase transition-all gap-1 ${data.layoutFormat === 'PRESENTATION' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}><Presentation size={14} /> Slide 16:9</button>
+                    <button onClick={() => onChange({ ...data, layoutFormat: 'REPORT' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-xs font-black uppercase transition-all gap-1 ${data.layoutFormat === 'REPORT' ? 'bg-white text-[#0079C2] shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}><FileText size={14} /> A4 Vertical</button>
+                    <button onClick={() => onChange({ ...data, layoutFormat: 'PRESENTATION' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-xs font-black uppercase transition-all gap-1 ${data.layoutFormat === 'PRESENTATION' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}><Presentation size={14} /> Slide 16:9</button>
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Identidade Visual</label>
+                  <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter">Identidade Visual</label>
                   <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
-                    <button onClick={() => onChange({ ...data, designSystem: 'STANDARD' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-[8px] font-black uppercase transition-all gap-1 ${data.designSystem === 'STANDARD' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}><LayoutPanelTop size={14} /> Padrão</button>
-                    <button onClick={() => onChange({ ...data, designSystem: 'FUTURE' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-[8px] font-black uppercase transition-all gap-1 ${data.designSystem === 'FUTURE' ? 'bg-[#006098] text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}><Sparkles size={14} /> Futuro</button>
+                    <button onClick={() => onChange({ ...data, designSystem: 'STANDARD' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-xs font-black uppercase transition-all gap-1 ${data.designSystem === 'STANDARD' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}><LayoutPanelTop size={14} /> Padrão</button>
+                    <button onClick={() => onChange({ ...data, designSystem: 'FUTURE' })} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg text-xs font-black uppercase transition-all gap-1 ${data.designSystem === 'FUTURE' ? 'bg-[#006098] text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}><Sparkles size={14} /> Futuro</button>
                   </div>
                 </div>
               </div>
@@ -232,7 +232,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
             className={`w-full flex items-center justify-between px-6 py-4 transition-all ${openSections.structure ? 'bg-[#0079C2]/5 border-l-4 border-[#0079C2] pl-[20px]' : 'hover:bg-slate-50 border-l-4 border-transparent'}`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border transition-all ${openSections.structure ? 'bg-[#0079C2] text-white border-[#006098]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>2</div>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-black border transition-all ${openSections.structure ? 'bg-[#0079C2] text-white border-[#006098]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>2</div>
               <span className="text-[11px] font-black uppercase text-[#006098] tracking-widest">Navegação & Estrutura</span>
             </div>
             <ChevronDown size={14} className={`text-slate-300 transition-transform ${openSections.structure ? 'rotate-180' : ''}`} />
@@ -266,7 +266,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
             className={`w-full flex items-center justify-between px-6 py-4 transition-all ${openSections.content ? 'bg-[#0079C2]/5 border-l-4 border-[#0079C2] pl-[20px]' : 'hover:bg-slate-50 border-l-4 border-transparent'}`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border transition-all ${openSections.content ? 'bg-[#0079C2] text-white border-[#006098]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>3</div>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-black border transition-all ${openSections.content ? 'bg-[#0079C2] text-white border-[#006098]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>3</div>
               <span className="text-[11px] font-black uppercase text-[#006098] tracking-widest">
                 {isCoverActive ? 'Edição da Capa' : isPageActive ? `Editor da Página ${typeof activePageIndex === 'number' ? activePageIndex + 1 : ''}` : 'Edição de Conteúdo'}
               </span>
@@ -278,38 +278,38 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
               {isPageActive && typeof activePageIndex === 'number' && data.pages[activePageIndex] && (
                 <div className="bg-white shadow-[0_-10px_20px_-15px_rgba(0,0,0,0.1)] relative z-10">
                   <div className="px-6 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tight">{data.pages[activePageIndex].blocks.length} componentes adicionados</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-tight">{data.pages[activePageIndex].blocks.length} componentes adicionados</span>
                   </div>
                   <div className="p-0">
                     <div className="space-y-1">
                       <details className="group/details" open>
                         <summary className="px-6 py-3 cursor-pointer bg-slate-50/50 hover:bg-slate-100 flex items-center justify-between transition-colors outline-none">
-                          <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><Plus size={12} /> Adicionar Elementos</span>
+                          <span className="text-[11px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><Plus size={12} /> Adicionar Elementos</span>
                           <ChevronDown size={12} className="text-slate-300 group-open/details:rotate-180 transition-transform" />
                         </summary>
                         <SidebarToolbox onAddBlock={(type) => onAddBlock && typeof activePageIndex === 'number' && onAddBlock(activePageIndex, type, true)} />
                       </details>
                       <details className="group/details" open={data.pages[activePageIndex].blocks.length > 0}>
                         <summary className="px-6 py-3 cursor-pointer bg-slate-50/50 hover:bg-slate-100 flex items-center justify-between transition-colors outline-none border-t border-slate-100">
-                          <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><Layers size={12} /> Gerenciar Conteúdo</span>
+                          <span className="text-[11px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><Layers size={12} /> Gerenciar Conteúdo</span>
                           <ChevronDown size={12} className="text-slate-300 group-open/details:rotate-180 transition-transform" />
                         </summary>
                         <SidebarBlockList blocks={data.pages[activePageIndex].blocks} activeBlockId={activeBlockId} activeSubItemIndex={activeSubItemIndex} onActiveBlockChange={onActiveBlockChange} onActiveSubItemChange={onActiveSubItemChange} onUpdatePage={(u) => updatePage(activePageIndex, u)} />
                       </details>
                       <details className="group/details">
                         <summary className="px-6 py-3 cursor-pointer bg-slate-50/50 hover:bg-slate-100 flex items-center justify-between transition-colors outline-none border-t border-slate-100">
-                          <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><Layout size={12} /> Layout e Espaçamento</span>
+                          <span className="text-[11px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><Layout size={12} /> Layout e Espaçamento</span>
                           <ChevronDown size={12} className="text-slate-300 group-open/details:rotate-180 transition-transform" />
                         </summary>
                         <SidebarPageSettings page={data.pages[activePageIndex]} onUpdatePage={(u) => updatePage(activePageIndex, u)} onApplyToAll={() => applyLayoutToAllPages(activePageIndex)} />
                       </details>
                       <details className="group/details">
                         <summary className="px-6 py-3 cursor-pointer bg-slate-50/50 hover:bg-slate-100 flex items-center justify-between transition-colors outline-none border-t border-slate-100">
-                          <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><FileJson size={12} /> Editar JSON da Página</span>
+                          <span className="text-[11px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><FileJson size={12} /> Editar JSON da Página</span>
                           <ChevronDown size={12} className="text-slate-300 group-open/details:rotate-180 transition-transform" />
                         </summary>
                         <div className="px-6 py-4 space-y-3">
-                          <p className="text-[10px] text-slate-400 leading-relaxed">
+                          <p className="text-sm text-slate-400 leading-relaxed">
                             Cole ou edite o JSON desta página diretamente. O conteúdo é validado antes de ser aplicado.
                           </p>
                           <button
@@ -317,7 +317,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
                               const page = data.pages[activePageIndex as number];
                               setPageJsonModal({ open: true, draft: JSON.stringify(page, null, 2), error: null });
                             }}
-                            className="w-full py-2.5 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] border border-[#0079C2]/20 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
+                            className="w-full py-2.5 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] border border-[#0079C2]/20 rounded-xl text-sm font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
                           >
                             <FileJson size={14} /> Abrir Editor JSON
                           </button>
@@ -334,11 +334,11 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
                   
                   <details className="group/details border-t border-slate-100">
                     <summary className="px-6 py-3 cursor-pointer bg-slate-50/50 hover:bg-slate-100 flex items-center justify-between transition-colors outline-none">
-                      <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><FileJson size={12} /> Editar JSON da Capa</span>
+                      <span className="text-[11px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><FileJson size={12} /> Editar JSON da Capa</span>
                       <ChevronDown size={12} className="text-slate-300 group-open/details:rotate-180 transition-transform" />
                     </summary>
                     <div className="px-6 py-4 space-y-3">
-                      <p className="text-[10px] text-slate-400 leading-relaxed">
+                      <p className="text-sm text-slate-400 leading-relaxed">
                         Cole ou edite o JSON da capa diretamente. As alterações são validadas antes de aplicar.
                       </p>
                       <button
@@ -346,7 +346,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
                           const cover = data.cover;
                           setPageJsonModal({ open: true, draft: JSON.stringify(cover, null, 2), error: null });
                         }}
-                        className="w-full py-2.5 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] border border-[#0079C2]/20 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
+                        className="w-full py-2.5 bg-[#0079C2]/10 hover:bg-[#0079C2]/20 text-[#006098] border border-[#0079C2]/20 rounded-xl text-sm font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
                       >
                         <FileJson size={14} /> Abrir Editor JSON
                       </button>
@@ -358,7 +358,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
               {!isPageActive && !isCoverActive && (
                 <div className="p-8 text-center opacity-50 mt-10">
                   <PenTool size={32} className="mx-auto text-slate-300 mb-3" />
-                  <p className="text-[10px] font-black uppercase text-slate-400">Selecione uma página para editar</p>
+                  <p className="text-sm font-black uppercase text-slate-400">Selecione uma página para editar</p>
                 </div>
               )}
             </div>
@@ -409,7 +409,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
       {/* RODAPÉ UTILITÁRIO */}
       <div className="p-4 border-t bg-white shrink-0 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.05)] z-20">
         {lastSaveTime && (
-          <div className={`flex items-center justify-center gap-1.5 text-[9px] font-bold uppercase tracking-widest mb-2 transition-colors ${isLongUnsaved ? 'text-amber-500 animate-pulse' : 'text-slate-400'}`}>
+          <div className={`flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-2 transition-colors ${isLongUnsaved ? 'text-amber-500 animate-pulse' : 'text-slate-400'}`}>
             <Clock size={10} strokeWidth={isLongUnsaved ? 3 : 2} /> {timeDisplay}
           </div>
         )}
@@ -426,7 +426,7 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
         <div className="grid grid-cols-2 gap-2 mb-3">
           <button 
             onClick={handleSharePresentation} 
-            className={`py-2.5 rounded-lg text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 border transition-all shadow-sm ${
+            className={`py-2.5 rounded-lg text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 border transition-all shadow-sm ${
               shareStatus === 'COPIED' 
                 ? 'bg-emerald-50 text-emerald-600 border-emerald-200 shadow-emerald-100' 
                 : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
@@ -438,34 +438,34 @@ export const SidebarForm: React.FC<SidebarFormProps> = ({
 
           <button 
             onClick={() => window.print()} 
-            className="py-2.5 rounded-lg text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 border bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200 transition-all shadow-sm"
+            className="py-2.5 rounded-lg text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 border bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200 transition-all shadow-sm"
           >
             <FileText size={14} /> Exportar PDF
           </button>
         </div>
 
-        <div className="flex items-center justify-between mb-3 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+        <div className="flex items-center justify-between mb-3 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
           <span>Total: {data.pages.length + (data.cover?.enabled ? 1 : 0)} Folhas</span>
           <button onClick={onTogglePreview} className="text-[#0079C2] hover:underline flex items-center gap-1"><Eye size={12} /> Alternar Margens</button>
         </div>
 
         {/* UTILITÁRIOS AVANÇADOS */}
         <details className="group/utils">
-          <summary className="flex items-center justify-center gap-1 cursor-pointer text-[9px] font-bold uppercase text-slate-400 tracking-widest select-none outline-none hover:text-slate-600">
+          <summary className="flex items-center justify-center gap-1 cursor-pointer text-[11px] font-bold uppercase text-slate-400 tracking-widest select-none outline-none hover:text-slate-600">
             <span>Mais Opções</span>
             <ChevronDown size={12} className="group-open/utils:rotate-180 transition-transform" />
           </summary>
           <div className="pt-3 flex gap-2">
             <button 
               onClick={() => setIsImportModalOpen(true)} 
-              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-lg flex items-center justify-center border border-slate-200 transition-all text-[9px] font-bold uppercase gap-1" 
+              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-lg flex items-center justify-center border border-slate-200 transition-all text-[11px] font-bold uppercase gap-1" 
               title="Restaurar Backup (JSON)"
             >
               <CloudUpload size={12} /> Importar JSON
             </button>
             <button 
               onClick={onExportBackup} 
-              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-lg flex items-center justify-center border border-slate-200 transition-all text-[9px] font-bold uppercase gap-1" 
+              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-lg flex items-center justify-center border border-slate-200 transition-all text-[11px] font-bold uppercase gap-1" 
               title="Exportar Arquivo .JSON"
             >
               <Send size={12} /> Exportar JSON

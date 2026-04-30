@@ -689,7 +689,7 @@ const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-[#0f172a] flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-[#0079C2] border-t-transparent rounded-full animate-spin" />
-        <p className="text-white/50 text-[11px] font-black uppercase tracking-widest">Carregando apresentação...</p>
+        <p className="text-white/50 text-[10px] font-black uppercase tracking-widest">Carregando apresentação...</p>
       </div>
     );
   }
@@ -703,17 +703,17 @@ const App: React.FC = () => {
             <div className="flex items-center gap-3 mb-4 text-amber-500">
               <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center border border-amber-100"><AlertTriangle size={20} /></div>
               <div className="flex-1">
-                <h3 className="text-sm font-black uppercase tracking-wide text-slate-700">Alterações Não Salvas</h3>
-                <p className="text-[10px] font-medium text-slate-400">Você tem modificações pendentes.</p>
+                <h3 className="text-base font-black uppercase tracking-wide text-slate-700">Alterações Não Salvas</h3>
+                <p className="text-xs font-medium text-slate-400">Você tem modificações pendentes.</p>
               </div>
               <button onClick={() => setShowUnsavedDialog(false)} className="text-slate-300 hover:text-slate-500"><X size={18} /></button>
             </div>
-            <p className="text-xs text-slate-600 mb-6 leading-relaxed">Deseja salvar o progresso atual antes de voltar para a tela inicial?</p>
+            <p className="text-sm text-slate-600 mb-6 leading-relaxed">Deseja salvar o progresso atual antes de voltar para a tela inicial?</p>
             <div className="flex flex-col gap-2">
-              <button onClick={handleSaveAndExit} className="w-full py-3 bg-[#0079C2] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#006098] flex items-center justify-center gap-2 shadow-md"><Save size={14} /> Salvar e Sair</button>
+              <button onClick={handleSaveAndExit} className="w-full py-3 bg-[#0079C2] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#006098] flex items-center justify-center gap-2 shadow-md"><Save size={14} /> Salvar e Sair</button>
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={handleDiscardExit} className="py-3 bg-white border border-rose-200 text-rose-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-50 flex items-center justify-center gap-2"><Trash2 size={14} /> Descartar</button>
-                <button onClick={() => setShowUnsavedDialog(false)} className="py-3 bg-slate-100 text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200">Cancelar</button>
+                <button onClick={handleDiscardExit} className="py-3 bg-white border border-rose-200 text-rose-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-50 flex items-center justify-center gap-2"><Trash2 size={14} /> Descartar</button>
+                <button onClick={() => setShowUnsavedDialog(false)} className="py-3 bg-slate-100 text-slate-500 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-200">Cancelar</button>
               </div>
             </div>
           </div>
@@ -883,14 +883,14 @@ const App: React.FC = () => {
                         setShowInsertAt(null); 
                         setInsertSubMenu('MAIN'); 
                       }}
-                      onUpdatePage={(u) => !isReadOnly && updatePage(pIdx, u)}
-                      onUpdateBlock={(id, u) => !isReadOnly && updateBlock(pIdx, id, u)}
-                      onRemoveBlock={(id) => !isReadOnly && (selectedBlockIds.length > 1 ? handleBulkRemove() : removeBlock(pIdx, id))}
-                      onMoveBlock={(idx, dir) => !isReadOnly && moveBlock(pIdx, idx, dir)}
-                      onDuplicateBlock={(idx) => !isReadOnly && handleDuplicateBlock(pIdx, idx)}
+                      onUpdatePage={(u: any) => !isReadOnly && updatePage(pIdx, u)}
+                      onUpdateBlock={(id: string, u: any) => !isReadOnly && updateBlock(pIdx, id, u)}
+                      onRemoveBlock={(id: string) => !isReadOnly && (selectedBlockIds.length > 1 ? handleBulkRemove() : removeBlock(pIdx, id))}
+                      onMoveBlock={(idx: number, dir: 'up' | 'down') => !isReadOnly && moveBlock(pIdx, idx, dir)}
+                      onDuplicateBlock={(idx: number) => !isReadOnly && handleDuplicateBlock(pIdx, idx)}
                       onCopyBlock={handleCopySelected}
-                      onPasteBlock={(idx) => !isReadOnly && handlePasteBlocks(pIdx, idx)}
-                      onBulkSelect={(ids) => setSelectedBlockIds(ids)}
+                      onPasteBlock={(idx: number) => !isReadOnly && handlePasteBlocks(pIdx, idx)}
+                      onBulkSelect={(ids: string[]) => setSelectedBlockIds(ids)}
                       totalPages={reportData.pages.length}
                     />
                   );
@@ -899,7 +899,7 @@ const App: React.FC = () => {
                   <div className="no-print w-full mt-8 mb-24 flex justify-center shrink-0">
                      <button onClick={(e) => { e.stopPropagation(); handleAddPage(); }} className="group w-full py-16 border-4 border-dashed border-slate-300 rounded-3xl flex flex-col items-center justify-center gap-4 text-slate-400 hover:border-[#0079C2] hover:text-[#0079C2] hover:bg-white transition-all duration-500 shadow-sm hover:shadow-xl" style={{ width: reportData.layoutFormat === 'PRESENTATION' ? '297mm' : '210mm' }}>
                        <div className="w-16 h-16 rounded-full bg-slate-100 group-hover:bg-[#0079C2] group-hover:text-white flex items-center justify-center transition-all duration-500 group-hover:scale-110"><Plus size={32} strokeWidth={3} /></div>
-                       <div className="flex flex-col items-center"><span className="text-xl font-black uppercase tracking-widest leading-none">Inserir Novo Slide/Folha</span><span className="text-[10px] font-bold uppercase tracking-tight opacity-60 mt-1">Adicionar mais dados ao projeto</span></div>
+                       <div className="flex flex-col items-center"><span className="text-xl font-black uppercase tracking-widest leading-none">Inserir Novo Slide/Folha</span><span className="text-xs font-bold uppercase tracking-tight opacity-60 mt-1">Adicionar mais dados ao projeto</span></div>
                      </button>
                   </div>
                 )}
@@ -940,7 +940,7 @@ const App: React.FC = () => {
       {isSaving && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#006098] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in slide-in-from-bottom-4 z-[300]">
           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-          <span className="text-[10px] font-black uppercase tracking-widest">Salvando na Nuvem...</span>
+          <span className="text-xs font-black uppercase tracking-widest">Salvando na Nuvem...</span>
         </div>
       )}
     </div>

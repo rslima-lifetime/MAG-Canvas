@@ -269,10 +269,10 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
             <div className="flex items-center justify-between px-2 mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: col.color }} />
-                <h4 className={`text-[10px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-100' : 'text-slate-600'}`}>
+                <h4 className={`text-xs font-black uppercase tracking-widest ${isBlueTheme ? 'text-blue-100' : 'text-slate-600'}`}>
                   {col.title}
                 </h4>
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${isBlueTheme ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-400'}`}>
+                <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${isBlueTheme ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-400'}`}>
                   {columnCards.length}
                 </span>
               </div>
@@ -422,14 +422,14 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                       {/* Descrição */}
                       {isHighlighted ? (
                         <textarea 
-                          className="w-full bg-transparent text-[9px] leading-snug outline-none border-b border-transparent focus:border-blue-300 resize-none h-12"
+                          className="w-full bg-transparent text-[11px] leading-snug outline-none border-b border-transparent focus:border-blue-300 resize-none h-12"
                           value={card.description}
                           onChange={(e) => updateCardField(card.id, 'description', e.target.value)}
                           onClick={(e) => e.stopPropagation()}
                           placeholder="Adicione uma descrição..."
                         />
                       ) : (
-                        card.description && <p className="text-[9px] leading-snug opacity-60 line-clamp-3 mb-2">{card.description}</p>
+                        card.description && <p className="text-[11px] leading-snug opacity-60 line-clamp-3 mb-2">{card.description}</p>
                       )}
 
                       {/* Checklist */}
@@ -459,7 +459,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                                 
                                 {isHighlighted ? (
                                   <input 
-                                    className={`flex-1 bg-transparent text-[9px] outline-none border-b border-transparent focus:border-blue-200 ${item.completed ? 'text-slate-400 line-through' : 'text-slate-600 font-medium'}`}
+                                    className={`flex-1 bg-transparent text-[11px] outline-none border-b border-transparent focus:border-blue-200 ${item.completed ? 'text-slate-400 line-through' : 'text-slate-600 font-medium'}`}
                                     value={item.text}
                                     onChange={(e) => {
                                       const newCheck = (card.checklist || []).map(i => i.id === item.id ? { ...i, text: e.target.value } : i);
@@ -468,7 +468,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                                     onClick={(e) => e.stopPropagation()}
                                   />
                                 ) : (
-                                  <span className={`text-[9px] ${item.completed ? 'text-slate-400 line-through italic' : 'text-slate-600 font-medium'}`}>
+                                  <span className={`text-[11px] ${item.completed ? 'text-slate-400 line-through italic' : 'text-slate-600 font-medium'}`}>
                                     {item.text}
                                   </span>
                                 )}
@@ -499,7 +499,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                                  }}
                                  onClick={(e) => e.stopPropagation()}
                                  placeholder="+ Novo item..."
-                                 className="w-full bg-transparent text-[8px] font-bold outline-none border-b border-blue-100/50 focus:border-blue-300 placeholder-slate-300"
+                                 className="w-full bg-transparent text-[10px] font-bold outline-none border-b border-blue-100/50 focus:border-blue-300 placeholder-slate-300"
                                />
                             </div>
                           )}
@@ -509,7 +509,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                       {/* Footer */}
                       <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-50 opacity-80">
                         <div className="flex items-center gap-1.5 min-w-0 relative">
-                          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-black border shrink-0 ${isBlueTheme ? 'bg-white/10 border-white/10' : 'bg-slate-100 border-slate-200'}`}>
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black border shrink-0 ${isBlueTheme ? 'bg-white/10 border-white/10' : 'bg-slate-100 border-slate-200'}`}>
                             {card.owner ? card.owner.charAt(0).toUpperCase() : <User size={10} />}
                           </div>
                           
@@ -517,7 +517,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                             <div className="relative">
                               <button 
                                 onClick={(e) => { e.stopPropagation(); setActiveOwnerPicker(activeOwnerPicker === card.id ? null : card.id); }}
-                                className={`text-[8px] font-bold outline-none border-b border-dashed transition-colors truncate max-w-[80px] ${card.owner ? 'border-blue-200 text-[#0079C2]' : 'border-slate-200 text-slate-400'}`}
+                                className={`text-[10px] font-bold outline-none border-b border-dashed transition-colors truncate max-w-[80px] ${card.owner ? 'border-blue-200 text-[#0079C2]' : 'border-slate-200 text-slate-400'}`}
                               >
                                 {card.owner || 'Selecionar...'}
                               </button>
@@ -533,7 +533,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                                         <button 
                                           key={m}
                                           onClick={(e) => { e.stopPropagation(); updateCardField(card.id, 'owner', m); setActiveOwnerPicker(null); }}
-                                          className="w-full flex items-center justify-between p-1.5 rounded-lg text-[9px] font-bold text-slate-600 hover:bg-blue-50 hover:text-[#0079C2] transition-colors"
+                                          className="w-full flex items-center justify-between p-1.5 rounded-lg text-[11px] font-bold text-slate-600 hover:bg-blue-50 hover:text-[#0079C2] transition-colors"
                                         >
                                           <span className="truncate">{m}</span>
                                           {card.owner === m && <Check size={10} strokeWidth={4} />}
@@ -555,7 +555,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                               )}
                             </div>
                           ) : (
-                            <span className="text-[8px] font-bold truncate">{card.owner || '—'}</span>
+                            <span className="text-[10px] font-bold truncate">{card.owner || '—'}</span>
                           )}
                         </div>
                         
@@ -563,7 +563,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                           <div className="relative group/date">
                             <label className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full border transition-all cursor-pointer bg-[#0079C2] text-white border-[#006098] hover:bg-[#006098] shadow-md hover:shadow-lg active:scale-95`}>
                               <Clock size={10} strokeWidth={3} className="shrink-0" />
-                              <span className="text-[9px] font-black uppercase leading-none drop-shadow-sm">{formatDisplayDate(card.date)}</span>
+                              <span className="text-[11px] font-black uppercase leading-none drop-shadow-sm">{formatDisplayDate(card.date)}</span>
                               <input 
                                 type="date"
                                 value={card.date || ''}
@@ -586,7 +586,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                               isBlueTheme ? 'bg-white/10 border-white/20 text-white' : 'bg-slate-50 border-slate-200 text-slate-500'
                             }`}>
                               <Clock size={10} className="opacity-50" /> 
-                              <span className="text-[9px] font-black uppercase leading-none">{formatDisplayDate(card.date)}</span>
+                              <span className="text-[11px] font-black uppercase leading-none">{formatDisplayDate(card.date)}</span>
                             </div>
                           )
                         )}
@@ -638,7 +638,7 @@ export const KanbanBlock: React.FC<KanbanBlockProps> = ({
                   onClick={() => isHighlighted && addCardAt(col.id, 0)}
                 >
                    <Tag size={24} strokeWidth={1} className="opacity-20 group-hover/empty:opacity-40 transition-opacity" />
-                   <span className="text-[8px] font-black uppercase mt-2 opacity-20 group-hover/empty:opacity-40">Vazio</span>
+                   <span className="text-[10px] font-black uppercase mt-2 opacity-20 group-hover/empty:opacity-40">Vazio</span>
                    {isHighlighted && <Plus size={16} className="mt-2 text-[#0079C2] opacity-0 group-hover/empty:opacity-100 transition-all scale-75 group-hover/empty:scale-100" />}
                 </div>
               )}

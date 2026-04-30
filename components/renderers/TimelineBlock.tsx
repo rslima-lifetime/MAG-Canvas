@@ -99,8 +99,8 @@ export const TimelineBlock: React.FC<TimelineBlockProps> = ({
 
   const getFontSize = (type: 'year' | 'title' | 'description') => {
     const scales: Record<string, any> = {
-      SM: { year: 'text-[13px]', title: 'text-[9px]', description: 'text-[9px]' },
-      MD: { year: 'text-[16px]', title: 'text-[10px]', description: 'text-[10.5px]' },
+      SM: { year: 'text-[13px]', title: 'text-[11px]', description: 'text-[11px]' },
+      MD: { year: 'text-[16px]', title: 'text-xs', description: 'text-[10.5px]' },
       LG: { year: 'text-[20px]', title: 'text-[12px]', description: 'text-[13px]' },
     };
     const s = scales[textScale] || scales.MD;
@@ -177,8 +177,8 @@ export const TimelineBlock: React.FC<TimelineBlockProps> = ({
                <Plus size={24} strokeWidth={3} />
             </div>
             <div className="flex flex-col items-center">
-               <span className="text-[10px] font-black uppercase tracking-widest text-[#006098]">Linha do Tempo Vazia</span>
-               <span className="text-[8px] font-bold uppercase text-slate-400">Clique para adicionar o primeiro marco</span>
+               <span className="text-xs font-black uppercase tracking-widest text-[#006098]">Linha do Tempo Vazia</span>
+               <span className="text-[10px] font-bold uppercase text-slate-400">Clique para adicionar o primeiro marco</span>
             </div>
         </div>
       ) : (
@@ -285,7 +285,7 @@ export const TimelineBlock: React.FC<TimelineBlockProps> = ({
             >
               <ChevronUp size={14} strokeWidth={3} />
             </button>
-            <span className="text-[8px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
+            <span className="text-[10px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
             <button 
               onClick={(e) => { e.stopPropagation(); handleMoveEvent(activeSubItemIndex!, 'DOWN'); }}
               disabled={activeSubItemIndex === events.length - 1}
@@ -320,7 +320,7 @@ export const TimelineBlock: React.FC<TimelineBlockProps> = ({
               <button 
                 key={scale.id}
                 onClick={(e) => { e.stopPropagation(); onUpdate?.({ config: { ...config, textScale: scale.id } }); }}
-                className={`px-2 py-1 rounded text-[9px] font-black transition-all ${textScale === scale.id ? 'bg-[#0079C2] text-white' : 'text-slate-400 hover:bg-slate-50'}`}
+                className={`px-2 py-1 rounded text-[11px] font-black transition-all ${textScale === scale.id ? 'bg-[#0079C2] text-white' : 'text-slate-400 hover:bg-slate-50'}`}
               >
                 {scale.label}
               </button>

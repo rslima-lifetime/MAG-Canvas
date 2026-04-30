@@ -55,10 +55,10 @@ export const FunnelEditor: React.FC<FunnelEditorProps> = ({ config, onUpdate, ac
       {/* Controle de Altura */}
       <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
           <div className="flex justify-between items-center">
-            <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+            <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
                <MoveVertical size={10} className="text-[#0079C2]" /> Altura da Etapa
             </label>
-            <span className="text-[9px] font-black text-[#0079C2]">{currentHeight}px</span>
+            <span className="text-[11px] font-black text-[#0079C2]">{currentHeight}px</span>
           </div>
           <input 
             type="range" 
@@ -91,7 +91,7 @@ export const FunnelEditor: React.FC<FunnelEditorProps> = ({ config, onUpdate, ac
                   <div className="flex flex-col gap-0.5">
                     <button onClick={(e) => { e.stopPropagation(); moveStage(idx, 'UP'); }} className="text-slate-300 hover:text-[#0079C2] p-0.5"><GripVertical size={10} /></button>
                   </div>
-                  <span className={`text-[9px] font-black uppercase ${isActive ? 'text-[#006098]' : 'text-slate-400'}`}>
+                  <span className={`text-[11px] font-black uppercase ${isActive ? 'text-[#006098]' : 'text-slate-400'}`}>
                     Etapa {idx + 1}
                   </span>
                 </div>
@@ -102,21 +102,21 @@ export const FunnelEditor: React.FC<FunnelEditorProps> = ({ config, onUpdate, ac
 
               <div className="grid grid-cols-5 gap-2" onClick={(e) => e.stopPropagation()}>
                 <div className="col-span-3 space-y-1">
-                  <label className="text-[8px] font-bold text-gray-400 uppercase">Rótulo</label>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Rótulo</label>
                   <input 
                     type="text" 
                     value={stage.label} 
                     onChange={(e) => updateStage(idx, { label: e.target.value })}
-                    className="w-full p-1.5 text-[10px] font-bold border rounded bg-white text-[#006098] outline-none focus:border-[#0079C2]"
+                    className="w-full p-1.5 text-xs font-bold border rounded bg-white text-[#006098] outline-none focus:border-[#0079C2]"
                   />
                 </div>
                 <div className="col-span-2 space-y-1">
-                  <label className="text-[8px] font-bold text-gray-400 uppercase">Valor</label>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Valor</label>
                   <input 
                     type="number" 
                     value={stage.value} 
                     onChange={(e) => updateStage(idx, { value: parseFloat(e.target.value) || 0 })}
-                    className="w-full p-1.5 text-[10px] font-black border rounded bg-white text-right outline-none focus:border-[#0079C2]"
+                    className="w-full p-1.5 text-xs font-black border rounded bg-white text-right outline-none focus:border-[#0079C2]"
                   />
                 </div>
               </div>
@@ -125,7 +125,7 @@ export const FunnelEditor: React.FC<FunnelEditorProps> = ({ config, onUpdate, ac
               <div className="flex items-center justify-between pt-1" onClick={(e) => e.stopPropagation()}>
                  <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded-full border border-slate-200 shadow-sm" style={{ backgroundColor: stage.color }}></div>
-                    <span className="text-[8px] font-bold text-slate-400 uppercase">Cor da Fatia</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">Cor da Fatia</span>
                  </div>
                  <button 
                    onClick={() => setShowColorPickerFor(isPickingColor ? null : idx)}
@@ -154,7 +154,7 @@ export const FunnelEditor: React.FC<FunnelEditorProps> = ({ config, onUpdate, ac
 
       <button 
         onClick={addStage}
-        className="w-full py-3 border-2 border-dashed border-blue-200 text-[#0079C2] text-[10px] font-black uppercase rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+        className="w-full py-3 border-2 border-dashed border-blue-200 text-[#0079C2] text-xs font-black uppercase rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
       >
         <Plus size={14} /> Adicionar Etapa ao Funil
       </button>

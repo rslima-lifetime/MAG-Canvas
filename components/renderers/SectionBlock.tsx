@@ -69,8 +69,8 @@ export const SectionBlock: React.FC<SectionBlockProps> = ({
   if (!showTitle && !showSubtitle && isHighlighted) {
     return (
       <div className="w-full border-2 border-dashed border-slate-200 rounded-lg p-4 flex flex-col items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer group relative">
-        <span className="text-[10px] font-black uppercase text-slate-400">Seção Oculta</span>
-        <span className="text-[8px] font-medium text-slate-400">Clique para configurar visualização</span>
+        <span className="text-xs font-black uppercase text-slate-400">Seção Oculta</span>
+        <span className="text-xs font-medium text-slate-400">Clique para configurar visualização</span>
         
         <div className="absolute -top-10 bg-white shadow-xl rounded-full p-1 flex gap-1 z-[350]">
            <button onClick={(e) => {e.stopPropagation(); onUpdateConfig({ showTitle: true }); }} className="p-1.5 hover:bg-slate-100 rounded-full text-slate-400 hover:text-blue-500" title="Exibir Título"><Type size={14} /></button>
@@ -141,7 +141,7 @@ export const SectionBlock: React.FC<SectionBlockProps> = ({
                       onBlur={(e) => onUpdateTitle(e.currentTarget.innerText || "")}
                       onPaste={handlePastePlain}
                       onClick={(e) => isHighlighted && e.stopPropagation()}
-                      className={`text-[12px] font-black uppercase tracking-[0.2em] outline-none whitespace-nowrap min-w-[80px] ${isHighlighted ? 'ring-1 ring-blue-400/30 px-2' : ''}`}
+                      className={`text-sm font-black uppercase tracking-[0.2em] outline-none whitespace-nowrap min-w-[80px] ${isHighlighted ? 'ring-1 ring-blue-400/30 px-2' : ''}`}
                     >
                       {title || "Setor de Dados"}
                     </h2>
@@ -152,7 +152,7 @@ export const SectionBlock: React.FC<SectionBlockProps> = ({
                         onBlur={(e) => onUpdateSubtitle(e.currentTarget.innerText || "")}
                         onPaste={handlePastePlain}
                         onClick={(e) => isHighlighted && e.stopPropagation()}
-                        className={`text-[8px] font-bold uppercase tracking-[0.1em] outline-none opacity-60 leading-tight italic mt-0.5 ${isHighlighted ? 'ring-1 ring-blue-400/30 rounded px-1' : ''}`}
+                        className={`text-xs font-bold uppercase tracking-[0.1em] outline-none opacity-60 leading-tight italic mt-0.5 ${isHighlighted ? 'ring-1 ring-blue-400/30 rounded px-1' : ''}`}
                       >
                         {subtitle}
                       </p>
@@ -224,7 +224,7 @@ export const SectionBlock: React.FC<SectionBlockProps> = ({
                     onBlur={(e) => onUpdateTitle(e.currentTarget.innerText || "")}
                     onPaste={handlePastePlain}
                     onClick={(e) => isHighlighted && e.stopPropagation()}
-                    className={`text-[15px] font-black uppercase tracking-tight outline-none leading-tight whitespace-pre-wrap break-words transition-colors ${
+                    className={`text-base font-black uppercase tracking-tight outline-none leading-tight whitespace-pre-wrap break-words transition-colors ${
                       isBlueTheme ? 'text-white' : 'text-[#006098]'
                     } ${isHighlighted ? 'cursor-text focus:ring-1 focus:ring-blue-400/30 rounded px-1' : ''}`}
                   >
@@ -239,7 +239,7 @@ export const SectionBlock: React.FC<SectionBlockProps> = ({
                     onBlur={(e) => onUpdateSubtitle(e.currentTarget.innerText || "")}
                     onPaste={handlePastePlain}
                     onClick={(e) => isHighlighted && e.stopPropagation()}
-                    className={`text-[9px] font-bold uppercase tracking-[0.15em] mt-0.5 opacity-80 outline-none leading-normal whitespace-pre-wrap break-words transition-opacity ${
+                    className={`text-sm font-bold uppercase tracking-[0.15em] mt-0.5 opacity-80 outline-none leading-normal whitespace-pre-wrap break-words transition-opacity ${
                       isBlueTheme ? 'text-blue-100' : 'text-[#415364]'
                     } ${isHighlighted ? 'cursor-text focus:ring-1 focus:ring-blue-400/30 rounded px-1' : ''}`}
                   >

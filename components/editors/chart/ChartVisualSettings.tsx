@@ -20,25 +20,25 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
       {/* Seletor de Empilhamento (Apenas Barras/Colunas) */}
       {isBarOrColumn && (
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter flex items-center gap-1">
             <Layers size={10} className="text-[#0079C2]" /> Modo de Exibição
           </label>
           <div className="grid grid-cols-3 gap-1">
             <button 
               onClick={() => onUpdate({ stackMode: 'GROUPED' })}
-              className={`py-1.5 rounded-lg border text-[8px] font-black uppercase transition-all ${(!config.stackMode || config.stackMode === 'GROUPED') ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}
+              className={`py-1.5 rounded-lg border text-[10px] font-black uppercase transition-all ${(!config.stackMode || config.stackMode === 'GROUPED') ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}
             >
               Agrupado
             </button>
             <button 
               onClick={() => onUpdate({ stackMode: 'STACKED' })}
-              className={`py-1.5 rounded-lg border text-[8px] font-black uppercase transition-all ${config.stackMode === 'STACKED' ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}
+              className={`py-1.5 rounded-lg border text-[10px] font-black uppercase transition-all ${config.stackMode === 'STACKED' ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}
             >
               Empilhado
             </button>
             <button 
               onClick={() => onUpdate({ stackMode: 'PERCENT' })}
-              className={`py-1.5 rounded-lg border text-[8px] font-black uppercase transition-all ${config.stackMode === 'PERCENT' ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}
+              className={`py-1.5 rounded-lg border text-[10px] font-black uppercase transition-all ${config.stackMode === 'PERCENT' ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`}
             >
               100% (Prop.)
             </button>
@@ -90,7 +90,7 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
           >
             <div className="flex items-center gap-2">
               <Target size={12} />
-              <span className="text-[8px] font-black uppercase leading-tight">Linha de Meta</span>
+              <span className="text-[10px] font-black uppercase leading-tight">Linha de Meta</span>
             </div>
             {config.showGoalLine ? <Eye size={12} /> : <EyeOff size={12} />}
           </button>
@@ -101,7 +101,7 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
       {!isPieType && config.showGoalLine && config.stackMode !== 'PERCENT' && (
         <div className="animate-in fade-in slide-in-from-top-1 -mt-2 p-2 bg-amber-50/50 border border-amber-100 rounded-lg">
           <div className="space-y-1">
-            <label className="text-[8px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-1">
+            <label className="text-[10px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-1">
               Valor da Meta
             </label>
             <input 
@@ -109,7 +109,7 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
               step="any"
               value={config.goalValue || 0} 
               onChange={(e) => onUpdate({ goalValue: parseFloat(e.target.value) })}
-              className="w-full p-1.5 text-[10px] font-black border rounded bg-white text-[#006098] outline-none focus:ring-1 focus:ring-amber-200"
+              className="w-full p-1.5 text-xs font-black border rounded bg-white text-[#006098] outline-none focus:ring-1 focus:ring-amber-200"
               placeholder="Ex: 100"
             />
           </div>
@@ -121,7 +121,7 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
         
         {/* Altura do Gráfico (Densidade) */}
         <div className="space-y-1">
-          <div className="flex justify-between items-center text-[9px] font-bold text-gray-400 uppercase tracking-tighter mb-1">
+          <div className="flex justify-between items-center text-[11px] font-bold text-gray-400 uppercase tracking-tighter mb-1">
             <div className="flex items-center gap-1">
               <Maximize size={10} className="text-[#0079C2] rotate-90" />
               <span>Altura (Densidade)</span>
@@ -143,7 +143,7 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
 
         {/* Fonte */}
         <div className="space-y-1 border-t border-slate-200 pt-3">
-          <div className="flex justify-between items-center text-[9px] font-bold text-gray-400 uppercase tracking-tighter mb-1">
+          <div className="flex justify-between items-center text-[11px] font-bold text-gray-400 uppercase tracking-tighter mb-1">
             <div className="flex items-center gap-1">
               <MoveVertical size={10} className="text-[#0079C2]" />
               <span>Tamanho da Fonte</span>
@@ -166,7 +166,7 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
         {/* Margem Eixo X / Y (Categorias) */}
         {!isPieType && (
           <div className="space-y-1 border-t border-slate-200 pt-3">
-            <div className="flex justify-between items-center text-[9px] font-bold text-gray-400 uppercase tracking-tighter mb-1">
+            <div className="flex justify-between items-center text-[11px] font-bold text-gray-400 uppercase tracking-tighter mb-1">
               <div className="flex items-center gap-1">
                 <ArrowLeftRight size={10} className="text-[#0079C2] rotate-90" />
                 <span>Distância Rótulo Eixo</span>
@@ -190,11 +190,11 @@ export const ChartVisualSettings: React.FC<ChartVisualSettingsProps> = ({ config
 
       {/* Tipo de Rótulo */}
       <div className="space-y-1 animate-in fade-in slide-in-from-top-1">
-        <label className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter flex items-center gap-1"><Tag size={10} /> Conteúdo do Rótulo</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-tighter flex items-center gap-1"><Tag size={10} /> Conteúdo do Rótulo</label>
         <select 
           value={config.labelContent || (isPieType ? 'LABEL_VALUE' : 'VALUE')} 
           onChange={(e) => onUpdate({ labelContent: e.target.value as LabelContent })} 
-          className="w-full p-1.5 text-[10px] border rounded bg-white text-[#006098] outline-none shadow-sm font-bold"
+          className="w-full p-1.5 text-xs border rounded bg-white text-[#006098] outline-none shadow-sm font-bold"
         >
           <option value="VALUE">Apenas Valor</option>
           <option value="PERCENT">Apenas Percentual</option>

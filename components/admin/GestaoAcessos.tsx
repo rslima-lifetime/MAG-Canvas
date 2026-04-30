@@ -221,14 +221,14 @@ export const GestaoAcessos: React.FC = () => {
     <div className="flex flex-col animate-in fade-in slide-in-from-right-4 duration-500 relative">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h3 className="text-sm font-black text-[#006098] uppercase tracking-widest flex items-center gap-2">
+          <h3 className="text-base font-black text-[#006098] uppercase tracking-widest flex items-center gap-2">
             <ShieldCheck size={18} className="text-[#00A7E7]" /> Gestão de Acessos
           </h3>
-          <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">Controle de usuários e permissões da equipe</p>
+          <p className="text-xs text-slate-400 font-bold uppercase mt-1">Controle de usuários e permissões da equipe</p>
         </div>
         <button 
           onClick={() => { setShowAddModal(true); setFormError(null); setFormSuccess(null); }}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#0079C2] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#006098] transition-all shadow-md"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#0079C2] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#006098] transition-all shadow-md"
         >
           <UserPlus size={14} /> Novo Usuário
         </button>
@@ -241,14 +241,14 @@ export const GestaoAcessos: React.FC = () => {
           placeholder="Buscar por nome ou e-mail..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
+          className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
         />
       </div>
 
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center py-12">
           <RefreshCw size={32} className="text-[#0079C2] animate-spin mb-4" />
-          <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Carregando usuários...</span>
+          <span className="text-xs font-black uppercase text-slate-400 tracking-widest">Carregando usuários...</span>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3">
@@ -261,7 +261,7 @@ export const GestaoAcessos: React.FC = () => {
                 <div>
                   <h4 className="text-[12px] font-black text-[#006098] uppercase leading-tight">{u.nome}</h4>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[9px] font-bold text-slate-400">{u.email}</span>
+                    <span className="text-[11px] font-bold text-slate-400">{u.email}</span>
                     {u.status === 'Inativo' && (
                       <span className="text-[7px] px-1.5 py-0.5 bg-rose-50 text-rose-500 rounded font-black uppercase tracking-wider border border-rose-100">
                         Inativo
@@ -280,14 +280,14 @@ export const GestaoAcessos: React.FC = () => {
                             console.error("Erro ao atualizar perfil:", error);
                           }
                         }}
-                        className="text-[9px] font-black uppercase px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded border border-blue-200 outline-none cursor-pointer font-sans"
+                        className="text-[11px] font-black uppercase px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded border border-blue-200 outline-none cursor-pointer font-sans"
                       >
                         <option value="Editor">Editor</option>
                         <option value="Admin">Admin</option>
                         <option value="Master">Master</option>
                       </select>
                     ) : (
-                      <span className="text-[8px] px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded-full font-black uppercase tracking-tighter">
+                      <span className="text-[10px] px-2 py-0.5 bg-blue-50 text-[#0079C2] rounded-full font-black uppercase tracking-tighter">
                         {u.email === 'master@mag.com.br' ? 'Master' : (u.role || 'Editor')}
                       </span>
                     )}
@@ -328,17 +328,17 @@ export const GestaoAcessos: React.FC = () => {
               <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center ${confirmModal.type === 'DANGER' ? 'bg-rose-50 text-rose-500' : 'bg-blue-50 text-[#0079C2]'}`}>
                 {confirmModal.type === 'DANGER' ? <AlertCircle size={32} /> : <KeyRound size={32} />}
               </div>
-              <h3 className="text-sm font-black uppercase text-slate-800 tracking-widest mb-2">{confirmModal.title}</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed mb-8">{confirmModal.message}</p>
+              <h3 className="text-base font-black uppercase text-slate-800 tracking-widest mb-2">{confirmModal.title}</h3>
+              <p className="text-sm text-slate-500 font-medium leading-relaxed mb-8">{confirmModal.message}</p>
               
               {formError && (
-                <div className="p-3 mb-4 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl text-[10px] font-bold flex items-center gap-2">
+                <div className="p-3 mb-4 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl text-xs font-bold flex items-center gap-2">
                   <AlertCircle size={14} /> {formError}
                 </div>
               )}
 
               {formSuccess && (
-                <div className="p-3 mb-4 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl text-[10px] font-bold flex items-center gap-2">
+                <div className="p-3 mb-4 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl text-xs font-bold flex items-center gap-2">
                   <CheckCircle2 size={14} /> {formSuccess}
                 </div>
               )}
@@ -347,7 +347,7 @@ export const GestaoAcessos: React.FC = () => {
                 <button 
                   onClick={confirmModal.onConfirm}
                   disabled={submitting}
-                  className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] text-white shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 ${confirmModal.type === 'DANGER' ? 'bg-rose-500 hover:bg-rose-600' : 'bg-[#0079C2] hover:bg-[#006098]'}`}
+                  className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-white shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 ${confirmModal.type === 'DANGER' ? 'bg-rose-500 hover:bg-rose-600' : 'bg-[#0079C2] hover:bg-[#006098]'}`}
                 >
                   {submitting ? (
                     <>
@@ -358,7 +358,7 @@ export const GestaoAcessos: React.FC = () => {
                 </button>
                 <button 
                   onClick={() => setConfirmModal(prev => ({ ...prev, show: false }))}
-                  className="w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] text-slate-400 hover:bg-slate-50 transition-all"
+                  className="w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-slate-400 hover:bg-slate-50 transition-all"
                 >
                   Cancelar
                 </button>
@@ -373,36 +373,36 @@ export const GestaoAcessos: React.FC = () => {
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-[400px] rounded-[32px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
             <div className="bg-[#006098] p-6 text-white flex justify-between items-center">
-              <h3 className="text-sm font-black uppercase tracking-widest">Novo Acesso</h3>
+              <h3 className="text-base font-black uppercase tracking-widest">Novo Acesso</h3>
               <button onClick={() => setShowAddModal(false)} className="text-white/60 hover:text-white"><X size={20} /></button>
             </div>
             <form onSubmit={handleCreateUser} className="p-8 space-y-4">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nome Completo</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Nome Completo</label>
                 <input 
                   type="text" required value={newNome} onChange={e => setNewNome(e.target.value)}
-                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-[#0079C2] transition-all"
+                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-[#0079C2] transition-all"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
                 <input 
                   type="email" required value={newEmail} onChange={e => setNewEmail(e.target.value)}
-                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-[#0079C2] transition-all"
+                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-[#0079C2] transition-all"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Senha Inicial</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Senha Inicial</label>
                 <input 
                   type="text" required value={newPassword} onChange={e => setNewPassword(e.target.value)} minLength={6}
-                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-[#0079C2] transition-all"
+                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-[#0079C2] transition-all"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Cargo/Permissão</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Cargo/Permissão</label>
                 <select 
                   value={newRole} onChange={e => setNewRole(e.target.value)}
-                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-[#0079C2] transition-all appearance-none cursor-pointer"
+                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-[#0079C2] transition-all appearance-none cursor-pointer"
                 >
                   <option value="Editor">Editor</option>
                   <option value="Admin">Administrador</option>
@@ -411,13 +411,13 @@ export const GestaoAcessos: React.FC = () => {
               </div>
 
               {formError && (
-                <div className="p-3 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl text-[10px] font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
+                <div className="p-3 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
                   <AlertCircle size={14} /> {formError}
                 </div>
               )}
 
               {formSuccess && (
-                <div className="p-3 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl text-[10px] font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
+                <div className="p-3 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
                   <CheckCircle2 size={14} /> {formSuccess}
                 </div>
               )}

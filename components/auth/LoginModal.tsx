@@ -115,7 +115,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h2 className="text-xl font-black uppercase tracking-tight leading-none">MAG Canvas</h2>
-              <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mt-1">Sincronize seus Projetos</p>
+              <p className="text-xs font-bold text-white/70 uppercase tracking-widest mt-1">Sincronize seus Projetos</p>
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <h3 className="text-lg font-black text-[#006098] uppercase tracking-tight">
               {isSignUp ? 'Criar Nova Conta' : 'Acessar sua Conta'}
             </h3>
-            <p className="text-xs text-slate-400 mt-1 font-medium">
+            <p className="text-sm text-slate-400 mt-1 font-medium">
               {isSignUp 
                 ? 'Preencha os dados abaixo para começar.' 
                 : 'Entre para acessar seus projetos salvos na nuvem.'}
@@ -135,7 +135,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {isSignUp && (
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nome Completo</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Nome Completo</label>
                 <div className="relative group">
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0079C2] transition-colors">
                     <UserPlus size={18} />
@@ -146,14 +146,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Seu nome"
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
+                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
                   />
                 </div>
               </div>
             )}
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
               <div className="relative group">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0079C2] transition-colors">
                   <Mail size={18} />
@@ -164,14 +164,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="exemplo@mag.com.br"
-                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sua Senha</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Sua Senha</label>
               </div>
               <div className="relative group">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0079C2] transition-colors">
@@ -183,7 +183,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-base font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#0079C2]/10 focus:border-[#0079C2] transition-all"
                 />
               </div>
               {!isSignUp && (
@@ -191,7 +191,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                   <button 
                     type="button" 
                     onClick={handleForgotPassword}
-                    className="text-[9px] font-black text-[#0079C2] uppercase hover:underline tracking-wide mt-1"
+                    className="text-[11px] font-black text-[#0079C2] uppercase hover:underline tracking-wide mt-1"
                   >
                     Esqueceu sua senha?
                   </button>
@@ -200,7 +200,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 p-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-[10px] font-bold animate-in slide-in-from-top-2 duration-200">
+              <div className="flex items-center gap-2 p-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-xs font-bold animate-in slide-in-from-top-2 duration-200">
                 <AlertCircle size={14} />
                 {error}
               </div>
@@ -223,12 +223,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           </form>
 
           <div className="mt-8 pt-8 border-t border-slate-100 flex flex-col items-center gap-4">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">
               {isSignUp ? 'Já possui uma conta?' : 'Ainda não tem acesso?'}
             </p>
             <button 
               onClick={() => { setIsSignUp(!isSignUp); setError(null); }}
-              className="px-6 py-2 border border-slate-200 rounded-full text-[10px] font-black uppercase tracking-widest text-[#006098] hover:bg-slate-50 transition-colors"
+              className="px-6 py-2 border border-slate-200 rounded-full text-xs font-black uppercase tracking-widest text-[#006098] hover:bg-slate-50 transition-colors"
             >
               {isSignUp ? 'Fazer Login' : 'Cadastre-se Agora'}
             </button>

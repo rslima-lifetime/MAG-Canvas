@@ -27,7 +27,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       {/* Seção de Capa */}
       <div className="space-y-1.5">
         <div className="px-2 mb-1 flex items-center justify-between">
-          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">Início do Documento</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Início do Documento</span>
         </div>
         <div 
           onClick={() => onActivePageChange('cover')}
@@ -43,7 +43,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             </div>
             <div className="flex flex-col">
               <span className="text-[11px] font-black uppercase tracking-tight">Capa Corporativa</span>
-              <span className={`text-[8px] font-bold uppercase opacity-60 ${activePageIndex === 'cover' ? 'text-white' : 'text-slate-400'}`}>Identidade Visual</span>
+              <span className={`text-[10px] font-bold uppercase opacity-60 ${activePageIndex === 'cover' ? 'text-white' : 'text-slate-400'}`}>Identidade Visual</span>
             </div>
           </div>
           <button 
@@ -58,8 +58,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       {/* Seção de Páginas */}
       <div className="space-y-1.5">
         <div className="px-2 mb-1 flex items-center justify-between">
-          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">Conteúdo do Report</span>
-          <span className="text-[8px] font-bold text-slate-300">{pages.length} Páginas</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Conteúdo do Report</span>
+          <span className="text-[10px] font-bold text-slate-300">{pages.length} Páginas</span>
         </div>
         
         <div className="space-y-1.5 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">
@@ -78,7 +78,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                 } ${page.hidden ? 'opacity-60 grayscale' : 'opacity-100'}`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-7 h-7 flex items-center justify-center rounded-lg text-[10px] font-black transition-all ${
+                  <div className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-black transition-all ${
                     isActive ? 'bg-[#0079C2] text-white' : 'bg-slate-100 text-slate-400'
                   }`}>
                     {idx + 1}
@@ -87,7 +87,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                     <span className={`text-[11px] font-bold truncate max-w-[120px] ${isActive ? 'text-[#006098]' : 'text-slate-600'} ${page.hidden ? 'line-through decoration-slate-400' : ''}`}>
                       {page.title || "Página sem título"}
                     </span>
-                    <span className="text-[8px] font-medium opacity-50 truncate uppercase tracking-tighter">
+                    <span className="text-[10px] font-medium opacity-50 truncate uppercase tracking-tighter">
                       {page.blocks.length} Componentes {page.hidden && '(Oculta)'}
                     </span>
                   </div>
@@ -153,7 +153,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
         <button 
           onClick={onAddPage} 
-          className="w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 text-[9px] font-black uppercase rounded-xl hover:bg-white hover:border-[#0079C2] hover:text-[#0079C2] transition-all flex items-center justify-center gap-2 mt-2 group"
+          className="w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 text-[11px] font-black uppercase rounded-xl hover:bg-white hover:border-[#0079C2] hover:text-[#0079C2] transition-all flex items-center justify-center gap-2 mt-2 group"
         >
           <Plus size={14} className="group-hover:rotate-90 transition-transform" /> 
           Nova Página de Dados

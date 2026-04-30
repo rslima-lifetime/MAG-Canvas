@@ -56,7 +56,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
     <label className="flex items-center justify-between cursor-pointer group py-1">
       <div className="flex items-center gap-2">
         <Icon size={12} className={value ? 'text-[#0079C2]' : 'text-slate-300'} />
-        <span className={`text-[9px] font-bold uppercase transition-colors ${value ? 'text-[#006098]' : 'text-slate-400'}`}>
+        <span className={`text-[11px] font-bold uppercase transition-colors ${value ? 'text-[#006098]' : 'text-slate-400'}`}>
           {label}
         </span>
       </div>
@@ -75,16 +75,16 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
       <div className="p-3 bg-blue-50/50 border border-blue-100 rounded-xl space-y-2">
         <div className="flex items-center gap-2 mb-1">
           <LayoutGrid size={12} className="text-[#0079C2]" />
-          <span className="text-[9px] font-black uppercase text-[#006098] tracking-widest">Configuração da Grade</span>
+          <span className="text-[11px] font-black uppercase text-[#006098] tracking-widest">Configuração da Grade</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-[8px] font-bold text-slate-400 uppercase">Colunas por linha</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase">Colunas por linha</span>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5, 6].map(num => (
               <button
                 key={num}
                 onClick={() => updateGridCols(num)}
-                className={`w-7 h-7 rounded-lg text-[10px] font-black transition-all border ${
+                className={`w-7 h-7 rounded-lg text-xs font-black transition-all border ${
                   (config?.columns || 4) === num 
                     ? 'bg-[#0079C2] border-[#0079C2] text-white shadow-sm' 
                     : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
@@ -118,11 +118,11 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
             </button>
             
             <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
-              <span className={`text-[10px] font-black uppercase tracking-wider ${isActive ? 'text-[#006098]' : 'text-slate-400'}`}>
+              <span className={`text-xs font-black uppercase tracking-wider ${isActive ? 'text-[#006098]' : 'text-slate-400'}`}>
                 Indicador #{idx + 1}
               </span>
               {isActive && (
-                <div className="flex items-center gap-1 text-[8px] font-black uppercase text-[#0079C2] animate-pulse">
+                <div className="flex items-center gap-1 text-[10px] font-black uppercase text-[#0079C2] animate-pulse">
                   <Target size={10} /> Ativo no Preview
                 </div>
               )}
@@ -131,7 +131,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
             <div className="space-y-4" onClick={(e) => e.stopPropagation()}>
               <div className="space-y-3">
                 <div className="space-y-1">
-                  <label className="text-[8px] font-bold text-gray-400 uppercase">Rótulo (Label)</label>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Rótulo (Label)</label>
                   <input 
                     type="text" 
                     value={kpi.label} 
@@ -142,7 +142,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
                 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase">Valor Atual</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Valor Atual</label>
                     <input 
                       type="number" step="any" value={kpi.current} 
                       onChange={(e) => updateKPI(idx, 'current', parseFloat(e.target.value) || 0)} 
@@ -150,11 +150,11 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase">Formato</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Formato</label>
                     <select 
                       value={kpi.format || 'DEFAULT'} 
                       onChange={(e) => updateKPI(idx, 'format', e.target.value as KPIFormat)}
-                      className="w-full p-2 text-[10px] border rounded-xl bg-white font-bold text-[#006098] outline-none"
+                      className="w-full p-2 text-xs border rounded-xl bg-white font-bold text-[#006098] outline-none"
                     >
                       {Object.entries(FORMAT_LABELS).map(([val, label]) => (
                         <option key={val} value={val}>{label}</option>
@@ -167,7 +167,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
               <div className="p-3 bg-slate-50 border rounded-xl space-y-1">
                 <div className="flex items-center gap-2 mb-1">
                   <Eye size={11} className="text-[#0079C2]" />
-                  <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">Recursos do Card</span>
+                  <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Recursos do Card</span>
                 </div>
                 <ToggleControl label="Variação (Anterior)" value={kpi.showDelta !== false} onToggle={(v: any) => updateKPI(idx, 'showDelta', v)} icon={TrendingUp} />
                 <ToggleControl label="Meta e Barra %" value={kpi.showGoal !== false} onToggle={(v: any) => updateKPI(idx, 'showGoal', v)} icon={Target} />
@@ -177,7 +177,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
               <div className="grid grid-cols-1 gap-3 pt-1">
                 {kpi.showDelta !== false && (
                   <div className="space-y-1">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase">Valor do Período Anterior</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Valor do Período Anterior</label>
                     <input 
                       type="number" step="any" value={kpi.prev} 
                       onChange={(e) => updateKPI(idx, 'prev', parseFloat(e.target.value) || 0)} 
@@ -188,7 +188,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
                 
                 {kpi.showGoal !== false && (
                   <div className="space-y-1">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase flex items-center gap-1"><Target size={10} className="text-[#0079C2]" /> Meta (Goal)</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1"><Target size={10} className="text-[#0079C2]" /> Meta (Goal)</label>
                     <input 
                       type="number" step="any" value={kpi.goal || ''} 
                       onChange={(e) => updateKPI(idx, 'goal', parseFloat(e.target.value) || 0)} 
@@ -202,7 +202,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
               {kpi.showSubMeasures !== false && (
                 <div className="space-y-2 pt-2 border-t">
                   <div className="flex justify-between items-center">
-                    <label className="text-[8px] font-bold text-gray-400 uppercase">Sub-medidas</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Sub-medidas</label>
                     <button onClick={() => addSubMeasure(idx)} className="text-[#0079C2] hover:bg-blue-50 p-1 rounded-lg transition-colors">
                       <Plus size={12} />
                     </button>
@@ -218,7 +218,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
                             updateKPI(idx, 'subMeasures', newSubs);
                           }}
                           placeholder="Label"
-                          className="flex-1 p-1.5 text-[9px] border rounded-lg"
+                          className="flex-1 p-1.5 text-[11px] border rounded-lg"
                         />
                         <input 
                           value={sm.value} 
@@ -228,7 +228,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
                             updateKPI(idx, 'subMeasures', newSubs);
                           }}
                           placeholder="Valor"
-                          className="w-16 p-1.5 text-[9px] border rounded-lg font-black text-[#006098]"
+                          className="w-16 p-1.5 text-[11px] border rounded-lg font-black text-[#006098]"
                         />
                         <button 
                           onClick={() => {
@@ -248,7 +248,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
               <div className="flex gap-4 pt-2 border-t border-slate-50">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={kpi.abbreviate} onChange={e => updateKPI(idx, 'abbreviate', e.target.checked)} className="rounded text-[#0079C2]" />
-                  <span className="text-[9px] font-bold text-slate-500 uppercase">Abreviar (k/mi)</span>
+                  <span className="text-[11px] font-bold text-slate-500 uppercase">Abreviar (k/mi)</span>
                 </label>
               </div>
             </div>
@@ -262,7 +262,7 @@ export const KPIEditor: React.FC<KPIEditorProps> = ({ kpis = [], config, activeS
           onUpdate(newKpis);
           onActiveSubItemChange?.(newKpis.length - 1);
         }}
-        className="w-full py-4 border-2 border-dashed border-blue-200 text-[#0079C2] text-[10px] font-black uppercase rounded-2xl hover:bg-blue-50 flex items-center justify-center gap-2 group transition-all"
+        className="w-full py-4 border-2 border-dashed border-blue-200 text-[#0079C2] text-xs font-black uppercase rounded-2xl hover:bg-blue-50 flex items-center justify-center gap-2 group transition-all"
       >
         <Plus size={16} className="group-hover:rotate-90 transition-transform" />
         Adicionar Indicador ao Grupo

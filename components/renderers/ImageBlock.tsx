@@ -148,10 +148,10 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
         </div>
         
         <div className="text-center">
-          <p className={`text-[10px] font-black uppercase tracking-widest ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>
+          <p className={`text-xs font-black uppercase tracking-widest ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`}>
             {isDragging ? 'Solte a imagem aqui' : 'Adicionar Imagem'}
           </p>
-          <p className={`text-[8px] mt-1 ${isBlueTheme ? 'text-blue-200' : 'text-slate-400'}`}>
+          <p className={`text-[10px] mt-1 ${isBlueTheme ? 'text-blue-200' : 'text-slate-400'}`}>
             Clique para upload ou Cole (Ctrl+V)
           </p>
         </div>
@@ -228,13 +228,13 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
               value={caption || ''} 
               onChange={(e) => onUpdate?.({ caption: e.target.value })}
               placeholder="Adicionar legenda..."
-              className={`w-full text-center text-[9px] font-medium bg-transparent border-b border-transparent focus:border-blue-300 outline-none placeholder-slate-300 italic ${
+              className={`w-full text-center text-[11px] font-medium bg-transparent border-b border-transparent focus:border-blue-300 outline-none placeholder-slate-300 italic ${
                 isBlueTheme ? 'text-blue-100' : 'text-slate-500'
               }`}
             />
           ) : (
             caption && (
-              <p className={`text-[9px] font-medium italic ${isBlueTheme ? 'text-blue-100/70' : 'text-slate-500'}`}>
+              <p className={`text-[11px] font-medium italic ${isBlueTheme ? 'text-blue-100/70' : 'text-slate-500'}`}>
                 {caption}
               </p>
             )

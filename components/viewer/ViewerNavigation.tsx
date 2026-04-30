@@ -81,15 +81,15 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
             <BookOpen size={16} strokeWidth={2.5} />
           </div>
           <div className="flex flex-col">
-            <h2 className="text-sm font-black text-[#006098] uppercase tracking-wide">Índice do Report</h2>
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Navegação Rápida</span>
+            <h2 className="text-base font-black text-[#006098] uppercase tracking-wide">Índice do Report</h2>
+            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Navegação Rápida</span>
           </div>
         </div>
 
         {/* Botão Modo Apresentação */}
         <button 
           onClick={onEnterPresentation}
-          className="w-full py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 hover:scale-[1.02] active:scale-95 transition-all shadow-lg group"
+          className="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 hover:scale-[1.02] active:scale-95 transition-all shadow-lg group"
         >
           <div className="p-1 rounded-full bg-white/20 group-hover:bg-[#00A7E7] transition-colors">
              <Play size={10} fill="currentColor" />
@@ -101,7 +101,7 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
         {firestoreId && (
           <button
             onClick={handleCopyShareLink}
-            className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all border ${
+            className={`w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all border ${
               copied
                 ? 'bg-emerald-50 text-emerald-600 border-emerald-200 shadow-emerald-100 shadow-sm'
                 : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-[#0079C2]/5 hover:text-[#0079C2] hover:border-[#0079C2]/30'
@@ -154,7 +154,7 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800 border border-transparent'
                 }`}
               >
-                <div className={`flex items-center justify-center min-w-[20px] h-5 rounded border text-[9px] font-black px-1 ${
+                <div className={`flex items-center justify-center min-w-[20px] h-5 rounded border text-[11px] font-black px-1 ${
                   isGroupActive 
                     ? 'bg-[#0079C2] border-[#0079C2] text-white' 
                     : 'bg-white border-slate-200 text-slate-400 group-hover:border-slate-300'
@@ -167,7 +167,7 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
                     {group.title}
                   </span>
                   {isMultiPage && (
-                    <span className="text-[8px] font-medium opacity-60 flex items-center gap-1">
+                    <span className="text-[10px] font-medium opacity-60 flex items-center gap-1">
                       <Layers size={8} />
                       {group.pageIndices.length} páginas (Cont.)
                     </span>
@@ -186,7 +186,7 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
                       className="flex items-center gap-2 pl-4 py-1.5 text-left group/sec hover:bg-slate-50 rounded-r-lg transition-colors w-full"
                     >
                       <div className="w-1 h-1 rounded-full bg-slate-300 group-hover/sec:bg-[#00A7E7] transition-colors shrink-0" />
-                      <span className="text-[10px] font-medium text-slate-400 group-hover/sec:text-[#006098] truncate uppercase tracking-tight w-full">
+                      <span className="text-xs font-medium text-slate-400 group-hover/sec:text-[#006098] truncate uppercase tracking-tight w-full">
                         {section.title}
                       </span>
                     </button>
@@ -200,7 +200,7 @@ export const ViewerNavigation: React.FC<ViewerNavigationProps> = ({ data, active
 
       {/* Footer do Índice */}
       <div className="p-4 bg-slate-50 border-t border-slate-100">
-        <div className="flex items-center gap-2 text-[10px] text-slate-400 font-medium">
+        <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
           <Hash size={12} />
           <span>{data.pages.length} Folhas</span>
           <span className="mx-1">•</span>

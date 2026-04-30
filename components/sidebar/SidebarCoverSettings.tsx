@@ -14,24 +14,24 @@ export const SidebarCoverSettings: React.FC<SidebarCoverSettingsProps> = ({ cove
     <div className="p-6 space-y-6 animate-in fade-in duration-300 bg-white">
       <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl flex gap-3">
         <Info size={18} className="text-[#0079C2] shrink-0" />
-        <p className="text-[9px] text-[#006098] font-medium leading-tight uppercase tracking-tight">
+        <p className="text-[11px] text-[#006098] font-medium leading-tight uppercase tracking-tight">
           As informações abaixo são aplicadas exclusivamente à primeira página do relatório (Capa Corporativa).
         </p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Tema Visual da Capa</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Tema Visual da Capa</label>
           <div className="grid grid-cols-2 gap-2">
             <button 
               onClick={() => onUpdateCover({ theme: 'LIGHT' })} 
-              className={`py-2.5 rounded-xl border text-[9px] font-black uppercase transition-all ${cover.theme === 'LIGHT' ? 'bg-white border-[#0079C2] text-[#0079C2] shadow-md' : 'bg-slate-50 text-slate-400 opacity-60'}`}
+              className={`py-2.5 rounded-xl border text-[11px] font-black uppercase transition-all ${cover.theme === 'LIGHT' ? 'bg-white border-[#0079C2] text-[#0079C2] shadow-md' : 'bg-slate-50 text-slate-400 opacity-60'}`}
             >
               Light Clean
             </button>
             <button 
               onClick={() => onUpdateCover({ theme: 'BLUE' })} 
-              className={`py-2.5 rounded-xl border text-[9px] font-black uppercase transition-all ${cover.theme === 'BLUE' ? 'bg-[#006098] border-[#006098] text-white shadow-md' : 'bg-slate-50 text-slate-400 opacity-60'}`}
+              className={`py-2.5 rounded-xl border text-[11px] font-black uppercase transition-all ${cover.theme === 'BLUE' ? 'bg-[#006098] border-[#006098] text-white shadow-md' : 'bg-slate-50 text-slate-400 opacity-60'}`}
             >
               Azul Institucional
             </button>
@@ -39,7 +39,7 @@ export const SidebarCoverSettings: React.FC<SidebarCoverSettingsProps> = ({ cove
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Alinhamento do Texto</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Alinhamento do Texto</label>
           <div className="flex bg-slate-100 p-1 rounded-xl gap-1">
             <button 
               onClick={() => onUpdateCover({ alignment: 'LEFT' })} 
@@ -66,7 +66,7 @@ export const SidebarCoverSettings: React.FC<SidebarCoverSettingsProps> = ({ cove
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <Tag size={10} className="text-[#0079C2]" /> Etiqueta Superior
           </label>
           <input 
@@ -79,7 +79,7 @@ export const SidebarCoverSettings: React.FC<SidebarCoverSettingsProps> = ({ cove
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Título Principal</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Título Principal</label>
           <input 
             type="text" 
             value={cover.title || ''} 
@@ -89,7 +89,7 @@ export const SidebarCoverSettings: React.FC<SidebarCoverSettingsProps> = ({ cove
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Subtítulo Contextual</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Subtítulo Contextual</label>
           <textarea 
             value={cover.subtitle || ''} 
             onChange={(e) => onUpdateCover({ subtitle: e.target.value })} 
@@ -99,15 +99,15 @@ export const SidebarCoverSettings: React.FC<SidebarCoverSettingsProps> = ({ cove
 
         <div className="space-y-3 pt-4 border-t">
           <div className="space-y-1">
-            <label className="text-[9px] font-bold text-gray-400 uppercase">Diretoria Responsável</label>
+            <label className="text-[11px] font-bold text-gray-400 uppercase">Diretoria Responsável</label>
             <input type="text" value={cover.author || ''} onChange={(e) => onUpdateCover({ author: e.target.value })} className="w-full p-2.5 text-[11px] font-bold border rounded-xl" />
           </div>
           <div className="space-y-1">
-            <label className="text-[9px] font-bold text-gray-400 uppercase">Gerência</label>
+            <label className="text-[11px] font-bold text-gray-400 uppercase">Gerência</label>
             <input type="text" value={cover.manager || ''} onChange={(e) => onUpdateCover({ manager: e.target.value })} className="w-full p-2.5 text-[11px] font-bold border rounded-xl" />
           </div>
           <div className="space-y-1">
-            <label className="text-[9px] font-bold text-gray-400 uppercase">Área / Núcleo de Origem</label>
+            <label className="text-[11px] font-bold text-gray-400 uppercase">Área / Núcleo de Origem</label>
             <input type="text" value={cover.department || ''} onChange={(e) => onUpdateCover({ department: e.target.value })} className="w-full p-2.5 text-[11px] font-bold border rounded-xl" />
           </div>
         </div>

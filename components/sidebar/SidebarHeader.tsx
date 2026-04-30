@@ -22,14 +22,14 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           title="Voltar para Tela Inicial (Meus Projetos)"
         >
           <ChevronLeft size={14} strokeWidth={3} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Início</span>
+          <span className="text-xs font-black uppercase tracking-widest">Início</span>
         </button>
         
         <div className="w-px h-8 bg-slate-100 mx-1 hidden md:block" />
         
         <div className="flex flex-col">
           <h2 className="text-xl font-black text-[#006098] tracking-tight leading-none">MAG Canvas</h2>
-          <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">Builder Estratégico</p>
+          <p className="text-[11px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">Builder Estratégico</p>
         </div>
       </div>
       

@@ -21,34 +21,34 @@ export const SectionEditor: React.FC<SectionEditorProps> = ({ config, onUpdate }
     <div className="space-y-5 animate-in fade-in duration-200">
       <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl flex gap-3">
         <Info size={20} className="text-[#0079C2] shrink-0" />
-        <p className="text-[9px] text-[#006098] font-medium leading-tight">
+        <p className="text-[11px] text-[#006098] font-medium leading-tight">
           Configure a visibilidade dos elementos da seção. Ocultar ambos cria um separador invisível ou uma quebra lógica.
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Visibilidade</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Visibilidade</label>
           <div className="flex flex-col gap-1">
             <button 
               onClick={() => onUpdate({ showTitle: !showTitle })}
               className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-all ${showTitle ? 'bg-white border-[#0079C2] text-[#0079C2]' : 'bg-slate-50 border-transparent text-slate-400'}`}
             >
-              <span className="text-[9px] font-black uppercase">Título</span>
+              <span className="text-[11px] font-black uppercase">Título</span>
               {showTitle ? <Eye size={12} /> : <EyeOff size={12} />}
             </button>
             <button 
               onClick={() => onUpdate({ showSubtitle: !showSubtitle })}
               className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-all ${showSubtitle ? 'bg-white border-[#0079C2] text-[#0079C2]' : 'bg-slate-50 border-transparent text-slate-400'}`}
             >
-              <span className="text-[9px] font-black uppercase">Subtítulo</span>
+              <span className="text-[11px] font-black uppercase">Subtítulo</span>
               {showSubtitle ? <Eye size={12} /> : <EyeOff size={12} />}
             </button>
           </div>
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Alinhamento</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Alinhamento</label>
           <div className="flex bg-slate-100 p-1 rounded-lg gap-1">
             <button onClick={() => onUpdate({ align: 'LEFT' })} className={`flex-1 flex items-center justify-center rounded py-1.5 transition-all ${align === 'LEFT' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}><AlignLeft size={14} /></button>
             <button onClick={() => onUpdate({ align: 'CENTER' })} className={`flex-1 flex items-center justify-center rounded py-1.5 transition-all ${align === 'CENTER' ? 'bg-white text-[#0079C2] shadow-sm' : 'text-slate-400'}`}><AlignCenter size={14} /></button>
@@ -58,10 +58,10 @@ export const SectionEditor: React.FC<SectionEditorProps> = ({ config, onUpdate }
       </div>
 
       <div className="space-y-2">
-        <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center justify-between">
+        <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center justify-between">
           <span>Ícone da Seção</span>
           {config.icon && (
-            <button onClick={() => onUpdate({ icon: null })} className="text-[8px] text-rose-500 hover:underline">Remover</button>
+            <button onClick={() => onUpdate({ icon: null })} className="text-[10px] text-rose-500 hover:underline">Remover</button>
           )}
         </label>
         
@@ -73,11 +73,11 @@ export const SectionEditor: React.FC<SectionEditorProps> = ({ config, onUpdate }
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${config.icon ? 'bg-[#0079C2] text-white' : 'bg-slate-100 text-slate-300'}`}>
               {config.icon ? <CurrentIcon size={16} /> : <ImageIcon size={16} />}
             </div>
-            <span className="text-[10px] font-bold text-slate-600 uppercase">
+            <span className="text-xs font-bold text-slate-600 uppercase">
               {config.icon || "Selecionar Ícone..."}
             </span>
           </div>
-          <span className="text-[9px] font-black text-[#0079C2] uppercase">
+          <span className="text-[11px] font-black text-[#0079C2] uppercase">
             {showIconPicker ? 'Fechar' : 'Alterar'}
           </span>
         </button>
@@ -92,7 +92,7 @@ export const SectionEditor: React.FC<SectionEditorProps> = ({ config, onUpdate }
 
       {showSubtitle && (
         <div className="space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <Type size={10} className="text-[#0079C2]" /> Conteúdo do Subtítulo
           </label>
           <textarea 
@@ -106,7 +106,7 @@ export const SectionEditor: React.FC<SectionEditorProps> = ({ config, onUpdate }
 
       {/* Legacy Option */}
       <div className="flex items-center justify-between px-1 pt-2 border-t border-slate-100 opacity-50 hover:opacity-100 transition-opacity">
-        <label className="text-[9px] font-bold text-gray-400 uppercase">Linha Decorativa (Estilo Padrão)</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase">Linha Decorativa (Estilo Padrão)</label>
         <button 
           onClick={() => onUpdate({ showLine: config.showLine !== false })}
           className={`w-8 h-4 rounded-full transition-all relative ${config.showLine !== false ? 'bg-slate-400' : 'bg-slate-200'}`}

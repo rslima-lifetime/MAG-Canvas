@@ -107,7 +107,7 @@ export const ComparisonBlock: React.FC<ComparisonBlockProps> = ({
             >
               {/* Winner Badge */}
               {isWinner && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-300 to-amber-500 text-slate-900 text-[8px] font-black uppercase px-4 py-1 rounded-full shadow-lg border border-white/50 z-30 flex items-center gap-1.5 whitespace-nowrap animate-in fade-in slide-in-from-top-1">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-300 to-amber-500 text-slate-900 text-[10px] font-black uppercase px-4 py-1 rounded-full shadow-lg border border-white/50 z-30 flex items-center gap-1.5 whitespace-nowrap animate-in fade-in slide-in-from-top-1">
                    <Trophy size={10} fill="currentColor" /> Recomendado
                 </div>
               )}
@@ -152,13 +152,13 @@ export const ComparisonBlock: React.FC<ComparisonBlockProps> = ({
                   
                   {isActive ? (
                     <textarea 
-                      className={`w-full text-center bg-transparent text-[10px] font-medium leading-relaxed outline-none border-none resize-none h-12 italic ${isWinner ? 'text-blue-100' : 'text-slate-500'}`}
+                      className={`w-full text-center bg-transparent text-xs font-medium leading-relaxed outline-none border-none resize-none h-12 italic ${isWinner ? 'text-blue-100' : 'text-slate-500'}`}
                       value={item.description}
                       onChange={(e) => handleUpdate(idx, 'description', e.target.value)}
                       placeholder="Breve descrição..."
                     />
                   ) : (
-                    <p className={`text-[10px] font-medium leading-relaxed italic ${isWinner ? 'text-blue-100/70' : (isBlueTheme ? 'text-blue-100/50' : 'text-slate-400')}`}>
+                    <p className={`text-xs font-medium leading-relaxed italic ${isWinner ? 'text-blue-100/70' : (isBlueTheme ? 'text-blue-100/50' : 'text-slate-400')}`}>
                       {item.description}
                     </p>
                   )}
@@ -175,13 +175,13 @@ export const ComparisonBlock: React.FC<ComparisonBlockProps> = ({
                          <div className="flex flex-col flex-1 min-w-0 pr-2">
                             {isActive ? (
                               <input 
-                                className={`bg-transparent outline-none text-[8px] font-black uppercase tracking-widest ${isWinner ? 'text-blue-300' : 'text-slate-400'}`}
+                                className={`bg-transparent outline-none text-[10px] font-black uppercase tracking-widest ${isWinner ? 'text-blue-300' : 'text-slate-400'}`}
                                 value={attr.label}
                                 onChange={(e) => updateAttribute(idx, aIdx, 'label', e.target.value)}
                                 placeholder="Label"
                               />
                             ) : (
-                              <span className={`text-[8px] font-black uppercase tracking-widest ${isWinner ? 'text-blue-300' : 'text-slate-400'}`}>{attr.label}</span>
+                              <span className={`text-[10px] font-black uppercase tracking-widest ${isWinner ? 'text-blue-300' : 'text-slate-400'}`}>{attr.label}</span>
                             )}
 
                             {isActive ? (
@@ -210,7 +210,7 @@ export const ComparisonBlock: React.FC<ComparisonBlockProps> = ({
                     {isActive && (
                       <button 
                         onClick={(e) => { e.stopPropagation(); addAttribute(idx); }}
-                        className={`py-2 rounded-xl border-2 border-dashed flex items-center justify-center gap-1.5 transition-all text-[8px] font-black uppercase ${
+                        className={`py-2 rounded-xl border-2 border-dashed flex items-center justify-center gap-1.5 transition-all text-[10px] font-black uppercase ${
                           isWinner ? 'border-white/20 text-white hover:bg-white/10' : 'border-slate-200 text-slate-400 hover:border-blue-300 hover:text-blue-600'
                         }`}
                       >
@@ -265,7 +265,7 @@ export const ComparisonBlock: React.FC<ComparisonBlockProps> = ({
              <div className="w-12 h-12 rounded-full bg-white border border-slate-100 text-[#0079C2] flex items-center justify-center shadow-md transition-transform group-hover/add-col:scale-110">
                 <Plus size={24} strokeWidth={3} />
              </div>
-             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-4">Adicionar Opção</span>
+             <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mt-4">Adicionar Opção</span>
           </div>
         )}
       </div>

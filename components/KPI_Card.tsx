@@ -124,7 +124,7 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
                 className={`w-7 h-7 flex flex-col items-center justify-center rounded-full transition-all ${isSel ? 'bg-[#0079C2] text-white' : 'text-slate-400 hover:bg-slate-100'}`}
               >
                 <FIcon size={10} strokeWidth={3} />
-                <span className="text-[6px] font-black uppercase">{f.label}</span>
+                <span className="text-[9px] font-black uppercase">{f.label}</span>
               </button>
             )
           })}
@@ -134,7 +134,7 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
             className={`w-7 h-7 flex flex-col items-center justify-center rounded-full transition-all ${abbreviate ? 'bg-amber-50 text-white' : 'text-slate-400 hover:bg-slate-100'}`}
           >
             <Hash size={12} strokeWidth={3} />
-            <span className="text-[6px] font-black uppercase">k/mi</span>
+            <span className="text-[9px] font-black uppercase">k/mi</span>
           </button>
           <div className="w-[1px] h-4 bg-slate-100 mx-1" />
           <button
@@ -142,7 +142,7 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
             className="w-7 h-7 flex flex-col items-center justify-center rounded-full transition-all text-[#0079C2] hover:bg-blue-50"
           >
             <TrendingUp size={12} strokeWidth={3} className="rotate-90" />
-            <span className="text-[6px] font-black uppercase">Dup</span>
+            <span className="text-[9px] font-black uppercase">Dup</span>
           </button>
         </div>
       )}
@@ -157,13 +157,13 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
               onClick={(e) => e.stopPropagation()}
               onKeyDown={handleKeyDown}
               autoFocus
-              className={`w-full text-[9px] font-black uppercase tracking-widest outline-none border rounded px-2 py-0.5 ${inputBaseStyle}`}
+              className={`w-full text-[11px] font-black uppercase tracking-widest outline-none border rounded px-2 py-0.5 ${inputBaseStyle}`}
               placeholder="LABEL"
             />
           ) : (
             <span className={`font-black uppercase tracking-widest truncate leading-none ${
               isBlueTheme ? 'text-blue-100/60' : 'text-slate-400'
-            } ${isCompact ? 'text-[7px]' : 'text-[9px]'}`} title={label}>
+            } ${isCompact ? 'text-[10px]' : 'text-[11px]'}`} title={label}>
               {label}
             </span>
           )}
@@ -197,7 +197,7 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
               </span>
               
               {showDelta && (
-                <div className={`flex items-center gap-1 mt-1 font-bold tracking-tight whitespace-nowrap ${isCompact ? 'text-[8px]' : 'text-[10px]'} ${
+                <div className={`flex items-center gap-1 mt-1 font-bold tracking-tight whitespace-nowrap ${isCompact ? 'text-xs' : 'text-sm'} ${
                   isZero 
                   ? (isBlueTheme ? 'text-blue-300/60' : 'text-slate-400') 
                   : (isPositive 
@@ -216,7 +216,7 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
         {showGoal && goal !== undefined && (
           <div className={`z-10 w-full ${isCompact ? 'mt-auto mb-1' : 'mt-auto mb-2'}`}>
             {!isCompact && (
-              <div className="flex justify-between items-center mb-1 text-[7px] font-black uppercase tracking-tighter">
+              <div className="flex justify-between items-center mb-1 text-[10px] font-black uppercase tracking-tighter">
                  {isActive && isEditable ? (
                    <div className="flex items-center gap-1.5 w-full">
                       <span className={isBlueTheme ? 'text-blue-200/40' : 'text-slate-400'}>META:</span>
@@ -225,7 +225,7 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
                         value={localGoal}
                         onChange={(e) => handleValueChange('goal', e.target.value)}
                         onClick={(e) => e.stopPropagation()}
-                        className={`w-16 text-[8px] font-black border rounded px-1.5 py-0.5 ${inputBaseStyle}`}
+                        className={`w-16 text-xs font-black border rounded px-1.5 py-0.5 ${inputBaseStyle}`}
                       />
                    </div>
                  ) : (
@@ -261,21 +261,21 @@ const KPI_Card: React.FC<KPI_CardProps> = ({
                       value={sm.label}
                       onChange={(e) => handleSubMeasureUpdate(i, 'label', e.target.value)}
                       onClick={(e) => e.stopPropagation()}
-                      className="text-[6px] font-black uppercase bg-transparent outline-none border-b border-transparent focus:border-blue-300 mb-0.5 w-full"
+                      className="text-[9px] font-black uppercase bg-transparent outline-none border-b border-transparent focus:border-blue-300 mb-0.5 w-full"
                       placeholder="Label"
                     />
                     <input 
                       value={sm.value}
                       onChange={(e) => handleSubMeasureUpdate(i, 'value', e.target.value)}
                       onClick={(e) => e.stopPropagation()}
-                      className="text-[9px] font-bold bg-transparent outline-none border-b border-transparent focus:border-blue-300 w-full"
+                      className="text-[11px] font-bold bg-transparent outline-none border-b border-transparent focus:border-blue-300 w-full"
                       placeholder="Valor"
                     />
                   </>
                 ) : (
                   <>
-                    <span className={`text-[7px] font-black uppercase tracking-tighter opacity-60 truncate whitespace-nowrap ${isBlueTheme ? 'text-blue-100' : 'text-slate-500'}`} title={sm.label}>{sm.label}</span>
-                    <span className={`text-[10px] font-bold leading-tight truncate whitespace-nowrap ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`} title={sm.value}>{sm.value}</span>
+                    <span className={`text-[10px] font-black uppercase tracking-tighter opacity-60 truncate whitespace-nowrap ${isBlueTheme ? 'text-blue-100' : 'text-slate-500'}`} title={sm.label}>{sm.label}</span>
+                    <span className={`text-sm font-bold leading-tight truncate whitespace-nowrap ${isBlueTheme ? 'text-white' : 'text-[#006098]'}`} title={sm.value}>{sm.value}</span>
                   </>
                 )}
               </div>

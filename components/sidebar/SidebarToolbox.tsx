@@ -38,7 +38,7 @@ export const SidebarToolbox: React.FC<SidebarToolboxProps> = ({ onAddBlock }) =>
           className="flex flex-col items-center justify-center p-3 bg-white border rounded-xl hover:border-[#0079C2] hover:bg-blue-50 transition-all shadow-sm active:scale-95 group"
         >
           <comp.icon size={18} className="text-[#0079C2] group-hover:scale-110 transition-transform" />
-          <span className="text-[8px] font-black mt-1.5 uppercase tracking-tighter text-slate-500 group-hover:text-[#006098]">{comp.label}</span>
+          <span className="text-[10px] font-black mt-1.5 uppercase tracking-tighter text-slate-500 group-hover:text-[#006098]">{comp.label}</span>
         </button>
       ))}
     </div>

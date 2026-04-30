@@ -93,8 +93,8 @@ export const RiskMatrixBlock: React.FC<RiskMatrixBlockProps> = ({
 
   const getFontSize = (type: 'title' | 'detail') => {
     const scales: Record<string, { title: string, detail: string }> = {
-      SM: { title: 'text-[9px]', detail: 'text-[8.5px]' },
-      MD: { title: 'text-[11px]', detail: 'text-[10px]' },
+      SM: { title: 'text-[11px]', detail: 'text-[8.5px]' },
+      MD: { title: 'text-[11px]', detail: 'text-xs' },
       LG: { title: 'text-[13px]', detail: 'text-[11.5px]' },
     };
     const s = scales[textScale] || scales.MD;
@@ -114,7 +114,7 @@ export const RiskMatrixBlock: React.FC<RiskMatrixBlockProps> = ({
         }
       `}</style>
       
-      <div className={`grid grid-cols-12 gap-4 px-4 py-2 border-b-2 ${isBlueTheme ? 'border-white/10 text-white/40' : 'border-slate-100 text-slate-400'} text-[8px] font-black uppercase tracking-[0.2em]`}>
+      <div className={`grid grid-cols-12 gap-4 px-4 py-2 border-b-2 ${isBlueTheme ? 'border-white/10 text-white/40' : 'border-slate-100 text-slate-400'} text-[10px] font-black uppercase tracking-[0.2em]`}>
         <div className="col-span-2">Status</div>
         <div className="col-span-5">Ponto de Atenção / Risco</div>
         <div className="col-span-5">Plano de Ação / Solução</div>
@@ -148,7 +148,7 @@ export const RiskMatrixBlock: React.FC<RiskMatrixBlockProps> = ({
                   } ${isBlueTheme ? 'bg-white/10 border-white/10 text-white' : `${configStatus.bg} ${configStatus.color} ${configStatus.border}`}`}
                 >
                   <Icon size={12} strokeWidth={3} />
-                  <span className="text-[9px] font-black uppercase tracking-tight">{configStatus.label}</span>
+                  <span className="text-[11px] font-black uppercase tracking-tight">{configStatus.label}</span>
                 </button>
               </div>
 
@@ -218,7 +218,7 @@ export const RiskMatrixBlock: React.FC<RiskMatrixBlockProps> = ({
       {isHighlighted && (
         <button 
           onClick={(e) => { e.stopPropagation(); onAddItem?.(); }}
-          className={`mt-3 py-4 border-2 border-dashed rounded-2xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${
+          className={`mt-3 py-4 border-2 border-dashed rounded-2xl flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest transition-all ${
             isBlueTheme 
               ? 'border-white/20 text-blue-200 hover:bg-white/5 hover:border-white/40' 
               : 'border-slate-200 text-slate-400 hover:border-[#0079C2] hover:text-[#0079C2] hover:bg-blue-50'
@@ -243,7 +243,7 @@ export const RiskMatrixBlock: React.FC<RiskMatrixBlockProps> = ({
             >
               <ChevronUp size={14} strokeWidth={3} />
             </button>
-            <span className="text-[8px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
+            <span className="text-[10px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
             <button 
               onClick={(e) => { e.stopPropagation(); handleMoveItem(activeSubItemIndex!, 'DOWN'); }}
               disabled={activeSubItemIndex === items.length - 1}
@@ -268,7 +268,7 @@ export const RiskMatrixBlock: React.FC<RiskMatrixBlockProps> = ({
               <button 
                 key={scale.id}
                 onClick={(e) => { e.stopPropagation(); onUpdate?.({ textScale: scale.id }); }}
-                className={`px-2 py-1 rounded text-[9px] font-black transition-all ${textScale === scale.id ? 'bg-[#0079C2] text-white' : 'text-slate-400 hover:bg-slate-50'}`}
+                className={`px-2 py-1 rounded text-[11px] font-black transition-all ${textScale === scale.id ? 'bg-[#0079C2] text-white' : 'text-slate-400 hover:bg-slate-50'}`}
               >
                 {scale.label}
               </button>

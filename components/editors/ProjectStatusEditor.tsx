@@ -49,7 +49,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
       {/* Título e Progresso */}
       <div className="grid grid-cols-4 gap-3">
         <div className="col-span-3 space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase">Nome do Projeto</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase">Nome do Projeto</label>
           <input 
             type="text" 
             value={config.projectTitle || ''} 
@@ -59,7 +59,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
           />
         </div>
         <div className="col-span-1 space-y-1">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1"><Percent size={10} /> %</label>
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1"><Percent size={10} /> %</label>
           <input 
             type="number" 
             min="0" max="100"
@@ -72,7 +72,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
 
       {/* Resumo Executivo */}
       <div className="space-y-1">
-        <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+        <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
           <MessageSquare size={10} className="text-[#0079C2]" /> Resumo Executivo
         </label>
         <textarea 
@@ -85,7 +85,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
 
       {/* Status Global */}
       <div className="space-y-1">
-        <label className="text-[9px] font-bold text-gray-400 uppercase">Status Geral</label>
+        <label className="text-[11px] font-bold text-gray-400 uppercase">Status Geral</label>
         <div className="grid grid-cols-2 gap-2">
           {STATUS_OPTIONS.map((opt) => {
             const Icon = opt.icon;
@@ -101,7 +101,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
                 }`}
               >
                 <Icon size={14} />
-                <span className="text-[9px] font-black uppercase">{opt.label}</span>
+                <span className="text-[11px] font-black uppercase">{opt.label}</span>
               </button>
             );
           })}
@@ -111,7 +111,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
       {/* Marcos */}
       <div className="space-y-2">
         <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-          <label className="text-[9px] font-bold text-gray-400 uppercase flex items-center gap-1">
+          <label className="text-[11px] font-bold text-gray-400 uppercase flex items-center gap-1">
             <Flag size={10} className="text-[#0079C2]" /> Marcos de Entrega
           </label>
           <button onClick={addMilestone} className="text-[#0079C2] hover:bg-blue-50 p-1 rounded transition-colors">
@@ -135,7 +135,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
                     value={m.date} 
                     onChange={(e) => updateMilestone(idx, { date: e.target.value })}
                     placeholder="Data"
-                    className="w-full text-[9px] font-bold uppercase text-slate-500 bg-transparent outline-none border-b border-transparent focus:border-blue-200"
+                    className="w-full text-[11px] font-bold uppercase text-slate-500 bg-transparent outline-none border-b border-transparent focus:border-blue-200"
                   />
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                      <div className="relative w-4 h-4 overflow-hidden cursor-pointer">
@@ -153,7 +153,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
                   value={m.label} 
                   onChange={(e) => updateMilestone(idx, { label: e.target.value })}
                   placeholder="Descrição da entrega"
-                  className="col-span-2 text-[10px] font-medium text-[#006098] bg-transparent outline-none border-b border-transparent focus:border-blue-200"
+                  className="col-span-2 text-xs font-medium text-[#006098] bg-transparent outline-none border-b border-transparent focus:border-blue-200"
                 />
               </div>
               <button onClick={() => removeMilestone(idx)} className="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -162,7 +162,7 @@ export const ProjectStatusEditor: React.FC<ProjectStatusEditorProps> = ({ config
             </div>
           ))}
           {(config.milestones || []).length === 0 && (
-            <div className="text-center py-4 text-[9px] text-slate-400 italic bg-slate-50 rounded-lg border border-dashed border-slate-200">
+            <div className="text-center py-4 text-[11px] text-slate-400 italic bg-slate-50 rounded-lg border border-dashed border-slate-200">
               Nenhum marco adicionado
             </div>
           )}

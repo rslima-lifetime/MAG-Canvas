@@ -143,7 +143,7 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
                   <div className="w-8 h-8 rounded-lg bg-[#0079C2] text-white flex items-center justify-center">
                     <List size={18} strokeWidth={2.5} />
                   </div>
-                  <h2 className="text-sm font-black text-white uppercase tracking-widest">Navegação</h2>
+                  <h2 className="text-base font-black text-white uppercase tracking-widest">Navegação</h2>
                 </div>
                 <button onClick={() => setShowIndex(false)} className="text-slate-400 hover:text-white transition-colors"><X size={20} /></button>
               </div>
@@ -167,7 +167,7 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
                         onClick={() => { onNavigate(group.startIndex); setShowIndex(false); }}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-white/10 text-white border border-white/10' : 'text-slate-400 hover:bg-white/5'}`}
                       >
-                        <div className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-black border ${isActive ? 'bg-[#0079C2] border-[#0079C2]' : 'border-white/20'}`}>
+                        <div className={`w-5 h-5 rounded flex items-center justify-center text-xs font-black border ${isActive ? 'bg-[#0079C2] border-[#0079C2]' : 'border-white/20'}`}>
                           {group.startIndex + 1}
                         </div>
                         <span className="text-[11px] uppercase font-bold tracking-tight truncate flex-1 text-left">{group.title}</span>
@@ -179,7 +179,7 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
                             <button 
                               key={sec.id}
                               onClick={() => { onNavigate(sec.pageIndex); setShowIndex(false); }}
-                              className="pl-4 py-1.5 text-[10px] font-medium text-slate-500 hover:text-[#00A7E7] transition-colors text-left uppercase truncate"
+                              className="pl-4 py-1.5 text-xs font-medium text-slate-500 hover:text-[#00A7E7] transition-colors text-left uppercase truncate"
                             >
                               • {sec.title}
                             </button>
@@ -191,7 +191,7 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
                 })}
               </div>
 
-              <div className="p-4 bg-black/20 text-[8px] font-black text-slate-500 uppercase tracking-widest text-center border-t border-white/5">
+              <div className="p-4 bg-black/20 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center border-t border-white/5">
                  Atalhos: M (Menu) • L (Laser) • W (Zoom Inteligente/150%)
               </div>
            </aside>
@@ -221,7 +221,7 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
           </button>
           
           <div className="px-4 text-center min-w-[80px]">
-            <span className="text-[10px] font-black uppercase text-blue-400 tracking-widest block">Slide</span>
+            <span className="text-xs font-black uppercase text-blue-400 tracking-widest block">Slide</span>
             <span className="text-[14px] font-black text-white">
               {currentPage === 'cover' ? 'CAPA' : `${currentPage + 1} / ${totalPages}`}
             </span>
@@ -242,7 +242,7 @@ export const PresentationControls: React.FC<PresentationControlsProps> = ({
           <button onClick={onZoomOut} className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-all" title="Zoom Out (-)">
             <ZoomOut size={16} />
           </button>
-          <span className="text-[10px] font-black text-slate-300 min-w-[36px] text-center">
+          <span className="text-xs font-black text-slate-300 min-w-[36px] text-center">
             {Math.round(zoomLevel * 100)}%
           </span>
           <button onClick={onZoomIn} className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-all" title="Zoom In (+)">

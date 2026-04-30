@@ -93,8 +93,8 @@ export const StepProcessBlock: React.FC<StepProcessBlockProps> = ({
 
   const getFontSize = (type: 'value' | 'label' | 'subtext') => {
     const scales: Record<string, any> = {
-      SM: { value: 'text-[16px]', label: 'text-[9px]', subtext: 'text-[9px]' },
-      MD: { value: 'text-[20px]', label: 'text-[10px]', subtext: 'text-[10px]' },
+      SM: { value: 'text-[16px]', label: 'text-[11px]', subtext: 'text-[11px]' },
+      MD: { value: 'text-[20px]', label: 'text-xs', subtext: 'text-xs' },
       LG: { value: 'text-[24px]', label: 'text-[12px]', subtext: 'text-[12px]' },
     };
     const s = scales[textScale] || scales.MD;
@@ -245,7 +245,7 @@ export const StepProcessBlock: React.FC<StepProcessBlockProps> = ({
               </div>
             </div>
             <div className="flex flex-col items-center w-full">
-               <h4 className="text-[9px] font-black uppercase tracking-widest text-slate-400">Adicionar</h4>
+               <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Adicionar</h4>
             </div>
           </div>
         )}
@@ -264,7 +264,7 @@ export const StepProcessBlock: React.FC<StepProcessBlockProps> = ({
             >
               <ChevronUp size={14} strokeWidth={3} />
             </button>
-            <span className="text-[8px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
+            <span className="text-[10px] font-black text-slate-300 mx-1 px-1">{activeSubItemIndex + 1}</span>
             <button 
               onClick={(e) => { e.stopPropagation(); handleMoveStep(activeSubItemIndex!, 'DOWN'); }}
               disabled={activeSubItemIndex === steps.length - 1}
@@ -289,7 +289,7 @@ export const StepProcessBlock: React.FC<StepProcessBlockProps> = ({
               <button 
                 key={scale.id}
                 onClick={(e) => { e.stopPropagation(); onUpdate?.({ textScale: scale.id }); }}
-                className={`px-2 py-1 rounded text-[9px] font-black transition-all ${textScale === scale.id ? 'bg-[#0079C2] text-white' : 'text-slate-400 hover:bg-slate-50'}`}
+                className={`px-2 py-1 rounded text-[11px] font-black transition-all ${textScale === scale.id ? 'bg-[#0079C2] text-white' : 'text-slate-400 hover:bg-slate-50'}`}
               >
                 {scale.label}
               </button>

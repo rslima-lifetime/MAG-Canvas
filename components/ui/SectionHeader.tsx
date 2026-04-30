@@ -73,7 +73,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
             isHighlighted 
             ? (isBlueTheme ? 'text-white' : 'text-[#00A7E7]') + ' cursor-text focus:ring-1 focus:ring-white/20 px-1 rounded min-h-[1.2em]' 
             : (isBlueTheme ? 'text-white/80' : 'text-[#006098]')
-          } ${isFuture ? 'text-[11px] tracking-[0.25em] border-b border-white/10 pb-1.5' : 'text-[10px]'} ${!showTitle && isHighlighted ? 'line-through decoration-rose-500 decoration-2' : ''}`}
+          } ${isFuture ? 'text-[11px] tracking-[0.25em] border-b border-white/10 pb-1.5' : 'text-xs'} ${!showTitle && isHighlighted ? 'line-through decoration-rose-500 decoration-2' : ''}`}
         >
           {title}
         </h3>
