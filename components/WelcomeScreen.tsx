@@ -588,7 +588,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                               let folderName = "Projetos Pessoais";
                               if (groupKey !== 'pessoais') {
                                 const team = myTeams.find((t: any) => t.id === groupKey);
-                                folderName = team ? `Equipe: ${team.name}` : 'Equipe Excluída';
+                                folderName = team ? team.name : 'Equipe Excluída';
                               }
                               
                               return (
@@ -636,9 +636,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                           const team = myTeams.find((t: any) => t.id === proj.allowedTeamId);
                                           const teamName = team ? team.name : 'Público';
                                           const ownerUser = allUsers.find((u: any) => u.id === proj.ownerId);
-                                          const ownerName = ownerUser ? ownerUser.nome : 'Outro';
+                                          const ownerName = ownerUser ? ownerUser.nome : (proj.ownerId === user.uid ? (user.displayName || 'Você') : 'Outro');
                                           badgeColor = "bg-emerald-50 text-emerald-600 border-emerald-200";
-                                          badgeText = `EQUIPE: ${teamName.toUpperCase()} (POR: ${ownerName.toUpperCase()})`;
+                                          badgeText = `${teamName.toUpperCase()} (POR: ${ownerName.toUpperCase()})`;
                                         }
 
                                         return (
@@ -660,7 +660,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                                   <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
                                                     <Clock size={10} /> 
                                                     {proj.updatedAt?.seconds 
-                                                      ? new Date(proj.updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
+                                                      ? new Date(proj.updatedAt.seconds * 1000).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ' às')
                                                       : 'Recente'
                                                     }
                                                   </span>
@@ -741,10 +741,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, onImport 
                                   <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
                                     <Clock size={10} /> 
                                     {(proj as any).updatedAt?.seconds 
-                                      ? new Date((proj as any).updatedAt.seconds * 1000).toLocaleDateString('pt-BR')
-                                      : (proj as any).updatedAt 
-                                        ? new Date((proj as any).updatedAt).toLocaleDateString('pt-BR')
-                                        : 'Recente'
+                                        ? new Date((proj as any).updatedAt.seconds * 1000).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ' às')
+                                        : (proj as any).updatedAt 
+                                          ? new Date((proj as any).updatedAt).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ' às')
+                                          : 'Recente'
                                     }
                                   </span>
                                 </div>
